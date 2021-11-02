@@ -36,7 +36,7 @@ You should test out updating your GitHub Pages website:
 * update "Your Project Title Here" to a new title in the YAML header
 * knit `index.Rmd` (we will now knit to HTML by default instead of pdf)
 * commit and push BOTH the `index.Rmd` and the `index.html` files as you are
-* go to https://stat231-f21.github.io/blog_your-group-name/ to see the published test document (this is publicly available!)
+* go to https://stat231-f21.github.io/blog_THeHe/ to see the published test document (this is publicly available!)
 
 ## Including code and plots
 
