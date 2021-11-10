@@ -45,3 +45,14 @@ for (i in 1:50) {
   }
   
 }
+
+headlines_data <- as.data.frame(do.call(cbind, headlines))
+
+headlines_long <- headlines_data %>% 
+  unnest(headline_text) %>% 
+  mutate(state = as.character(state),
+         week = as.numeric(week),
+         headline_text = as.character(headline_text))
+
+write_csv(headlines_long, "data/news/headlines.csv")
+
