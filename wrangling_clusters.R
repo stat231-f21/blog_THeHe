@@ -348,7 +348,7 @@ for (i in 1:10){
 
 # Construct elbow plot
 ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
-  geom_point() + 
+  geom_point() +
   geom_line() +
   scale_x_continuous(breaks = 1:10) +
   labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
