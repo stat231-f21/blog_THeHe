@@ -1,6 +1,6 @@
 ---
-title: "Your Project Title Here"
-author: "Your Names Here"
+title: "A Deeper Dive Into COVID-Related Relationships"
+author: "Tracy Huang, Helen Feibes, Henry Bassett"
 date: "Add a date"
 output:
   rmdformats::readthedown:
@@ -81,7 +81,7 @@ You can include [links](https://www.datadreaming.org/post/r-markdown-theme-galle
 
 ### Option 1: Markdown approach
 
-![This is a figure caption. The artwork is called Safe Space by  [Kenesha Sneed](https://www.keneshasneed.com/#/safespace/)](img/Kenesha-Sneed_safe-space.jpeg)
+<!-- ![This is a figure caption. The artwork is called Safe Space by  [Kenesha Sneed](https://www.keneshasneed.com/#/safespace/)](img/Kenesha-Sneed_safe-space.jpeg) -->
 
 
 ### Option 2: Code chunk approach
