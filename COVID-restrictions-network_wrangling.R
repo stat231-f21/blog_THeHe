@@ -14,11 +14,11 @@ library(ggnetwork)
 library(grDevices)
 
 # Load COVID state restrictions datasets
-restaurants <- read.csv("data/restrictions_data/Restaurants.csv")
-bars <- read.csv("data/restrictions_data/Bars.csv")
-mask_mandates <- read.csv("data/restrictions_data/Mask_Mandates.csv")
-gathering_bans <- read.csv("data/restrictions_data/Gathering_Bans.csv")
-stay_at_home_orders <- read.csv("data/restrictions_data/Stay-At-Home_Orders.csv")
+restaurants <- read.csv("data/restrictions/restrictions_data/Restaurants.csv")
+bars <- read.csv("data/restrictions/restrictions_data/Bars.csv")
+mask_mandates <- read.csv("data/restrictions/restrictions_data/Mask_Mandates.csv")
+gathering_bans <- read.csv("data/restrictions/restrictions_data/Gathering_Bans.csv")
+stay_at_home_orders <- read.csv("data/restrictions/restrictions_data/Stay-At-Home_Orders.csv")
 
 # Set color palette
 eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
