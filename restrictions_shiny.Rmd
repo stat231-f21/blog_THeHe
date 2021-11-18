@@ -9,87 +9,220 @@ library(tidyverse)
 library(dplyr)
 library(igraph)
 library(visNetwork)
-library(ggnetwork)
 library(grDevices)
+library(shiny)
 ```
 
 ```{r}
 # Load network datasets
-restaurants_final <- read.csv("wrangled_csv_data/restaurants_network_data.csv")
-bars_final <- read.csv("wrangled_csv_data/bars_network_data.csv")
-mask_mandates_final <- read.csv("wrangled_csv_data/mask_mandates_network_data.csv")
-gathering_bans_final <- read.csv("wrangled_csv_data/gathering_bans_network_data.csv")
-stay_at_home_orders_final <- read.csv("wrangled_csv_data/stay_at_home_orders_network_data.csv")
+restaurants_final <- read.csv("wrangled_csv_data/restaurants_network_data.csv") %>% select(-X)
+bars_final <- read.csv("wrangled_csv_data/bars_network_data.csv") %>% select(-X)
+mask_mandates_final <- read.csv("wrangled_csv_data/mask_mandates_network_data.csv") %>% select(-X)
+gathering_bans_final <- read.csv("wrangled_csv_data/gathering_bans_network_data.csv") %>% select(-X)
+stay_at_home_orders_final <- read.csv("wrangled_csv_data/stay_at_home_orders_network_data.csv") %>% select(-X)
+
+# Load proportion of annual COVID cases per state population data
+annual_cases <- read.csv("wrangled_csv_data/proportion_annual_cases_data.csv")
 ```
 
 ```{r}
-# create igraph object
-states <- c("AK", "CT", "SD", "AR", "LA")
-
-gathering_bans_final <- gathering_bans_final %>%
-  filter(state_one %in% states,
-         state_two %in% states) %>%
-  select(-X)
-         #gathering_bans_overLap > 10)
-
-gathering_bans_final <- as.matrix.data.frame(gathering_bans_final)
-
-gathering_bans_igraph <- graph_from_data_frame(gathering_bans_final, directed = FALSE)
-
-#gatbans <- ggnetwork(gathering_bans_igraph)
-#head(gatbans)
-
-# create visualization of this network
-# ggplot(data = gatbans, aes(x = x, y = y, 
-#           xend = xend, yend = yend)) +
-#  geom_edges(arrow = arrow(type = "closed", length = unit(8, "pt")),
-#     color = "lightgray") +
-#  geom_nodes() +
-#  geom_nodelabel(aes(label = name)) +
-#  theme_blank()
-
-# igraph <- set_vertex_attr(gathering_bans_igraph, "overlap", value = gathering_bans_network$overLap)
-# # Graph network
-# ggnetwork(igraph) %>%
-# ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
-# geom_edges(color = "lightgray", curvature = .2) +
-# geom_nodes(aes(size = overLap)) +
-# geom_nodelabel_repel(aes(label = name)) +
-# labs(size = "PageRank") +
-# theme_blank()
-# 
-
-gathering_bans_visNetwork <- toVisNetworkData(gathering_bans_igraph)
-
-#  visIgraphLayout(layout = "layout_in_circle") %>%
-
-
-
+# Set color palette
 eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
 
-x <- c(0.01, 0.2, 0.03, 0.05, 0.05)
+# Create plot for color legend
+png(file = "covid_legend.png")
+legend_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+text(x=1.25, y = seq(0,1,l=5), labels = seq(0.01,.12,l=5))
+legend_image <- rasterImage(legend_image, 0, 0, 1,1)
+dev.off()
 
-edges <- gathering_bans_visNetwork$edges
-nodes <- gathering_bans_visNetwork$nodes %>%
-  mutate(covid_case = as.numeric(x),
-        color = eigScalePal(5)[cut(covid_case, breaks = 5)]) %>%
-  select(-covid_case)
- 
-#eigen_centrality(gathering_bans_igraph)
-# eigScalePal <- colorRampPalette(c("blue", "red"), bias = 1)
-# nodes$color <- eigScalePal(5)[cut(eigen_centrality(gathering_bans_igraph)$vector, breaks = 5)]
+cut(annual_cases$covid_prop, breaks = 10)
 
-edges <- edges %>%
-  mutate(value = as.numeric(edges$gathering_bans_overLap),
+# Restaurant Restrictions
+restaurants_igraph <- graph_from_data_frame(restaurants_final, directed = FALSE)
+
+restaurants_visNetwork <- toVisNetworkData(restaurants_igraph)
+
+restaurants_edges <- restaurants_visNetwork$edges %>%
+  mutate(value = as.numeric(restaurants_overLap),
          width = value/100) %>%
   select(-value)
 
+restaurants_nodes <- restaurants_visNetwork$nodes %>%
+  inner_join(annual_cases, by = c("id" = "state")) %>%
+  mutate(color = eigScalePal(5)[cut(covid_prop, breaks = 10)]) %>%
+  select(-c(X, covid_prop)) 
+```
 
-# # data.frame from edges legend
-# ledges <- data.frame(Color = edges$color,
-#                      Label = edges$color)
 
-visNetwork(nodes, edges, height = "700px", width = "100%", 
+```{r}
+# Bar Restrictions
+bars_igraph <- graph_from_data_frame(bars_final, directed = FALSE)
+
+bars_visNetwork <- toVisNetworkData(bars_igraph)
+
+bars_edges <- bars_visNetwork$edges %>%
+  mutate(value = as.numeric(bars_overLap),
+         width = value/100) %>%
+  select(-value)
+
+bars_nodes <- bars_visNetwork$nodes %>%
+  inner_join(annual_cases, by = c("id" = "state")) %>%
+  mutate(color = eigScalePal(5)[cut(covid_prop, breaks = 5)]) %>%
+  select(-c(X, covid_prop))
+```
+
+
+```{r}
+# Mask Mandates
+mask_mandates_igraph <- graph_from_data_frame(mask_mandates_final, directed = FALSE)
+
+mask_mandates_visNetwork <- toVisNetworkData(mask_mandates_igraph)
+
+mask_mandates_edges <- mask_mandates_visNetwork$edges %>%
+  mutate(value = as.numeric(mask_mandates_overLap),
+         width = value/100) %>%
+  select(-value)
+
+mask_mandates_nodes <- mask_mandates_visNetwork$nodes %>%
+  inner_join(annual_cases, by = c("id" = "state")) %>%
+  mutate(color = eigScalePal(5)[cut(covid_prop, breaks = 5)]) %>%
+  select(-c(X, covid_prop))
+```
+
+
+```{r}
+# create igraph object
+# states <- c("AK", "CT", "SD", "AR", "LA")
+# 
+# gathering_bans_final <- gathering_bans_final %>%
+#   filter(state_one %in% states,
+#          state_two %in% states) 
+
+# Gathering Bans
+gathering_bans_igraph <- graph_from_data_frame(gathering_bans_final, directed = FALSE)
+
+gathering_bans_visNetwork <- toVisNetworkData(gathering_bans_igraph)
+
+gathering_ban_edges <- gathering_bans_visNetwork$edges %>%
+  mutate(value = as.numeric(gathering_bans_overLap),
+         width = value/100) %>%
+  select(-value) 
+
+gathering_ban_edges <- gathering_ban_edges %>%
+  mutate(title = paste0(gathering_ban_edges$gathering_bans_overLap, " days shared in 2020"))
+
+gathering_ban_nodes <- gathering_bans_visNetwork$nodes %>%
+  inner_join(annual_cases, by = c("id" = "state")) %>%
+  mutate(color = eigScalePal(5)[cut(covid_prop, breaks = 5)]) %>%
+  select(-c(X, covid_prop))
+```
+
+```{r}
+# Stay at home orders 
+states <- c("AK", "CT", "SD", "AR", "LA")
+# 
+stay_at_home_orders_final <- stay_at_home_orders_final %>%
+  filter(state_one %in% states,
+         state_two %in% states) 
+
+stay_at_home_orders_igraph <- graph_from_data_frame(stay_at_home_orders_final, directed = FALSE)
+
+stay_at_home_orders_visNetwork <- toVisNetworkData(stay_at_home_orders_igraph)
+
+stay_at_home_orders_edges <- stay_at_home_orders_visNetwork$edges %>%
+  mutate(value = as.numeric(stay_at_home_orders_overLap),
+         width = value/100) %>%
+  select(-value) %>%
+  mutate(title = paste0(stay_at_home_orders_edges$stay_at_home_orders_overLap, " days shared in 2020"))
+
+stay_at_home_orders_nodes <- stay_at_home_orders_visNetwork$nodes %>%
+  inner_join(annual_cases, by = c("id" = "state")) %>%
+  mutate(color = eigScalePal(5)[cut(covid_prop, breaks = 5)]) %>%
+  select(-c(X, covid_prop)) 
+```
+
+```{r}
+ visNetwork(stay_at_home_orders_nodes, stay_at_home_orders_edges, height = "700px", width = "100%", 
+               main = list(text = "Network for States Sharing the Same COVID Restrictions in 2020", 
+                           style = "font-family:Arial;font-size:20px"
+               ),
+               submain = list(text = 
+                                "*Nodes are colored by proportion of annual COVID cases per state population<br>
+                                 *Edges are weighted by number of days in 2020 that states shared 
+                                 the same restrictions",
+                              style = "font-family:Arial;font-size:13px")) %>%
+      visNodes(size = 10) %>%
+      visOptions(selectedBy = "group", 
+                 highlightNearest = list(enabled = TRUE, hover = TRUE), 
+                 nodesIdSelection = TRUE) %>%
+      visPhysics(stabilization = FALSE) %>%
+      visEdges(color = list(color = "black", highlight = "red")) 
+```
+
+
+```{r}
+############
+#    ui    #
+############
+ui <- fluidPage(title = "State COVID Restrictions Network",
+                fillPage(sidebarLayout(
+                  sidebarPanel(
+                    selectizeInput(
+                      inputId = "filterNodes",
+                      label = "Select states:",
+                      choices = gathering_ban_nodes$id,
+                      selected = "AK",
+                      multiple = TRUE
+                    ),
+                    selectInput(
+                      inputId = "restriction",
+                      label = "Select a type of COVID restriction",
+                      choices =  list(
+                        "Resturant Restrictions" = "rest",
+                        "Bar Restrictions" = "bar",
+                        "Mask Mandates" = "mask",
+                        "Gathering Bans" = "gatban",
+                        "Stay at Home Orders" = "stayhome"),
+                      selected = "gatban",
+                      multiple = FALSE
+                    ),
+                    img(src="covid_legend.png", align = "left"),
+                    width = 3,
+                  ),
+                  mainPanel(
+                    visNetworkOutput("network_proxy_update", width = "100%", height = "90vh"),
+                    width = 9
+                  )
+                )))
+
+############
+# server   #
+############
+
+server <- function(input, output) {
+active_nodes <- reactive({
+  switch(input$restriction,
+         "rest" = restaurants_nodes,
+         "bar" = bars_nodes,
+         "mask" = mask_mandates_nodes,
+         "gatban" = gathering_ban_nodes,
+         "stayhome" = stay_at_home_orders_nodes)
+})
+  
+active_edges <- reactive({
+  switch(input$restriction,
+         "rest" = restaurants_edges,
+         "bar" = bars_edges,
+         "mask" = mask_mandates_edges,
+         "gatban" = gathering_ban_edges,
+         "stayhome" = stay_at_home_orders_edges
+         )
+})
+
+  output$network_proxy_update <- renderVisNetwork({
+    visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
            main = list(text = "Network for States Sharing the Same COVID Restrictions in 2020", 
                        style = "font-family:Arial;font-size:20px"
                        ),
@@ -104,10 +237,20 @@ visNetwork(nodes, edges, height = "700px", width = "100%",
              nodesIdSelection = TRUE) %>%
   visPhysics(stabilization = FALSE) %>%
   visEdges(color = list(color = "black", highlight = "red")) 
+  })
+  
+myVisNetworkProxy <- visNetworkProxy("network_proxy_update")
+  
+observe ({
+     filteredNodes <- active_nodes()[gathering_ban_nodes$id %in% input$filterNodes, ,drop = FALSE]
+     hiddenNodes <- anti_join(active_nodes(), filteredNodes)
+     visRemoveNodes(myVisNetworkProxy, id = hiddenNodes$id)
+     visUpdateNodes(myVisNetworkProxy, nodes = filteredNodes)
+   })
+}
 
-# create legend for node color
-legend_image <- as.raster(matrix(eigScalePal(5), ncol=1))
-plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'Proportion of COVID cases')
-text(x=1.5, y = seq(0,1,l=5), labels = seq(0,1,l=5))
-rasterImage(legend_image, 0, 0, 1,1)
+#####################
+# call to shiny App #
+#####################
+shinyApp(ui = ui, server = server)
 ```
