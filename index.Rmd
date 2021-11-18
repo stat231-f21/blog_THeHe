@@ -1,6 +1,6 @@
 ---
 title: "Your Project Title Here"
-author: "Your Names Here"
+author: "Tracy Huang, Helen Fiebes, Henry Bassett"
 date: "Add a date"
 output:
   rmdformats::readthedown:
