@@ -301,6 +301,39 @@ pulse_grouped <- pulse_clustered_data %>%
             non_hispanic_other_multiple_races = sum(non_hispanic_other_multiple_races),
             non_hispanic_black = sum(non_hispanic_black))
 
+# for each cluster, find the percent of individuals in the cluster with healthcare
+# percent with each of the other variables
+# none, acute, or chronic anxiety or depression
+
+pres_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(prescription) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "presc") %>% 
+  rename(value = prescription) %>% 
+  select(-c(n, total))
+
+no_a_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(no_access) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "no_a") %>% 
+  rename(value = no_access) %>% 
+  select(-c(n, total))
+
+meep <- rbind(pres_sum, no_a_sum)
+# meep <- no_a_sum %>% 
+#   full_join(pres_sum, by = "clusters")
+
+stacked <- ggplot(data = pres_sum) +
+  geom_col(mapping = aes(x = clusters,
+                         y = percent_type,
+                         fill = prescription)) +
+  coord_flip()
+stacked
+
 # Check by state
 # Same thing happening
 # pulse_grouped_states <- pulse_clustered_data %>% 
