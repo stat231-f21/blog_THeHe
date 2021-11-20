@@ -345,6 +345,8 @@ meep <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum)
 # meep <- no_a_sum %>% 
 #   full_join(pres_sum, by = "clusters")
 
+# individuals
+
 stacked <- ggplot(data = pres_sum) +
   geom_col(mapping = aes(x = clusters,
                          y = percent_type,
@@ -358,6 +360,9 @@ stacked2 <- ggplot(data = no_a_sum) +
                          fill = value)) +
   coord_flip()
 stacked2
+
+
+# attempting the animated one 
 
 # animate_hc <- ggplot(data = meep) +
 #   geom_col(mapping = aes(x = clusters,
