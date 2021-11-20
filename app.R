@@ -6,109 +6,35 @@ library(visNetwork)
 library(grDevices)
 library(shiny)
 
+#######################
+#    Load Datasets    #
+#######################
 # Load network datasets
-restaurants_final <- read.csv("wrangled_csv_data/restaurants_network_data.csv") %>% select(-X)
-bars_final <- read.csv("wrangled_csv_data/bars_network_data.csv") %>% select(-X)
-mask_mandates_final <- read.csv("wrangled_csv_data/mask_mandates_network_data.csv") %>% select(-X)
-gathering_bans_final <- read.csv("wrangled_csv_data/gathering_bans_network_data.csv") %>% select(-X)
-stay_at_home_orders_final <- read.csv("wrangled_csv_data/stay_at_home_orders_network_data.csv") %>% select(-X)
+restaurants_edges <- read.csv("wrangled_csv_data/restaurants_edges_data.csv") %>% select(-X)
+restaurants_nodes <- read.csv("wrangled_csv_data/restaurants_nodes_data.csv") %>% select(-X)
+
+bars_edges <- read.csv("wrangled_csv_data/bars_edges_data.csv") %>% select(-X)
+bars_nodes <- read.csv("wrangled_csv_data/bars_nodes_data.csv") %>% select(-X)
+
+mask_mandates_edges <- read.csv("wrangled_csv_data/mask_mandates_edges_data.csv") %>% select(-X)
+mask_mandates_nodes <- read.csv("wrangled_csv_data/mask_mandates_nodes_data.csv") %>% select(-X)
+
+gathering_ban_edges <- read.csv("wrangled_csv_data/gathering_ban_edges_data.csv") %>% select(-X)
+gathering_ban_nodes <- read.csv("wrangled_csv_data/gathering_ban_nodes_data.csv") %>% select(-X)
+
+stay_at_home_orders_edges <- read.csv("wrangled_csv_data/stay_at_home_orders_edges_data.csv") %>% select(-X)
+stay_at_home_orders_nodes <- read.csv("wrangled_csv_data/stay_at_home_orders_nodes_data.csv") %>% select(-X)
 
 # Load proportion of annual COVID cases per state population data
-annual_cases <- read.csv("wrangled_csv_data/proportion_annual_cases_data.csv")
+annual_cases <- read.csv("wrangled_csv_data/proportion_annual_covid_cases_data.csv")
 
-# Set color palette
-eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
-num_colors <- 10
-
-# Create plot for color legend
-png(file = "covid_legend.png")
-legend_image <- as.raster(matrix(eigScalePal(num_colors), ncol=1))
-plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'Proportion of Annual COVID Cases')
-text(x=1.5, y = seq(0,1,l=5), labels = seq(0,1,l=5))
-legend_image <- rasterImage(legend_image, 0, 0, 1,1)
-dev.off()
-
-# Restaurant Restrictions
-restaurants_igraph <- graph_from_data_frame(restaurants_final, directed = FALSE)
-
-restaurants_visNetwork <- toVisNetworkData(restaurants_igraph)
-
-restaurants_edges <- restaurants_visNetwork$edges %>%
-  mutate(value = as.numeric(restaurants_overLap),
-         width = value/100) %>%
-  select(-value)
-
-restaurants_nodes <- restaurants_visNetwork$nodes %>%
-  inner_join(annual_cases, by = c("id" = "state")) %>%
-  mutate(color = eigScalePal(num_colors)[cut(covid_prop, breaks = num_colors)]) %>%
-  select(-c(X, covid_prop))
-
-# Bar Restrictions
-bars_igraph <- graph_from_data_frame(bars_final, directed = FALSE)
-
-bars_visNetwork <- toVisNetworkData(bars_igraph)
-
-bars_edges <- bars_visNetwork$edges %>%
-  mutate(value = as.numeric(bars_overLap),
-         width = value/100) %>%
-  select(-value)
-
-bars_nodes <- bars_visNetwork$nodes %>%
-  inner_join(annual_cases, by = c("id" = "state")) %>%
-  mutate(color = eigScalePal(num_colors)[cut(covid_prop, breaks = num_colors)]) %>%
-  select(-c(X, covid_prop))
-
-# Mask Mandates
-mask_mandates_igraph <- graph_from_data_frame(mask_mandates_final, directed = FALSE)
-
-mask_mandates_visNetwork <- toVisNetworkData(mask_mandates_igraph)
-
-mask_mandates_edges <- mask_mandates_visNetwork$edges %>%
-  mutate(value = as.numeric(mask_mandates_overLap),
-         width = value/100) %>%
-  select(-value)
-
-mask_mandates_nodes <- mask_mandates_visNetwork$nodes %>%
-  inner_join(annual_cases, by = c("id" = "state")) %>%
-  mutate(color = eigScalePal(5)[cut(covid_prop, breaks = 5)]) %>%
-  select(-c(X, covid_prop))
-
-# create igraph object
-# states <- c("AK", "CT", "SD", "AR", "LA")
-# 
-# gathering_bans_final <- gathering_bans_final %>%
-#   filter(state_one %in% states,
-#          state_two %in% states) 
-
-# Gathering Bans
-gathering_bans_igraph <- graph_from_data_frame(gathering_bans_final, directed = FALSE)
-
-gathering_bans_visNetwork <- toVisNetworkData(gathering_bans_igraph)
-
-gathering_ban_edges <- gathering_bans_visNetwork$edges %>%
-  mutate(value = as.numeric(gathering_bans_overLap),
-         width = value/100) %>%
-  select(-value)
-
-gathering_ban_nodes <- gathering_bans_visNetwork$nodes %>%
-  inner_join(annual_cases, by = c("id" = "state")) %>%
-  mutate(color = eigScalePal(num_colors)[cut(covid_prop, breaks = num_colors)]) %>%
-  select(-c(X, covid_prop))
-
-# Stay at home orders 
-stay_at_home_orders_igraph <- graph_from_data_frame(stay_at_home_orders_final, directed = FALSE)
-
-stay_at_home_orders_visNetwork <- toVisNetworkData(stay_at_home_orders_igraph)
-
-stay_at_home_orders_edges <- stay_at_home_orders_visNetwork$edges %>%
-  mutate(value = as.numeric(stay_at_home_orders_overLap),
-         width = value/100) %>%
-  select(-value)
-
-stay_at_home_orders_nodes <- stay_at_home_orders_visNetwork$nodes %>%
-  inner_join(annual_cases, by = c("id" = "state")) %>%
-  mutate(color = eigScalePal(num_colors)[cut(covid_prop, breaks = num_colors)]) %>%
-  select(-c(X, covid_prop))
+##############################################
+# Define choice values and names for widgets #
+##############################################
+# # Get column for state abbreviations
+node_values <- state.abb
+node_names <- state.name
+names(node_values) <- node_names
 
 ############
 #    ui    #
@@ -119,7 +45,7 @@ ui <- fluidPage(title = "State COVID Restrictions Network",
                     selectizeInput(
                       inputId = "filterNodes",
                       label = "Select states:",
-                      choices = gathering_ban_nodes$id,
+                      choices = node_values,
                       selected = "AK",
                       multiple = TRUE
                     ),
@@ -135,7 +61,9 @@ ui <- fluidPage(title = "State COVID Restrictions Network",
                       selected = "gatban",
                       multiple = FALSE
                     ),
-                    img(src="covid_legend.png", align = "left"),
+                    br(),
+                    p("Proportion of Annual COVID Cases per State Population"),
+                    img(src="covid_legend.png", width = "500px", height = "500px"),
                     width = 3,
                   ),
                   mainPanel(
@@ -149,7 +77,9 @@ ui <- fluidPage(title = "State COVID Restrictions Network",
 ############
 
 server <- function(input, output) {
+  
   active_nodes <- reactive({
+    # Switch nodes dataset depending on user input
     switch(input$restriction,
            "rest" = subset(restaurants_nodes, restaurants_nodes$id %in% input$filterNodes), 
            "bar" = subset(bars_nodes, bars_nodes$id %in% input$filterNodes),
@@ -160,6 +90,7 @@ server <- function(input, output) {
   })
   
   active_edges <- reactive({
+    # Switch edges dataset depending on user input
     switch(input$restriction,
            "rest" = subset(restaurants_edges, restaurants_edges$from %in% input$filterNodes),
            "bar" = subset(bars_edges, bars_edges$from %in% input$filterNodes),
@@ -177,7 +108,8 @@ server <- function(input, output) {
                submain = list(text = 
                                 "*Nodes are colored by proportion of annual COVID cases per state population<br>
                                  *Edges are weighted by number of days in 2020 that states shared 
-                                 the same restrictions",
+                                 the same restrictions<br>
+                                 Hover over edges to see the exact number of days",
                               style = "font-family:Arial;font-size:13px")) %>%
       visNodes(size = 10) %>%
       visOptions(selectedBy = "group", 
@@ -190,8 +122,11 @@ server <- function(input, output) {
   myVisNetworkProxy <- visNetworkProxy("network_proxy_update")
   
   observe ({
+    # Create an object to contain the nodes the user selects
     filteredNodes <- active_nodes()[gathering_ban_nodes$id %in% input$filterNodes, ,drop = FALSE]
+    # Create an object to create all the nodes the user did not select
     hiddenNodes <- anti_join(active_nodes(), filteredNodes)
+    # 
     visRemoveNodes(myVisNetworkProxy, id = hiddenNodes$id)
     visUpdateNodes(myVisNetworkProxy, nodes = filteredNodes)
   })

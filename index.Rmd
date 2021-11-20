@@ -1,7 +1,7 @@
 ---
-title: "Your Project Title Here"
-author: "Your Names Here"
-date: "Add a date"
+title: "A Deeper Dive Into COVID-Related Relationships"
+author: "Tracy Huang, Helen Feibes, Henry Bassett"
+date: "12/15/21"
 output:
   rmdformats::readthedown:
     thumbnails: false
@@ -22,13 +22,41 @@ knitr::opts_chunk$set(echo = FALSE,
 options(knitr.kable.NA = '')
 ```
 
-# Header 1 (Section heading)
+# Introduction
+Why should anyone care about this? 
+What is this about? Do not assume your readers have any specific knowledge of your subject matter! 
 
-## Header 2 (Subsection heading)
+# Data Sources
+What are the data? What was the source of the data (who collected it, when, in what way, and why)? What kind of data was it? Is there a link to the data or some other way for the reader to follow up on your work? 
 
-### Header 3 (Subsubsection heading)
+# COVID State Restrictions Network
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For example, you can include **Bold** and _Italic_ and `Code` text.  For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each state as a node and each edge as displaying the      . The edges are weighted by how many days states share, and the nodes are colored by the proportion of annual COVID cases per state population. 
+
+Visit our Shiny app to 
+What are your findings? What kind of statistical computations (if any) have you done to support those conclusions? (Again, even if you display code showing how some of the calculations were performed, it is up to you to interpret, in simple terms, the results of these calculations.) Do not forget about units, axis labels, etc.
+
+## Data Source
+
+For the COVID state restrictions network, we used data from the CDC      . Specifically:
+* `Restaurants.csv`, which contains U.S. State and Territorial Orders Closing and Reopening Restaurants Issued from March 11, 2020 through August 15, 2021 by County by Day
+* `Bars.csv`, which contains U.S. state and territorial orders closing and reopening bars issued from March 11, 2020 through August 15, 2021 by County by Day
+* `Mask_Mandates.csv`, which contains U.S. State and Territorial Public Mask Mandates From April 10, 2020 through August 15, 2021 by County by Day
+* `Gathering_Bans.csv`, which contains U.S. State and Territorial Gathering Bans: March 11, 2020-August 15, 2021 by County by Day
+* `Stay-At-Home_Orders.csv`, which contains U.S. State and Territorial Public Mask Mandates From April 10, 2020 through August 15, 2021 by County by Day
+
+Visit [links](https://data.cdc.gov/browse?category=Policy+Surveillance) to explore and download the data-sets. Networks need a format where there are nodes and edges  . In order to convert the data into a format for networks, we 
+
+## Creating the network using `visNetwork`
+
+
+
+## Findings 
+
+# Limitations 
+What are the limitations of your work? Be clear so that others do not misinterpret your findings. To what population do your results apply? Do they generalize? Could your work be extended with more data or computational power or time to analyze? How could your study be improved? Suggesting plausible extensions doesn’t weaken your work; it strengthens it by connecting it to future work. 
+
+For example, you can include **Bold** and _Italic_ and `Code` text.  For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 You should test out updating your GitHub Pages website:
 
@@ -81,7 +109,7 @@ You can include [links](https://www.datadreaming.org/post/r-markdown-theme-galle
 
 ### Option 1: Markdown approach
 
-![This is a figure caption. The artwork is called Safe Space by  [Kenesha Sneed](https://www.keneshasneed.com/#/safespace/)](img/Kenesha-Sneed_safe-space.jpeg)
+<!-- ![This is a figure caption. The artwork is called Safe Space by  [Kenesha Sneed](https://www.keneshasneed.com/#/safespace/)](img/Kenesha-Sneed_safe-space.jpeg) -->
 
 
 ### Option 2: Code chunk approach
