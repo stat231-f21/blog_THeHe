@@ -171,114 +171,55 @@ racial_ethnic_totals <- pulse_college_data %>%
   mutate(total = sum(n),
          prop_respondents = n/total)
 
-# state_totals <- pulse_college_data %>% 
-#   group_by(state) %>% 
-#   count() %>% 
-#   ungroup() %>% 
-#   mutate(total = sum(n),
-#          prop_respondents = n/total)
-
-# SAMPLE 
-
-# plot sample for funsies
+# Set seed and cluster with healthcare access variables
 set.seed(1984)
-pulse_sample <- pulse_college_data %>% 
-  sample_n(500)
-
-# ggplot(data = pulse_sample, aes(x = ANXIOUS, y = DOWN)) +
-#   geom_point(position = "jitter")
-
-# cluster
-
-set.seed(1984)
-clustering_vars <- c("ANXIOUS", "DOWN", "prescription", "mental_health_services", "no_access")
-pulse_clusters <- pulse_sample %>% 
+clustering_vars <- c("prescription", "mental_health_services", "no_access", "healthcare")
+pulse_all_clusters <- pulse_college_data %>% 
   select(clustering_vars) %>% 
-  kmeans(centers = 10, nstart = 20)
+  # Try 5 clusters (there are 5 racial/ethnic groups)
+  kmeans(centers = 5, nstart = 25)
 
-pulse_sample <- pulse_sample %>% 
-  mutate(clusters = factor(pulse_clusters$cluster))
+# Add cluster assignments to data frame
+pulse_clustered_data <- pulse_college_data %>% 
+  mutate(clusters = factor(pulse_all_clusters$cluster))
 
-plot_ly(pulse_sample, x = ~jitter(ANXIOUS), y = ~jitter(DOWN), z = ~jitter(prescription), type="scatter3d", mode="markers", color = ~clusters)
+# Create 3D plot of clusters
+# Since all answers are integers 1:4, use jitter for better visualization
+# ADD TITLES AND DO SHINY
+plot_ly(pulse_clustered_data, x = ~jitter(prescription), y = ~jitter(mental_health_services), z = ~jitter(no_access), type="scatter3d", mode="markers", color = ~clusters)
 
-ggplot(data = pulse_sample, aes(x = ANXIOUS, y = DOWN)) +
-  geom_point(aes(color = clusters), position = "jitter") +
-  geom_text_repel(aes(label = race_ethnicity, color = clusters, size = 3))
-
-
-# For each cluster, calculate percent of each cluster that is each race/ethnicity 
-set.seed(1984)
-pulse_sample_grouped <- pulse_sample %>% 
-  group_by(clusters) %>% 
-  count(race_ethnicity) %>% 
-  mutate(total = sum(n),
-         percent_type = n/total) %>% 
-  pivot_wider(names_from = race_ethnicity,
-              values_from = percent_type) %>% 
-  mutate_all(~replace(., is.na(.), 0)) %>% 
-  janitor::clean_names() %>% 
-  summarise(hispanic_or_latino = sum(hispanic_or_latino),
-            non_hispanic_asian = sum(non_hispanic_asian),
-            non_hispanic_white = sum(non_hispanic_white),
-            non_hispanic_other_multiple_races = sum(non_hispanic_other_multiple_races),
-            non_hispanic_black = sum(non_hispanic_black))
-
-
-# LOL, elbow plot
+# Check usefulness of 5 clusters with elbow plot
 elbow_plot <- data.frame(clusters = 1:10,
-                         within_ss = rep(NA, 20))
+                         within_ss = rep(NA, 10))
 
 set.seed(1984)
 for (i in 1:10){
-  pulse_out <- pulse_sample %>% 
+  pulse_out <- pulse_clustered_data %>% 
     select(clustering_vars) %>% 
-    kmeans(centers = i, nstart = 20)
+    kmeans(centers = i, nstart = 25)
   
   elbow_plot$within_ss[i] <- pulse_out$tot.withinss
 }
 
 # Construct elbow plot
 ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
-  geom_point() + 
+  geom_point() +
   geom_line() +
   scale_x_continuous(breaks = 1:10) +
   labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
-
-################
-# FULL DATASET #
-################
+# Indeed, 5 or 6 clusters seems roughly optimal
 
 
-# cluster
-
-set.seed(1984)
-# clustering_vars <- c("ANXIOUS", "DOWN", "prescription", "mental_health_services", "no_access")
-clustering_vars <- c("prescription", "mental_health_services", "no_access", "healthcare")
-# clustering_vars <- c("prescription", "mental_health_services", "no_access")
-
-pulse_all_clusters <- pulse_college_data %>% 
-  select(clustering_vars) %>% 
-  kmeans(centers = 5, nstart = 25)
-
-pulse_clustered_data <- pulse_college_data %>% 
-  mutate(clusters = factor(pulse_all_clusters$cluster))
-
-plot_ly(pulse_clustered_data, x = ~jitter(prescription), y = ~jitter(mental_health_services), z = ~jitter(no_access), type="scatter3d", mode="markers", color = ~clusters)
-# 
-# ggplot(data = pulse_sample, aes(x = ANXIOUS, y = DOWN)) +
-#   geom_point(aes(color = clusters), position = "jitter") +
-#   geom_text_repel(aes(label = race_ethnicity, color = clusters, size = 3))
-
-
-# For each cluster, calculate percent of each cluster that is each race/ethnicity 
-set.seed(1984)
+# Investigate information in the clusters
+# Compare distribution of racial/ethnic groups in each cluster to that of all respondents
 pulse_grouped <- pulse_clustered_data %>% 
+  # For each cluster, count number of respondents in each racial/ethnic group
   group_by(clusters) %>% 
   count(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent_type = n/total) %>% 
+         prop_type = n/total) %>% 
   pivot_wider(names_from = race_ethnicity,
-              values_from = percent_type) %>% 
+              values_from = prop_type) %>% 
   mutate_all(~replace(., is.na(.), 0)) %>% 
   janitor::clean_names() %>% 
   summarise(hispanic_or_latino = sum(hispanic_or_latino),
@@ -287,10 +228,8 @@ pulse_grouped <- pulse_clustered_data %>%
             non_hispanic_other_multiple_races = sum(non_hispanic_other_multiple_races),
             non_hispanic_black = sum(non_hispanic_black))
 
-# for each cluster, find the percent of individuals in the cluster with healthcare
-# percent with each of the other variables
-# none, acute, or chronic anxiety or depression
-
+# Compare access of healthcare across clusters with animated bar chart
+# Find percent of individuals in each cluster taking prescription
 pres_sum <- pulse_clustered_data %>% 
   group_by(clusters) %>% 
   count(prescription) %>% 
@@ -300,6 +239,7 @@ pres_sum <- pulse_clustered_data %>%
   rename(value = prescription) %>% 
   select(-c(n, total))
 
+# Receiving counseling or similar 
 mhs_sum <- pulse_clustered_data %>% 
   group_by(clusters) %>% 
   count(mental_health_services) %>% 
@@ -309,6 +249,7 @@ mhs_sum <- pulse_clustered_data %>%
   rename(value = mental_health_services) %>% 
   select(-c(n, total))
 
+# Needing access but not receiving
 no_a_sum <- pulse_clustered_data %>% 
   group_by(clusters) %>% 
   count(no_access) %>% 
@@ -317,8 +258,11 @@ no_a_sum <- pulse_clustered_data %>%
          type = "no_a") %>% 
   rename(value = no_access) %>% 
   select(-c(n, total)) %>% 
+  # Align with the other variables, where `1` indicates access to healthcare of some sort
+  # Flip `1` and `2` so `1` indicates needing and receiving / not needing, and `2` indicates needing but not receiving access
   mutate(value = recode(value, `1` = 2, `2` = 1))
 
+# Having some type of healthcare coverage
 healthcare_sum <- pulse_clustered_data %>% 
   group_by(clusters) %>% 
   count(healthcare) %>% 
@@ -328,13 +272,10 @@ healthcare_sum <- pulse_clustered_data %>%
   rename(value = healthcare) %>% 
   select(-c(n, total))
 
+# Combine above dataframes
+clusters_characteristics <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum)
 
-# https://ugoproto.github.io/ugo_r_doc/pdf/gganimate.pdf
-
-meep <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum)
-# meep <- no_a_sum %>% 
-#   full_join(pres_sum, by = "clusters")
-
+# Try an individual stacked bar chart
 stacked <- ggplot(data = pres_sum) +
   geom_col(mapping = aes(x = clusters,
                          y = percent_type,
@@ -342,12 +283,6 @@ stacked <- ggplot(data = pres_sum) +
   coord_flip()
 stacked
 
-stacked2 <- ggplot(data = no_a_sum) +
-  geom_col(mapping = aes(x = clusters,
-                         y = percent_type,
-                         fill = value)) +
-  coord_flip()
-stacked2
 
 # animate_hc <- ggplot(data = meep) +
 #   geom_col(mapping = aes(x = clusters,
@@ -357,6 +292,7 @@ stacked2
 #   enter_grow() +
 #   exit_shrink()
 
+# Try animation
 animate_hc <- ggplot(data = meep) +
   geom_col(mapping = aes(x = clusters,
                          y = percent_type,
@@ -381,7 +317,6 @@ animate_hc <- ggplot(data = meep) +
 # enter_drift("2", x_mod = 0, y_mod = -meep$percent_type) +
 # exit_drift("2", x_mod = 0, y_mod = -meep$percent_type)
 
-# 
 
 # animate_hc <- ggplot(data = meep) +
 #   geom_col(mapping = aes(x = clusters,
@@ -399,9 +334,9 @@ animate_hc <- ggplot(data = meep) +
 
 animate(animate_hc, renderer=gifski_renderer("test.gif"))
 
-
-################################################################################
-# network
+################################
+# Racial/Ethnic Groups Network #
+################################
 
 r_e_network <- pulse_college_data %>% 
   select(race_ethnicity, prescription, mental_health_services, no_access, healthcare, ANXIOUS, DOWN) 
@@ -475,19 +410,29 @@ r_e_network <- pulse_college_data %>%
 #   select(race_ethnicity, prop_hc, type) %>% 
 #   distinct()
 
+# Use mental health / healthcare access variables to show similarities between racial/ethnic groups
+# Quantify similarities to use as edges in network
+
+# Anxiety
 anxiety_net <- r_e_network %>% 
+  # For each racial/ethnic group, count individuals in each level of the variable
   group_by(race_ethnicity, ANXIOUS) %>% 
   count(ANXIOUS) %>% 
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
+  # Calculate percent of individuals experiencing no, some, etc. anxiety
   mutate(total = sum(n),
          percent_a = n*100/total,
          type = "anx") %>% 
+  # Keep only individuals experiencing chronic anxiety
   filter(ANXIOUS == c(3, 4)) %>% 
   mutate(percent = sum(percent_a)) %>% 
+  # Keep needed columns 
   select(race_ethnicity, percent, type) %>% 
+  # Remove repeated rows
   distinct()
 
+# Depression
 depression_net <- r_e_network %>% 
   group_by(race_ethnicity, DOWN) %>% 
   count(DOWN) %>% 
@@ -501,6 +446,7 @@ depression_net <- r_e_network %>%
   select(race_ethnicity, percent, type) %>% 
   distinct()
 
+# Prescription medication
 presc_net <- r_e_network %>% 
   group_by(race_ethnicity, prescription) %>% 
   count(prescription) %>% 
@@ -509,10 +455,12 @@ presc_net <- r_e_network %>%
   mutate(total = sum(n),
          percent = n/total*100,
          type = "presc") %>% 
+  # Keep only individuals taking prescription medications
   filter(prescription == 1) %>% 
   select(race_ethnicity, percent, type) %>% 
   distinct()
 
+# Mental health counseling or similar service
 mhs_net <- r_e_network %>% 
   group_by(race_ethnicity, mental_health_services) %>% 
   count(mental_health_services) %>% 
@@ -525,6 +473,7 @@ mhs_net <- r_e_network %>%
   select(race_ethnicity, percent, type) %>% 
   distinct()
 
+# Needed access to mental health services but did not receive them
 no_a_net <- r_e_network %>% 
   group_by(race_ethnicity, no_access) %>% 
   count(no_access) %>% 
@@ -537,6 +486,7 @@ no_a_net <- r_e_network %>%
   select(race_ethnicity, percent, type) %>% 
   distinct()
 
+# Healthcare coverage
 hc_net <- r_e_network %>% 
   group_by(race_ethnicity, healthcare) %>% 
   count(healthcare) %>% 
@@ -549,7 +499,9 @@ hc_net <- r_e_network %>%
   select(race_ethnicity, percent, type) %>% 
   distinct()
 
+# Combine above data-frames for network 
 r_e_net <- rbind(anxiety_net, depression_net, presc_net, mhs_net, no_a_net, hc_net) %>% 
+  # Pivot wider to get column for each racial/ethnic group
   pivot_wider(names_from = race_ethnicity,
               values_from = percent)
 
@@ -559,14 +511,10 @@ race_ethnicity_Mat <- t(combn(names(r_e_net[,-1]), 2))
 # Pre-allocate space for a count vector
 race_ethnicity_close <- integer(nrow(race_ethnicity_Mat))
 
-# df <- data.frame(matrix(nrow = nrow(r_e_net), ncol = nrow(race_ethnicity_Mat)+1))
-# df[,1] <- c("anx", "dep", "presc", "mhs", "no_a", "hc")
-
-
 # Loop through race_ethnicity combos 
 for(i in 1:nrow(race_ethnicity_Mat)) {
   r_e_1 <- r_e_net[, race_ethnicity_Mat[i,]]
-  # get the number of days each pair of states shared and put result in count vector
+  # Get difference in percent of individuals for each combination of racial/ethnic groups, for each variable, and put result in count vector
   race_ethnicity_close[i] <- abs(r_e_1[, 1] - r_e_1[, 2])
 }
 
@@ -578,13 +526,18 @@ for(i in 1:nrow(race_ethnicity_Mat)) {
 #                                 "race_ethnicity_two" = race_ethnicity_Mat[,2], 
 #                                 "closeness"= race_ethnicity_close)
 
-
+# Convert list to dataframe
 r_e_network_final <- rbind.data.frame(race_ethnicity_close) 
+# Transpose so group combinations are the rows
 r_e_network_final <- t(r_e_network_final)
+# Get rid of row names (artifact of `rbind.data.frame()`
 rownames(r_e_network_final) <- NULL
+# Reassign to data frame 
 r_e_network_final <- as.data.frame(r_e_network_final) %>% 
+  # Add group combinations 
   mutate("race_ethnicity_one" = race_ethnicity_Mat[,1], 
          "race_ethnicity_two" = race_ethnicity_Mat[,2]) %>% 
+  # Manually assign corresponding column names
   rename("anx" = V1,
          "dep" = V2, 
          "presc" = V3, 
@@ -593,20 +546,18 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          "hc" = V6) %>% 
   select(race_ethnicity_one, race_ethnicity_two, anx)
 
+# Create igraph object
 r_e_igraph <- graph_from_data_frame(r_e_network_final, directed = FALSE)
 
+# Assign to visNetwork object
 r_e_visNetwork <- toVisNetworkData(r_e_igraph)
 
-# Convert edges from differences in prop to differences in percent
-# Better for visualizing on the network
+# Get nodes and weighted edges 
 r_e_edges <- r_e_visNetwork$edges %>% 
   mutate(width = anx)
 r_e_nodes <- r_e_visNetwork$nodes 
 
-
-
-
-
+# Create network
 visNetwork(r_e_nodes, r_e_edges, height = "700px", width = "100%", 
            main = list(text = "yeehaw", 
                        style = "font-family:Arial;font-size:20px"
@@ -719,24 +670,6 @@ visNetwork(r_e_nodes, r_e_edges, height = "700px", width = "100%",
 
 
 
-elbow_plot <- data.frame(clusters = 1:10,
-                         within_ss = rep(NA, 10))
-
-set.seed(1984)
-for (i in 1:10){
-  pulse_out <- pulse_clustered_data %>% 
-    select(clustering_vars) %>% 
-    kmeans(centers = i, nstart = 25)
-  
-  elbow_plot$within_ss[i] <- pulse_out$tot.withinss
-}
-
-# Construct elbow plot
-ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
-  geom_point() +
-  geom_line() +
-  scale_x_continuous(breaks = 1:10) +
-  labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
 
 
 # Quantify changes in proportion
