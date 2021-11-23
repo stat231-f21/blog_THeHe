@@ -7,6 +7,10 @@ library(ggrepel)
 library(plotly)
 library(gganimate)
 library(gifski)
+library(igraph)
+library(visNetwork)
+library(ggnetwork)
+library(grDevices)
 
 # Load Pulse Survey datasets
 week22 <- read.csv("data/pulse/pulse2021_puf_22.csv")
@@ -32,6 +36,7 @@ week39 <- read.csv("data/pulse/pulse2021_puf_39.csv")
 
 ###################################
 # Wrangle pulse survey data sets  #
+# Using same wrangling as before  #
 ###################################
 
 # Prior to joining weeks, select variables of interest
@@ -74,12 +79,6 @@ pulse_college_data <- pulse_data %>%
   # Filter out cases that did not respond to our variables of interest
   filter(ANXIOUS != -99, ANXIOUS != -88, DOWN != -99, DOWN != -88, PRESCRIPT != -99, PRESCRIPT != -88, MH_SVCS != -99, MH_SVCS != -88, MH_NOTGET != -99, MH_NOTGET != -88,
          HLTHINS1 != -99, HLTHINS1 != -88, HLTHINS2 != -99, HLTHINS2 != -88, HLTHINS3 != -99, HLTHINS3 != -88, HLTHINS4 != -99, HLTHINS4 != -88, HLTHINS5 != -99, HLTHINS5 != -88, HLTHINS6 != -99, HLTHINS6 != -88, HLTHINS7 != -99, HLTHINS7 != -88, HLTHINS8 != -99, HLTHINS8 != -88) %>% 
-  # # Recode anxiety
-  # mutate(anxiety = case_when(ANXIOUS == 1 ~ "No",
-  #                            (ANXIOUS == 2 |  ANXIOUS == 3 |  ANXIOUS == 4) ~ "Yes")) %>%
-  # # Recode depression
-  # mutate(depression = case_when(DOWN == 1 ~ "No",
-  #                               (DOWN == 2 |  DOWN == 3 |  DOWN == 4) ~ "Yes")) %>%
   # Recode states to two letter state codes
   mutate(state = case_when(EST_ST == "1" ~ "AL",
                            EST_ST == "2" ~ "AK",
@@ -150,25 +149,21 @@ pulse_college_data <- pulse_data %>%
                                      WEEK == 37 ~ as.Date("2021-09-01"),
                                      WEEK == 38 ~ as.Date("2021-09-15"),
                                      WEEK == 39 ~ as.Date("2021-09-29"))) %>% 
+  # Recode healthcare: any type of healthcare counts as having healthcare; answering no to all types of healthcare means the individual has no healthcare coverage
+  mutate(healthcare = case_when((HLTHINS1 == 1 | HLTHINS2 == 1 | HLTHINS3 == 1 | HLTHINS4 == 1 | HLTHINS5 == 1 | HLTHINS6 == 1 | HLTHINS7 == 1 | HLTHINS8 == 1) ~ 1,
+                                (HLTHINS1 == 2 & HLTHINS2 == 2 & HLTHINS3 == 2 & HLTHINS4 == 2 & HLTHINS5 == 2 & HLTHINS6 == 2 & HLTHINS7 == 2 & HLTHINS8 == 2) ~ 2)) %>% 
   # Rename other columns
   rename(week = WEEK, 
          birth_year = TBIRTH_YEAR,
          prescription = PRESCRIPT,
          mental_health_services = MH_SVCS,
-         no_access  = MH_NOTGET) %>% 
-  mutate(healthcare = case_when((HLTHINS1 == 1 | HLTHINS2 == 1 | HLTHINS3 == 1 | HLTHINS4 == 1 | HLTHINS5 == 1 | HLTHINS6 == 1 | HLTHINS7 == 1 | HLTHINS8 == 1) ~ 1,
-                                (HLTHINS1 == 2 & HLTHINS2 == 2 & HLTHINS3 == 2 & HLTHINS4 == 2 & HLTHINS5 == 2 & HLTHINS6 == 2 & HLTHINS7 == 2 & HLTHINS8 == 2) ~ 2))
+         no_access  = MH_NOTGET)
 
 #####################
 # Kmeans clustering #
 #####################
 
-# compare distribution to distribution of population for each group 
-# xcould also literally try plotting these like density plots... except that the values are discrete 1-4
-
-# 11/9
-# check percentages of pulse respondents in each group we care about
-
+# Get distribution of racial/ethnic groups for all respondents
 racial_ethnic_totals <- pulse_college_data %>% 
   group_by(race_ethnicity) %>% 
   count() %>% 
@@ -486,11 +481,11 @@ anxiety_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         prop_a = n/total,
+         percent_a = n*100/total,
          type = "anx") %>% 
   filter(ANXIOUS == c(3, 4)) %>% 
-  mutate(prop = sum(prop_a)) %>% 
-  select(race_ethnicity, prop, type) %>% 
+  mutate(percent = sum(percent_a)) %>% 
+  select(race_ethnicity, percent, type) %>% 
   distinct()
 
 depression_net <- r_e_network %>% 
@@ -499,11 +494,11 @@ depression_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         prop_d = n/total,
+         percent_d = n/total*100,
          type = "dep") %>% 
   filter(DOWN == c(3, 4)) %>% 
-  mutate(prop = sum(prop_d)) %>% 
-  select(race_ethnicity, prop, type) %>% 
+  mutate(percent = sum(percent_d)) %>% 
+  select(race_ethnicity, percent, type) %>% 
   distinct()
 
 presc_net <- r_e_network %>% 
@@ -512,10 +507,10 @@ presc_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         prop = n/total,
+         percent = n/total*100,
          type = "presc") %>% 
   filter(prescription == 1) %>% 
-  select(race_ethnicity, prop, type) %>% 
+  select(race_ethnicity, percent, type) %>% 
   distinct()
 
 mhs_net <- r_e_network %>% 
@@ -524,10 +519,10 @@ mhs_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         prop = n/total,
+         percent = n/total*100,
          type = "mhs") %>% 
   filter(mental_health_services == 1) %>% 
-  select(race_ethnicity, prop, type) %>% 
+  select(race_ethnicity, percent, type) %>% 
   distinct()
 
 no_a_net <- r_e_network %>% 
@@ -536,10 +531,10 @@ no_a_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         prop = n/total,
+         percent = n/total*100,
          type = "no_a") %>% 
   filter(no_access == 1) %>% 
-  select(race_ethnicity, prop, type) %>% 
+  select(race_ethnicity, percent, type) %>% 
   distinct()
 
 hc_net <- r_e_network %>% 
@@ -548,15 +543,15 @@ hc_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         prop = n/total,
+         percent = n/total*100,
          type = "hc") %>% 
   filter(healthcare == 1) %>% 
-  select(race_ethnicity, prop, type) %>% 
+  select(race_ethnicity, percent, type) %>% 
   distinct()
 
 r_e_net <- rbind(anxiety_net, depression_net, presc_net, mhs_net, no_a_net, hc_net) %>% 
   pivot_wider(names_from = race_ethnicity,
-              values_from = prop)
+              values_from = percent)
 
 # Create a matrix with all racial/ethnic combinations
 race_ethnicity_Mat <- t(combn(names(r_e_net[,-1]), 2))
@@ -595,10 +590,32 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          "presc" = V3, 
          "mhs" = V4,
          "no_a" = V5,
-         "hc" = V6)
+         "hc" = V6) %>% 
+  select(race_ethnicity_one, race_ethnicity_two, anx)
+
+r_e_igraph <- graph_from_data_frame(r_e_network_final, directed = FALSE)
+
+r_e_visNetwork <- toVisNetworkData(r_e_igraph)
+
+# Convert edges from differences in prop to differences in percent
+# Better for visualizing on the network
+r_e_edges <- r_e_visNetwork$edges %>% 
+  mutate(width = anx)
+r_e_nodes <- r_e_visNetwork$nodes 
 
 
 
+
+
+visNetwork(r_e_nodes, r_e_edges, height = "700px", width = "100%", 
+           main = list(text = "yeehaw", 
+                       style = "font-family:Arial;font-size:20px"
+           )) %>%
+  visNodes(size = 10) %>%
+  visOptions(highlightNearest = list(enabled = TRUE, hover = TRUE), 
+             nodesIdSelection = TRUE) %>%
+  visPhysics(stabilization = FALSE) %>%
+  visEdges(color = list(color = "black", highlight = "red")) 
 
 
 
