@@ -570,9 +570,9 @@ visNetwork(r_e_nodes, r_e_edges, height = "700px", width = "100%",
 
 
 
-# 
-# 
-# 
+
+# Tried putting together network data frame in a smarter way but could not make it work
+
 # r_e_network_final <- data.frame("race_ethnicity_one" = race_ethnicity_Mat[,1], 
 #                                 "race_ethnicity_two" = race_ethnicity_Mat[,2]) %>% 
 #   left_join(ugh)
@@ -633,52 +633,11 @@ visNetwork(r_e_nodes, r_e_edges, height = "700px", width = "100%",
 
 
 
-
-################################################################################
-
-
-# Check by state
-# Same thing happening
-# pulse_grouped_states <- pulse_clustered_data %>% 
-#   group_by(clusters) %>% 
-#   count(state) %>% 
-#   mutate(total = sum(n),
-#          percent_type = n/total) %>% 
-#   pivot_wider(names_from = state,
-#               values_from = percent_type) %>% 
-#   mutate_all(~replace(., is.na(.), 0)) %>% 
-#   janitor::clean_names() %>% 
-#   summarise(ak = sum(ak), 
-#             al = sum(al),
-#             ar = sum(ar),
-#             az = sum(az)) # etc.
-# 
-# # Check by other mental health variables
-# set.seed(1984)
-# pulse_grouped_mh <- pulse_clustered_data %>% 
-#   mutate(no_access = as.character(no_access)) %>% 
-#   group_by(clusters) %>% 
-#   count(no_access) %>% 
-#   mutate(total = sum(n),
-#          prop_type = n/total) %>% 
-#   pivot_wider(names_from = no_access,
-#               values_from = prop_type) %>% 
-#   mutate_all(~replace(., is.na(.), 0)) %>% 
-#   janitor::clean_names() %>% 
-#   summarise(x1 = sum(x1), 
-#             x2 = sum(x2)) # etc.
-
-
-
-
-
-# Quantify changes in proportion
-
-
-
 ###########
 # Dim Red #
 ###########
+
+# Not using!
 pulse_college_data <- pulse_college_data %>% 
   tibble::rowid_to_column("index")
 pulse_svd <- pulse_college_data %>% 
@@ -714,184 +673,3 @@ ggplot(data = pulses, aes(x = pc_1, y = pc_2)) +
   ylab("Second Best Vector from SVD") + 
   scale_color_brewer(palette = "Set2")
 
-
-
-
-
-# ESSENTIALLY IGNORE THIS
-
-###############################
-# Try the yes/no distinction #
-##############################
-# Changes nothing!
-
-pulse_college_data <- pulse_data %>%
-  # Filter out people outside of age range 18-25
-  filter(TBIRTH_YEAR %in% (1998:2003)) %>%
-  # Create new column for race/ethnicity
-  mutate(race_ethnicity = case_when(RHISPANIC == 2 ~ "Hispanic or Latino", 
-                                    (RHISPANIC == 1 & RRACE == 1) ~ "Non-Hispanic White",
-                                    (RHISPANIC == 1 & RRACE == 2) ~ "Non-Hispanic Black",
-                                    (RHISPANIC == 1 & RRACE == 3) ~ "Non-Hispanic Asian",
-                                    (RHISPANIC == 1 & RRACE == 4) ~ "Non-Hispanic Other/Multiple Races")) %>%
-  # Filter out cases that did not respond to our variables of interest
-  filter(ANXIOUS != -99, ANXIOUS != -88, DOWN != -99, DOWN != -88, PRESCRIPT != -99, PRESCRIPT != -88, MH_SVCS != -99, MH_SVCS != -88, MH_NOTGET != -99, MH_NOTGET != -88) %>% 
-  # Recode anxiety
-  mutate(anxiety = case_when(ANXIOUS == 1 ~ 1,
-                             (ANXIOUS == 2 |  ANXIOUS == 3 |  ANXIOUS == 4) ~ 2)) %>%
-  # Recode depression
-  mutate(depression = case_when(DOWN == 1 ~ 1,
-                                (DOWN == 2 |  DOWN == 3 |  DOWN == 4) ~ 2)) %>%
-  # Recode states to two letter state codes
-  mutate(state = case_when(EST_ST == "1" ~ "AL",
-                           EST_ST == "2" ~ "AK",
-                           EST_ST == "4" ~ "AZ",
-                           EST_ST == "5" ~ "AR",
-                           EST_ST == '6' ~ "CA",
-                           EST_ST == '8' ~ "CO",
-                           EST_ST == '9' ~ "CT",
-                           EST_ST == '10' ~ "DE",
-                           EST_ST == '12' ~ "FL",
-                           EST_ST == '13' ~ "GA",
-                           EST_ST == '15' ~ "HI",
-                           EST_ST == '16' ~ "ID",
-                           EST_ST == '17' ~ "IL",
-                           EST_ST == '18' ~ "IN",
-                           EST_ST == '19' ~ "IA",
-                           EST_ST == '20' ~ "KS",
-                           EST_ST == '21' ~ "KY",
-                           EST_ST == '22' ~ "LA",
-                           EST_ST == '23' ~ "ME",
-                           EST_ST == '24' ~ "MD",
-                           EST_ST == '25' ~ "MA",
-                           EST_ST == '26' ~ "MI",
-                           EST_ST == '27' ~ "MN",
-                           EST_ST == '28' ~ "MS",
-                           EST_ST == '29' ~ "MO",
-                           EST_ST == '30' ~ "MT",
-                           EST_ST == '31' ~ "NE",
-                           EST_ST == '32' ~ "NV",
-                           EST_ST == '33' ~ "NH",
-                           EST_ST == '34' ~ "NJ",
-                           EST_ST == '35' ~ "NM",
-                           EST_ST == '36' ~ "NY",
-                           EST_ST == '37' ~ "NC",
-                           EST_ST == '38' ~ "ND",
-                           EST_ST == '39' ~ "OH",
-                           EST_ST == '40' ~ "OK",
-                           EST_ST == '41' ~ "OR",
-                           EST_ST == '42' ~ "PA",
-                           EST_ST == '44' ~ "RI",
-                           EST_ST == '45' ~ "SC",
-                           EST_ST == '46' ~ "SD",
-                           EST_ST == '47' ~ "TN",
-                           EST_ST == '48' ~ "TX",
-                           EST_ST == '49' ~ "UT",
-                           EST_ST == '50' ~ "VT",
-                           EST_ST == '51' ~ "VA",
-                           EST_ST == '53' ~ "WA",
-                           EST_ST == '54' ~ "WV",
-                           EST_ST == '55' ~ "WI",
-                           EST_ST == '56' ~ "WY")) %>%
-  # Recode weeks to starting date
-  mutate(week_start_date = case_when(WEEK == 22 ~ as.Date("2021-01-06"),
-                                     WEEK == 23 ~ as.Date("2021-01-20"),
-                                     WEEK == 24 ~ as.Date("2021-02-03"),
-                                     WEEK == 25 ~ as.Date("2021-02-17"),
-                                     WEEK == 26 ~ as.Date("2021-03-03"),
-                                     WEEK == 27 ~ as.Date("2021-03-17"),
-                                     WEEK == 28 ~ as.Date("2021-04-14"),
-                                     WEEK == 29 ~ as.Date("2021-04-28"),
-                                     WEEK == 30 ~ as.Date("2021-05-12"),
-                                     WEEK == 31 ~ as.Date("2021-05-26"),
-                                     WEEK == 32 ~ as.Date("2021-06-09"),
-                                     WEEK == 33 ~ as.Date("2021-06-23"),
-                                     WEEK == 34 ~ as.Date("2021-07-21"),
-                                     WEEK == 35 ~ as.Date("2021-08-04"),
-                                     WEEK == 36 ~ as.Date("2021-08-18"),
-                                     WEEK == 37 ~ as.Date("2021-09-01"),
-                                     WEEK == 38 ~ as.Date("2021-09-15"),
-                                     WEEK == 39 ~ as.Date("2021-09-29"))) %>% 
-  # Rename other columns
-  rename(week = WEEK, 
-         birth_year = TBIRTH_YEAR,
-         prescription = PRESCRIPT,
-         mental_health_services = MH_SVCS,
-         no_access  = MH_NOTGET)
-
-racial_ethnic_totals <- pulse_college_data %>% 
-  group_by(race_ethnicity) %>% 
-  count() %>% 
-  ungroup() %>% 
-  mutate(total = sum(n),
-         prop_respondents = n/total)
-
-state_totals <- pulse_college_data %>% 
-  group_by(state) %>% 
-  count() %>% 
-  ungroup() %>% 
-  mutate(total = sum(n),
-         prop_respondents = n/total)
-
-
-################
-# FULL DATASET #
-################
-
-
-# cluster
-
-set.seed(1984)
-clustering_vars <- c("anxiety", "depression", "prescription", "mental_health_services", "no_access")
-
-pulse_all_clusters <- pulse_college_data %>% 
-  select(clustering_vars) %>% 
-  kmeans(centers = 5, nstart = 25)
-
-pulse_clustered_data <- pulse_college_data %>% 
-  mutate(clusters = factor(pulse_all_clusters$cluster))
-
-# plot_ly(pulse_sample, x = ~jitter(ANXIOUS), y = ~jitter(DOWN), z = ~jitter(prescription), type="scatter3d", mode="markers", color = ~clusters)
-# 
-# ggplot(data = pulse_sample, aes(x = ANXIOUS, y = DOWN)) +
-#   geom_point(aes(color = clusters), position = "jitter") +
-#   geom_text_repel(aes(label = race_ethnicity, color = clusters, size = 3))
-
-
-# For each cluster, calculate percent of each cluster that is each race/ethnicity 
-set.seed(1984)
-pulse_grouped <- pulse_clustered_data %>% 
-  group_by(clusters) %>% 
-  count(race_ethnicity) %>% 
-  mutate(total = sum(n),
-         percent_type = n/total) %>% 
-  pivot_wider(names_from = race_ethnicity,
-              values_from = percent_type) %>% 
-  mutate_all(~replace(., is.na(.), 0)) %>% 
-  janitor::clean_names() %>% 
-  summarise(hispanic_or_latino = sum(hispanic_or_latino),
-            non_hispanic_asian = sum(non_hispanic_asian),
-            non_hispanic_white = sum(non_hispanic_white),
-            non_hispanic_other_multiple_races = sum(non_hispanic_other_multiple_races),
-            non_hispanic_black = sum(non_hispanic_black))
-
-
-
-elbow_plot <- data.frame(clusters = 1:5,
-                         within_ss = rep(NA, 5))
-
-set.seed(1984)
-for (i in 1:5){
-  pulse_out <- pulse_clustered_data %>% 
-    select(clustering_vars) %>% 
-    kmeans(centers = i, nstart = 25)
-  
-  elbow_plot$within_ss[i] <- pulse_out$tot.withinss
-}
-
-# Construct elbow plot
-ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
-  geom_point() + 
-  geom_line() +
-  scale_x_continuous(breaks = 1:5) +
-  labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
