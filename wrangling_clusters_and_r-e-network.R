@@ -530,7 +530,7 @@ for(i in 1:nrow(race_ethnicity_Mat)) {
 r_e_network_final <- rbind.data.frame(race_ethnicity_close) 
 # Transpose so group combinations are the rows
 r_e_network_final <- t(r_e_network_final)
-# Get rid of row names (artifact of `rbind.data.frame()`
+# Get rid of row names (artifact of `rbind.data.frame()`)
 rownames(r_e_network_final) <- NULL
 # Reassign to data frame 
 r_e_network_final <- as.data.frame(r_e_network_final) %>% 
@@ -545,6 +545,9 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          "no_a" = V5,
          "hc" = V6) %>% 
   select(race_ethnicity_one, race_ethnicity_two, anx)
+
+# Save as csv
+write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
 
 # Create igraph object
 r_e_igraph <- graph_from_data_frame(r_e_network_final, directed = FALSE)
