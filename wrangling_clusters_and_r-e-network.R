@@ -163,14 +163,6 @@ pulse_college_data <- pulse_data %>%
 # Kmeans clustering #
 #####################
 
-# Get distribution of racial/ethnic groups for all respondents
-racial_ethnic_totals <- pulse_college_data %>% 
-  group_by(race_ethnicity) %>% 
-  count() %>% 
-  ungroup() %>% 
-  mutate(total = sum(n),
-         prop_respondents = n/total)
-
 # Set seed and cluster with healthcare access variables
 set.seed(1984)
 clustering_vars <- c("prescription", "mental_health_services", "no_access", "healthcare")
@@ -212,6 +204,7 @@ ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
 
 # Investigate information in the clusters
 # Compare distribution of racial/ethnic groups in each cluster to that of all respondents
+# Clusters
 pulse_grouped <- pulse_clustered_data %>% 
   # For each cluster, count number of respondents in each racial/ethnic group
   group_by(clusters) %>% 
@@ -226,7 +219,34 @@ pulse_grouped <- pulse_clustered_data %>%
             non_hispanic_asian = sum(non_hispanic_asian),
             non_hispanic_white = sum(non_hispanic_white),
             non_hispanic_other_multiple_races = sum(non_hispanic_other_multiple_races),
-            non_hispanic_black = sum(non_hispanic_black))
+            non_hispanic_black = sum(non_hispanic_black)) %>% 
+  pivot_longer(cols = -clusters,
+               names_to = "race_ethnicity") %>% 
+  mutate(race_ethnicity = case_when(race_ethnicity == "hispanic_or_latino" ~ "Hispanic or Latino",
+                                    race_ethnicity == "non_hispanic_asian" ~ "Non-Hispanic Asian",
+                                    race_ethnicity == "non_hispanic_white" ~ "Non-Hispanic White",
+                                    race_ethnicity == "non_hispanic_other_multiple_races" ~ "Non-Hispanic Other/Multiple Races",
+                                    race_ethnicity == "non_hispanic_black" ~ "Non-Hispanic Black"))
+
+# Get distribution of racial/ethnic groups for all respondents
+racial_ethnic_totals <- pulse_college_data %>% 
+  group_by(race_ethnicity) %>% 
+  count() %>% 
+  ungroup() %>% 
+  mutate(total = sum(n),
+         value = n/total,
+         clusters = "All respondents") %>% 
+  select(clusters, race_ethnicity, value) %>% 
+  # Combine with distribution within clusters
+  rbind(pulse_grouped)
+
+clusters_breakdown <- ggplot(data = racial_ethnic_totals, 
+                             mapping = aes(x = clusters,
+                                           y = value,
+                                           fill = race_ethnicity)) +
+  geom_col() +
+  coord_flip()
+clusters_breakdown
 
 # Compare access of healthcare across clusters with animated bar chart
 # Find percent of individuals in each cluster taking prescription
