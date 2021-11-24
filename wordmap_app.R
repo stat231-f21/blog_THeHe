@@ -1,5 +1,13 @@
 library(tidyverse)
 library(tidytext)
+library(sf)
+
+###########
+# mapping #
+###########
+
+state_map <- maps::map("state", plot = FALSE, fill = TRUE) %>% 
+  st_as_sf()
 
 ######
 # ui #
@@ -56,7 +64,20 @@ ui <- navbarPage(
 # server #
 ##########
 
-
+server <- function(input, output) {
+  
+  output$wordmap <- renderPlot({
+    
+    ggplot(data = state_map) +
+      geom_sf(fill = "white", color = "black") +
+      geom_text(aes(label = ))
+      theme_void()
+    
+    
+  })
+  
+  
+}
 
 ############
 # shinyApp #
