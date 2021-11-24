@@ -603,12 +603,18 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          "race_ethnicity_two" = race_ethnicity_Mat[,2]) %>% 
   # Manually assign corresponding column names
   rename("anx" = V1,
-         "dep" = V2, 
-         "presc" = V3, 
+         "dep" = V2,
+         "presc" = V3,
          "mhs" = V4,
          "no_a" = V5,
-         "hc" = V6) %>% 
-  select(race_ethnicity_one, race_ethnicity_two, anx)
+         "hc" = V6) %>%
+  # Subtract all values from 100, so the network will give more edge weight to smaller differences 
+  mutate(anx = 100-anx,
+         dep = 100-dep,
+         presc = 100-presc,
+         mhs = 100-mhs,
+         no_a = 100-no_a,
+         hc = 100-hc)
 
 # Save as csv
 write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
