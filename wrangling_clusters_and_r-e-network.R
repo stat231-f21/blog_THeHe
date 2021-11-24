@@ -174,6 +174,8 @@ pulse_all_clusters <- pulse_college_data %>%
 # Add cluster assignments to data frame
 pulse_clustered_data <- pulse_college_data %>% 
   mutate(clusters = factor(pulse_all_clusters$cluster))
+# Write to csv for Shiny app
+write.csv(pulse_clustered_data, file = "wrangled_csv_data/pulse_clustered_data.csv")
 
 # Create 3D plot of clusters
 # Since all answers are integers 1:4, use jitter for better visualization

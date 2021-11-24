@@ -10,6 +10,10 @@ library(ggnetwork)
 library(grDevices)
 library(shiny)
 
+# Read in data
+pulse_clustered_data <- read.csv("wrangled_csv_data/pulse_clustered_data.csv")
+
+
 # Set up choices for input variables
 # Choose 3 of the 4 vairables used to do the Kmeans Clustering
 choice_values <- c("prescription", "mental_health_services", "no_access", "healthcare")
