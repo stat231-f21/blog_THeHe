@@ -5,6 +5,8 @@ library(lubridate)
 library(mclust)
 library(ggrepel)
 library(plotly)
+library(gganimate)
+library(gifski)
 
 # Load Pulse Survey datasets
 week22 <- read.csv("data/pulse/pulse2021_puf_22.csv")
@@ -185,12 +187,12 @@ racial_ethnic_totals <- pulse_college_data %>%
   mutate(total = sum(n),
          prop_respondents = n/total)
 
-state_totals <- pulse_college_data %>% 
-  group_by(state) %>% 
-  count() %>% 
-  ungroup() %>% 
-  mutate(total = sum(n),
-         prop_respondents = n/total)
+# state_totals <- pulse_college_data %>% 
+#   group_by(state) %>% 
+#   count() %>% 
+#   ungroup() %>% 
+#   mutate(total = sum(n),
+#          prop_respondents = n/total)
 
 # SAMPLE 
 
@@ -300,6 +302,126 @@ pulse_grouped <- pulse_clustered_data %>%
             non_hispanic_white = sum(non_hispanic_white),
             non_hispanic_other_multiple_races = sum(non_hispanic_other_multiple_races),
             non_hispanic_black = sum(non_hispanic_black))
+
+# for each cluster, find the percent of individuals in the cluster with healthcare
+# percent with each of the other variables
+# none, acute, or chronic anxiety or depression
+
+pres_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(prescription) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "presc") %>% 
+  rename(value = prescription) %>% 
+  select(-c(n, total))
+
+mhs_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(mental_health_services) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "mhs") %>% 
+  rename(value = mental_health_services) %>% 
+  select(-c(n, total))
+
+no_a_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(no_access) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "no_a") %>% 
+  rename(value = no_access) %>% 
+  select(-c(n, total)) %>% 
+  mutate(value = recode(value, `1` = 2, `2` = 1))
+
+healthcare_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(healthcare) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "healthcare") %>% 
+  rename(value = healthcare) %>% 
+  select(-c(n, total))
+
+
+# https://ugoproto.github.io/ugo_r_doc/pdf/gganimate.pdf
+
+meep <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum)
+# meep <- no_a_sum %>% 
+#   full_join(pres_sum, by = "clusters")
+
+# individuals
+
+stacked <- ggplot(data = pres_sum) +
+  geom_col(mapping = aes(x = clusters,
+                         y = percent_type,
+                         fill = value)) +
+  coord_flip()
+stacked
+
+stacked2 <- ggplot(data = no_a_sum) +
+  geom_col(mapping = aes(x = clusters,
+                         y = percent_type,
+                         fill = value)) +
+  coord_flip()
+stacked2
+
+
+# attempting the animated one 
+
+# animate_hc <- ggplot(data = meep) +
+#   geom_col(mapping = aes(x = clusters,
+#                          y = percent_type,
+#                          fill = value)) +
+#   transition_states(type, transition_length = 3, state_length = 1) +
+#   enter_grow() +
+#   exit_shrink()
+
+animate_hc <- ggplot(data = meep) +
+  geom_col(mapping = aes(x = clusters,
+                         y = percent_type,
+                         fill = value)) +
+  transition_states(type, transition_length = 3, state_length = 1) +
+  enter_drift(x_mod = 0, y_mod = meep$percent_type) +
+  exit_drift(x_mod = 0, y_mod = meep$percent_type)
+
+# animate_hc <- ggplot(data = meep) +
+#   geom_col(data = meep %>% filter(value == 1),
+#            mapping = aes(x = clusters,
+#                          y = percent_type),
+#            fill = "coral2") +
+#   geom_col(data = meep %>% filter(value == 2),
+#            mapping = aes(x = clusters,
+#                          y = percent_type),
+#            fill = "deepskyblue1") +
+#   transition_states(type, transition_length = 3, state_length = 1) +
+#   enter_drift(x_mod = 0, y_mod = 1) +
+#   exit_drift(x_mod = 0, y_mod = meep$percent_type) 
+# +
+  # enter_drift("2", x_mod = 0, y_mod = -meep$percent_type) +
+  # exit_drift("2", x_mod = 0, y_mod = -meep$percent_type)
+
+# 
+
+# animate_hc <- ggplot(data = meep) +
+#   geom_col(mapping = aes(x = clusters,
+#                          y = percent_type,
+#                          fill = value)) +
+#   transition_states(type, transition_length = 3, state_length = 1) +
+#   enter_drift(x_mod = 0, y_mod = meep$percent_type) +
+#   exit_drift(x_mod = 0, y_mod = meep$percent_type)
+
+# animate_hc <- ggplot(data = meep, aes(x = clusters, y = percent_type)) +
+#   geom_col(mapping = aes(fill = value), position = "identity", width = 0.8) +
+#   transition_states(type, transition_length = 3, state_length = 1) +
+#   enter_drift(x_mod = 0, y_mod = meep$percent_type) +
+#   exit_drift(x_mod = 0, y_mod = meep$percent_type)
+
+animate(animate_hc, renderer=gifski_renderer("test.gif"))
+
+
+
 
 # Check by state
 # Same thing happening
