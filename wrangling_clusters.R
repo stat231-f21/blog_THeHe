@@ -5,6 +5,8 @@ library(lubridate)
 library(mclust)
 library(ggrepel)
 library(plotly)
+library(gganimate)
+library(gifski)
 
 # Load Pulse Survey datasets
 week22 <- read.csv("data/pulse/pulse2021_puf_22.csv")
@@ -46,7 +48,7 @@ week39 <- read.csv("data/pulse/pulse2021_puf_39.csv")
 # Prior to joining weeks, select variables of interest
 for (i in 22:39) {
   assign(paste0("week", i),
-         eval(parse(text = paste0("week", i))) %>% select(TBIRTH_YEAR, RHISPANIC, RRACE, ANXIOUS, WORRY, INTEREST, DOWN, PRESCRIPT, MH_SVCS, MH_NOTGET, EST_ST, WEEK))
+         eval(parse(text = paste0("week", i))) %>% select(TBIRTH_YEAR, RHISPANIC, RRACE, ANXIOUS, WORRY, INTEREST, DOWN, PRESCRIPT, MH_SVCS, MH_NOTGET, EST_ST, WEEK, HLTHINS1, HLTHINS2, HLTHINS3, HLTHINS4, HLTHINS5, HLTHINS6, HLTHINS7, HLTHINS8))
 }
 
 # Join pulse data sets with dates from weeks 22 to 32
@@ -58,11 +60,13 @@ second_phase <- rbind(week33, week34, week35, week36, week37, week38, week39)
 # Mutate data sets to include a variable indicating whether it's from first or second phase
 first_phase <- first_phase %>%
   mutate(phase = "first") %>%
-  select(TBIRTH_YEAR, RHISPANIC, RRACE, ANXIOUS, WORRY, INTEREST, DOWN, PRESCRIPT, MH_SVCS, MH_NOTGET, EST_ST, WEEK, phase)
+  select(TBIRTH_YEAR, RHISPANIC, RRACE, ANXIOUS, WORRY, INTEREST, DOWN, PRESCRIPT, MH_SVCS, MH_NOTGET, EST_ST, WEEK, phase,
+         HLTHINS1, HLTHINS2, HLTHINS3, HLTHINS4, HLTHINS5, HLTHINS6, HLTHINS7, HLTHINS8)
 
 second_phase <- second_phase %>%
   mutate(phase = "second") %>%
-  select(TBIRTH_YEAR, RHISPANIC, RRACE, ANXIOUS, WORRY, INTEREST, DOWN, PRESCRIPT, MH_SVCS, MH_NOTGET, EST_ST, WEEK, phase)
+  select(TBIRTH_YEAR, RHISPANIC, RRACE, ANXIOUS, WORRY, INTEREST, DOWN, PRESCRIPT, MH_SVCS, MH_NOTGET, EST_ST, WEEK, phase,
+         HLTHINS1, HLTHINS2, HLTHINS3, HLTHINS4, HLTHINS5, HLTHINS6, HLTHINS7, HLTHINS8)
 
 # Join pulse survey data sets with dates from weeks 22 to 39
 pulse_data <- rbind(first_phase, second_phase)
@@ -79,7 +83,8 @@ pulse_college_data <- pulse_data %>%
                                     (RHISPANIC == 1 & RRACE == 3) ~ "Non-Hispanic Asian",
                                     (RHISPANIC == 1 & RRACE == 4) ~ "Non-Hispanic Other/Multiple Races")) %>%
   # Filter out cases that did not respond to our variables of interest
-  filter(ANXIOUS != -99, ANXIOUS != -88, DOWN != -99, DOWN != -88, PRESCRIPT != -99, PRESCRIPT != -88, MH_SVCS != -99, MH_SVCS != -88, MH_NOTGET != -99, MH_NOTGET != -88) %>% 
+  filter(ANXIOUS != -99, ANXIOUS != -88, DOWN != -99, DOWN != -88, PRESCRIPT != -99, PRESCRIPT != -88, MH_SVCS != -99, MH_SVCS != -88, MH_NOTGET != -99, MH_NOTGET != -88,
+         HLTHINS1 != -99, HLTHINS1 != -88, HLTHINS2 != -99, HLTHINS2 != -88, HLTHINS3 != -99, HLTHINS3 != -88, HLTHINS4 != -99, HLTHINS4 != -88, HLTHINS5 != -99, HLTHINS5 != -88, HLTHINS6 != -99, HLTHINS6 != -88, HLTHINS7 != -99, HLTHINS7 != -88, HLTHINS8 != -99, HLTHINS8 != -88) %>% 
   # # Recode anxiety
   # mutate(anxiety = case_when(ANXIOUS == 1 ~ "No",
   #                            (ANXIOUS == 2 |  ANXIOUS == 3 |  ANXIOUS == 4) ~ "Yes")) %>%
@@ -161,7 +166,9 @@ pulse_college_data <- pulse_data %>%
          birth_year = TBIRTH_YEAR,
          prescription = PRESCRIPT,
          mental_health_services = MH_SVCS,
-         no_access  = MH_NOTGET)
+         no_access  = MH_NOTGET) %>% 
+  mutate(healthcare = case_when((HLTHINS1 == 1 | HLTHINS2 == 1 | HLTHINS3 == 1 | HLTHINS4 == 1 | HLTHINS5 == 1 | HLTHINS6 == 1 | HLTHINS7 == 1 | HLTHINS8 == 1) ~ 1,
+                                (HLTHINS1 == 2 & HLTHINS2 == 2 & HLTHINS3 == 2 & HLTHINS4 == 2 & HLTHINS5 == 2 & HLTHINS6 == 2 & HLTHINS7 == 2 & HLTHINS8 == 2) ~ 2))
 
 #####################
 # Kmeans clustering #
@@ -180,12 +187,12 @@ racial_ethnic_totals <- pulse_college_data %>%
   mutate(total = sum(n),
          prop_respondents = n/total)
 
-state_totals <- pulse_college_data %>% 
-  group_by(state) %>% 
-  count() %>% 
-  ungroup() %>% 
-  mutate(total = sum(n),
-         prop_respondents = n/total)
+# state_totals <- pulse_college_data %>% 
+#   group_by(state) %>% 
+#   count() %>% 
+#   ungroup() %>% 
+#   mutate(total = sum(n),
+#          prop_respondents = n/total)
 
 # SAMPLE 
 
@@ -203,7 +210,7 @@ set.seed(1984)
 clustering_vars <- c("ANXIOUS", "DOWN", "prescription", "mental_health_services", "no_access")
 pulse_clusters <- pulse_sample %>% 
   select(clustering_vars) %>% 
-  kmeans(centers = 5, nstart = 20)
+  kmeans(centers = 10, nstart = 20)
 
 pulse_sample <- pulse_sample %>% 
   mutate(clusters = factor(pulse_clusters$cluster))
@@ -262,7 +269,8 @@ ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
 
 set.seed(1984)
 # clustering_vars <- c("ANXIOUS", "DOWN", "prescription", "mental_health_services", "no_access")
-clustering_vars <- c("prescription", "mental_health_services", "no_access")
+clustering_vars <- c("prescription", "mental_health_services", "no_access", "healthcare")
+# clustering_vars <- c("prescription", "mental_health_services", "no_access")
 
 pulse_all_clusters <- pulse_college_data %>% 
   select(clustering_vars) %>% 
@@ -295,44 +303,164 @@ pulse_grouped <- pulse_clustered_data %>%
             non_hispanic_other_multiple_races = sum(non_hispanic_other_multiple_races),
             non_hispanic_black = sum(non_hispanic_black))
 
-# Check by state
-# Same thing happening
-pulse_grouped_states <- pulse_clustered_data %>% 
-  group_by(clusters) %>% 
-  count(state) %>% 
-  mutate(total = sum(n),
-         percent_type = n/total) %>% 
-  pivot_wider(names_from = state,
-              values_from = percent_type) %>% 
-  mutate_all(~replace(., is.na(.), 0)) %>% 
-  janitor::clean_names() %>% 
-  summarise(ak = sum(ak), 
-            al = sum(al),
-            ar = sum(ar),
-            az = sum(az)) # etc.
+# for each cluster, find the percent of individuals in the cluster with healthcare
+# percent with each of the other variables
+# none, acute, or chronic anxiety or depression
 
-# Check by other mental health variables
-set.seed(1984)
-pulse_grouped_mh <- pulse_clustered_data %>% 
-  mutate(no_access = as.character(no_access)) %>% 
+pres_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(prescription) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "presc") %>% 
+  rename(value = prescription) %>% 
+  select(-c(n, total))
+
+mhs_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(mental_health_services) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "mhs") %>% 
+  rename(value = mental_health_services) %>% 
+  select(-c(n, total))
+
+no_a_sum <- pulse_clustered_data %>% 
   group_by(clusters) %>% 
   count(no_access) %>% 
   mutate(total = sum(n),
-         prop_type = n/total) %>% 
-  pivot_wider(names_from = no_access,
-              values_from = prop_type) %>% 
-  mutate_all(~replace(., is.na(.), 0)) %>% 
-  janitor::clean_names() %>% 
-  summarise(x1 = sum(x1), 
-            x2 = sum(x2)) # etc.
+         percent_type = n/total,
+         type = "no_a") %>% 
+  rename(value = no_access) %>% 
+  select(-c(n, total)) %>% 
+  mutate(value = recode(value, `1` = 2, `2` = 1))
+
+healthcare_sum <- pulse_clustered_data %>% 
+  group_by(clusters) %>% 
+  count(healthcare) %>% 
+  mutate(total = sum(n),
+         percent_type = n/total,
+         type = "healthcare") %>% 
+  rename(value = healthcare) %>% 
+  select(-c(n, total))
+
+
+# https://ugoproto.github.io/ugo_r_doc/pdf/gganimate.pdf
+
+meep <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum)
+# meep <- no_a_sum %>% 
+#   full_join(pres_sum, by = "clusters")
+
+# individuals
+
+stacked <- ggplot(data = pres_sum) +
+  geom_col(mapping = aes(x = clusters,
+                         y = percent_type,
+                         fill = value)) +
+  coord_flip()
+stacked
+
+stacked2 <- ggplot(data = no_a_sum) +
+  geom_col(mapping = aes(x = clusters,
+                         y = percent_type,
+                         fill = value)) +
+  coord_flip()
+stacked2
+
+
+# attempting the animated one 
+
+# animate_hc <- ggplot(data = meep) +
+#   geom_col(mapping = aes(x = clusters,
+#                          y = percent_type,
+#                          fill = value)) +
+#   transition_states(type, transition_length = 3, state_length = 1) +
+#   enter_grow() +
+#   exit_shrink()
+
+animate_hc <- ggplot(data = meep) +
+  geom_col(mapping = aes(x = clusters,
+                         y = percent_type,
+                         fill = value)) +
+  transition_states(type, transition_length = 3, state_length = 1) +
+  enter_drift(x_mod = 0, y_mod = meep$percent_type) +
+  exit_drift(x_mod = 0, y_mod = meep$percent_type)
+
+# animate_hc <- ggplot(data = meep) +
+#   geom_col(data = meep %>% filter(value == 1),
+#            mapping = aes(x = clusters,
+#                          y = percent_type),
+#            fill = "coral2") +
+#   geom_col(data = meep %>% filter(value == 2),
+#            mapping = aes(x = clusters,
+#                          y = percent_type),
+#            fill = "deepskyblue1") +
+#   transition_states(type, transition_length = 3, state_length = 1) +
+#   enter_drift(x_mod = 0, y_mod = 1) +
+#   exit_drift(x_mod = 0, y_mod = meep$percent_type) 
+# +
+  # enter_drift("2", x_mod = 0, y_mod = -meep$percent_type) +
+  # exit_drift("2", x_mod = 0, y_mod = -meep$percent_type)
+
+# 
+
+# animate_hc <- ggplot(data = meep) +
+#   geom_col(mapping = aes(x = clusters,
+#                          y = percent_type,
+#                          fill = value)) +
+#   transition_states(type, transition_length = 3, state_length = 1) +
+#   enter_drift(x_mod = 0, y_mod = meep$percent_type) +
+#   exit_drift(x_mod = 0, y_mod = meep$percent_type)
+
+# animate_hc <- ggplot(data = meep, aes(x = clusters, y = percent_type)) +
+#   geom_col(mapping = aes(fill = value), position = "identity", width = 0.8) +
+#   transition_states(type, transition_length = 3, state_length = 1) +
+#   enter_drift(x_mod = 0, y_mod = meep$percent_type) +
+#   exit_drift(x_mod = 0, y_mod = meep$percent_type)
+
+animate(animate_hc, renderer=gifski_renderer("test.gif"))
 
 
 
-elbow_plot <- data.frame(clusters = 1:5,
-                         within_ss = rep(NA, 5))
+
+# Check by state
+# Same thing happening
+# pulse_grouped_states <- pulse_clustered_data %>% 
+#   group_by(clusters) %>% 
+#   count(state) %>% 
+#   mutate(total = sum(n),
+#          percent_type = n/total) %>% 
+#   pivot_wider(names_from = state,
+#               values_from = percent_type) %>% 
+#   mutate_all(~replace(., is.na(.), 0)) %>% 
+#   janitor::clean_names() %>% 
+#   summarise(ak = sum(ak), 
+#             al = sum(al),
+#             ar = sum(ar),
+#             az = sum(az)) # etc.
+# 
+# # Check by other mental health variables
+# set.seed(1984)
+# pulse_grouped_mh <- pulse_clustered_data %>% 
+#   mutate(no_access = as.character(no_access)) %>% 
+#   group_by(clusters) %>% 
+#   count(no_access) %>% 
+#   mutate(total = sum(n),
+#          prop_type = n/total) %>% 
+#   pivot_wider(names_from = no_access,
+#               values_from = prop_type) %>% 
+#   mutate_all(~replace(., is.na(.), 0)) %>% 
+#   janitor::clean_names() %>% 
+#   summarise(x1 = sum(x1), 
+#             x2 = sum(x2)) # etc.
+
+
+
+elbow_plot <- data.frame(clusters = 1:10,
+                         within_ss = rep(NA, 10))
 
 set.seed(1984)
-for (i in 1:5){
+for (i in 1:10){
   pulse_out <- pulse_clustered_data %>% 
     select(clustering_vars) %>% 
     kmeans(centers = i, nstart = 25)
@@ -342,10 +470,55 @@ for (i in 1:5){
 
 # Construct elbow plot
 ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
-  geom_point() + 
+  geom_point() +
   geom_line() +
-  scale_x_continuous(breaks = 1:5) +
+  scale_x_continuous(breaks = 1:10) +
   labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
+
+
+# Quantify changes in proportion
+
+
+
+###########
+# Dim Red #
+###########
+pulse_college_data <- pulse_college_data %>% 
+  tibble::rowid_to_column("index")
+pulse_svd <- pulse_college_data %>% 
+  select(-c(birth_year, RHISPANIC, RRACE, EST_ST, week, phase, state, week_start_date, race_ethnicity)) %>% 
+  svd()
+
+num_clusters <- 5
+library(broom)
+pulse_svd_tidy <- pulse_svd %>% 
+  tidy(matrix = "u") %>% 
+  filter(PC < num_clusters) %>% 
+  mutate(PC = paste0("pc_", PC)) %>% 
+  pivot_wider(names_from = PC, values_from = value) %>%
+  select(-row)
+
+clusts <- pulse_svd_tidy %>% 
+  kmeans(centers = num_clusters)
+
+tidy(clusts)
+
+
+pulse_svd_clust <- pulse_college_data %>% 
+  mutate(clusters = factor(clusts$cluster))
+mosaic::tally(race_ethnicity ~ clusters, data = pulse_svd_clust)
+
+pulses <- clusts %>%
+  augment(pulse_svd_tidy)
+
+ggplot(data = pulses, aes(x = pc_1, y = pc_2)) +
+  geom_point(aes(x = 0, y = 0), color = "red", shape = 1, size = 7) + 
+  geom_point(size = 5, alpha = 0.6, aes(color = .cluster)) +
+  xlab("Best Vector from SVD") + 
+  ylab("Second Best Vector from SVD") + 
+  scale_color_brewer(palette = "Set2")
+
+
 
 
 
