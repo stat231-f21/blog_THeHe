@@ -12,6 +12,8 @@ library(shiny)
 
 # Read in data
 pulse_clustered_data <- read.csv("wrangled_csv_data/pulse_clustered_data.csv")
+# Convert clusters to factor for proper legend
+pulse_clustered_data$clusters <- as.factor(pulse_clustered_data$clusters)
 
 
 # Set up choices for input variables
@@ -54,8 +56,6 @@ ui <- fluidPage(title = "Clusters Plot",
                       multiple = FALSE
                     ),
                     submitButton(text = "Make plot", icon = NULL, width = NULL),
-                    # img(src="covid_legend.png", align = "left"),
-                    # width = 3,
                   ),
                   mainPanel(plotlyOutput("clusters")
                   )
@@ -66,12 +66,6 @@ ui <- fluidPage(title = "Clusters Plot",
 # server   #
 ############
 server <- function(input, output){
-  
-  # # Tab 1: interactive lineplot
-  # data_lineplot <- reactive({
-  #   pulse_clustered_data %>% 
-  #     filter(race_ethnicity %in% input$r_e)
-  # })
 
   output$clusters <- renderPlotly({
     plot_ly(pulse_clustered_data, x = ~jitter(get(input$var1)), 
