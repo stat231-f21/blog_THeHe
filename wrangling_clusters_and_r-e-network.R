@@ -186,7 +186,7 @@ pulse_clustered_data <- pulse_college_data %>%
 # Create 3D plot of clusters
 # Since all answers are integers 1:4, use jitter for better visualization
 # ADD TITLES AND DO SHINY
-plot_ly(pulse_clustered_data, x = ~jitter(prescription), y = ~jitter(mental_health_services), z = ~jitter(no_access), type="scatter3d", mode="markers", color = ~clusters)
+plot_ly(pulse_clustered_data, x = ~jitter(prescription), y = ~jitter(mental_health_services), z = ~jitter(healthcare), type="scatter3d", mode="markers", color = ~clusters)
 
 # Check usefulness of 5 clusters with elbow plot
 elbow_plot <- data.frame(clusters = 1:10,
@@ -275,11 +275,19 @@ healthcare_sum <- pulse_clustered_data %>%
 # Combine above dataframes
 clusters_characteristics <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum)
 
+clusters_temp <- clusters_characteristics %>% 
+  group_by(clusters, type) %>% 
+  mutate(yep = sum(percent_type)) %>% 
+  select(clusters, type, yep) %>% 
+  distinct()
+
+
 # Try an individual stacked bar chart
 stacked <- ggplot(data = pres_sum) +
   geom_col(mapping = aes(x = clusters,
-                         y = percent_type,
-                         fill = value)) +
+                         y = 1,
+                         fill = value),
+           position = "fill") +
   coord_flip()
 stacked
 
@@ -293,29 +301,48 @@ stacked
 #   exit_shrink()
 
 # Try animation
-animate_hc <- ggplot(data = meep) +
+animate_hc <- ggplot(data = clusters_characteristics) +
   geom_col(mapping = aes(x = clusters,
                          y = percent_type,
-                         fill = value)) +
+                         fill = value),
+           position = "fill") +
   transition_states(type, transition_length = 3, state_length = 1) +
-  enter_drift(x_mod = 0, y_mod = meep$percent_type) +
-  exit_drift(x_mod = 0, y_mod = meep$percent_type)
+  enter_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type) +
+  exit_drift(x_mod = 0, y_mod = 1) 
+# +
+#   ease_aes("linear")
 
-# animate_hc <- ggplot(data = meep) +
-#   geom_col(data = meep %>% filter(value == 1),
+#oh?
+animate_hc <- ggplot(data = clusters_characteristics) +
+  geom_col(data = clusters_temp,
+           mapping = aes(x = clusters,
+                         y = yep),
+           fill = "coral2") +
+  geom_col(data = clusters_characteristics %>% filter(value == 1),
+           mapping = aes(x = clusters,
+                         y = percent_type),
+           fill = "deepskyblue1") +
+  transition_states(type, transition_length = 3, state_length = 1) +
+  enter_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type) +
+  exit_shrink()
+  # exit_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type)
+
+# animate_hc <- ggplot(data = clusters_characteristics) +
+#   geom_col(data = clusters_characteristics %>% filter(value == 1),
 #            mapping = aes(x = clusters,
 #                          y = percent_type),
 #            fill = "coral2") +
-#   geom_col(data = meep %>% filter(value == 2),
+#   geom_col(data = clusters_characteristics %>% filter(value == 2),
 #            mapping = aes(x = clusters,
 #                          y = percent_type),
 #            fill = "deepskyblue1") +
 #   transition_states(type, transition_length = 3, state_length = 1) +
 #   enter_drift(x_mod = 0, y_mod = 1) +
-#   exit_drift(x_mod = 0, y_mod = meep$percent_type) 
+#   exit_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type)
+# 
 # +
-# enter_drift("2", x_mod = 0, y_mod = -meep$percent_type) +
-# exit_drift("2", x_mod = 0, y_mod = -meep$percent_type)
+# enter_drift("2", x_mod = 0, y_mod = -clusters_characteristics$percent_type) +
+# exit_drift("2", x_mod = 0, y_mod = -clusters_characteristics$percent_type)
 
 
 # animate_hc <- ggplot(data = meep) +
