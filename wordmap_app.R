@@ -1,5 +1,5 @@
 library(tidyverse)
-library(tidyverse)
+library(tidytext)
 
 ######
 # ui #
