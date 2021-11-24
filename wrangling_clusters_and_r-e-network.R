@@ -226,7 +226,12 @@ pulse_grouped <- pulse_clustered_data %>%
                                     race_ethnicity == "non_hispanic_asian" ~ "Non-Hispanic Asian",
                                     race_ethnicity == "non_hispanic_white" ~ "Non-Hispanic White",
                                     race_ethnicity == "non_hispanic_other_multiple_races" ~ "Non-Hispanic Other/Multiple Races",
-                                    race_ethnicity == "non_hispanic_black" ~ "Non-Hispanic Black"))
+                                    race_ethnicity == "non_hispanic_black" ~ "Non-Hispanic Black"),
+         clusters = case_when(clusters == 1 ~ "Cluster 1",
+                              clusters == 2 ~ "Cluster 2",
+                              clusters == 3 ~ "Cluster 3",
+                              clusters == 4 ~ "Cluster 4",
+                              clusters == 5 ~ "Cluster 5"))
 
 # Get distribution of racial/ethnic groups for all respondents
 racial_ethnic_totals <- pulse_college_data %>% 
@@ -240,12 +245,23 @@ racial_ethnic_totals <- pulse_college_data %>%
   # Combine with distribution within clusters
   rbind(pulse_grouped)
 
+# Create stacked bar charts to compare breakdown of racial/ethnic groups across clusters
 clusters_breakdown <- ggplot(data = racial_ethnic_totals, 
                              mapping = aes(x = clusters,
                                            y = value,
                                            fill = race_ethnicity)) +
   geom_col() +
-  coord_flip()
+  coord_flip() +
+  labs(x = "Group",
+       y = "Proportion of group",
+       title = "Distribution of Racial/Ethnic Groups for All 
+       Respondents and Kmeans Clusters ") +
+  scale_fill_manual(name = "Racial/Ethnic Group", 
+                     values = c("Hispanic or Latino" = "#66C2A5", 
+                                "Non-Hispanic Asian" = "#FC8D62", 
+                                "Non-Hispanic Black" = "#8DA0CB", 
+                                "Non-Hispanic White" = "#E78AC3",
+                                "Non-Hispanic Other/Multiple Races" = "#A6D854"))
 clusters_breakdown
 
 # Compare access of healthcare across clusters with animated bar chart
@@ -344,8 +360,9 @@ animate_hc <- ggplot(data = clusters_characteristics) +
            fill = "deepskyblue1") +
   transition_states(type, transition_length = 3, state_length = 1) +
   enter_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type) +
-  exit_shrink()
-  # exit_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type)
+  exit_shrink() +
+  # exit_drift(x_mod = 0, y_mod = -clusters_characteristics$percent_type) +
+  coord_flip()
 
 # animate_hc <- ggplot(data = clusters_characteristics) +
 #   geom_col(data = clusters_characteristics %>% filter(value == 1),
