@@ -39,6 +39,16 @@ ui <- navbarPage(
       
       plotOutput(outputId = "wordmap")
     )
+  ),
+  
+  tabPanel(
+    
+    title = "Sentiment Analysis",
+    
+    mainPanel(
+      
+      plotOutput(outputId = "sentmap")
+    )
   )
 )
 
