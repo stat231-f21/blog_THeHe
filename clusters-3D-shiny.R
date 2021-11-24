@@ -10,11 +10,17 @@ library(ggnetwork)
 library(grDevices)
 library(shiny)
 
-# plot_ly(pulse_clustered_data, x = ~jitter(prescription), y = ~jitter(mental_health_services), z = ~jitter(healthcare), type="scatter3d", mode="markers", color = ~clusters)
-
+# Set up choices for input variables
+# Choose 3 of the 4 vairables used to do the Kmeans Clustering
 choice_values <- c("prescription", "mental_health_services", "no_access", "healthcare")
-choice_names <- c("Prescription medication", "Mental health counseling or other services", "Needed access to mental health care but did not receive", "Some form of healthcare")
+# Names for reactive axes
+choice_axes <- c("Prescription", "Counseling or similar", "Needed but did not get", "Some healthcare")
+names(choice_values) <- choice_axes
+# Overwrite previous names to use for the drop-down
+choice_names <- c("Prescription medication", "Mental health counseling or similar service", "Could not access mental health care when needed", "Some form of healthcare")
 names(choice_values) <- choice_names
+
+
 
 ############
 #    ui    #
@@ -38,7 +44,7 @@ ui <- fluidPage(title = "Clusters Plot",
                     ),
                     selectInput(
                       inputId = "var3",
-                      label = "Select the second variable to plot",
+                      label = "Select the third variable to plot",
                       choices = choice_values,
                       selected = "no_access",
                       multiple = FALSE
@@ -68,10 +74,11 @@ server <- function(input, output){
             y = ~jitter(get(input$var2)), 
             z = ~jitter(get(input$var3)), 
             type="scatter3d", mode="markers", color = ~clusters) %>% 
-      layout(title = "Title",
-             scene = list(xaxis = list(title = paste(choice_names[choice_values == input$var1])), 
-                          yaxis = list(title = paste(choice_names[choice_values == input$var2])),
-                          zaxis = list(title = paste(choice_names[choice_values == input$var3])))
+      layout(title = list(text = "Kmeans Clustering"),
+             scene = list(xaxis = list(title = paste(choice_axes[choice_values == input$var1])), 
+                          yaxis = list(title = paste(choice_axes[choice_values == input$var2])),
+                          zaxis = list(title = paste(choice_axes[choice_values == input$var3]))),
+             legend=list(title=list(text='<b> Cluster </b>'))
              )
   })
 
