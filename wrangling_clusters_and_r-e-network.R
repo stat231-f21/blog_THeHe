@@ -203,7 +203,6 @@ ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
 # Indeed, 5 or 6 clusters seems roughly optimal
 
-
 # Investigate information in the clusters
 # Compare distribution of racial/ethnic groups in each cluster to that of all respondents
 # Clusters
@@ -325,8 +324,12 @@ stacked <- ggplot(data = pres_sum) +
   geom_col(mapping = aes(x = clusters,
                          y = 1,
                          fill = value),
-           position = "fill") +
-  coord_flip()
+           position = "fill",
+           color = "coral2") +
+  coord_flip() +
+  scale_color_manual(values = "black") +
+  guides(color = guide_legend()) 
+
 stacked
 
 
@@ -354,17 +357,19 @@ animate_hc <- ggplot(data = clusters_characteristics) +
 animate_hc <- ggplot(data = clusters_characteristics) +
   geom_col(data = clusters_temp,
            mapping = aes(x = clusters,
-                         y = yep),
-           fill = "coral2") +
+                         y = yep, 
+                         fill = "coral2")) +
   geom_col(data = clusters_characteristics %>% filter(value == 1),
            mapping = aes(x = clusters,
-                         y = percent_type),
-           fill = "deepskyblue1") +
+                         y = percent_type,
+                         fill = "deepskyblue1")) +
+  scale_fill_discrete(labels = c("yes", "no")) +
   transition_states(type, transition_length = 3, state_length = 1) +
   enter_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type) +
   exit_shrink() +
   # exit_drift(x_mod = 0, y_mod = -clusters_characteristics$percent_type) +
-  coord_flip()
+  coord_flip() +
+  labs(title = "Comparison of {closest_state}")
 
 # animate_hc <- ggplot(data = clusters_characteristics) +
 #   geom_col(data = clusters_characteristics %>% filter(value == 1),
