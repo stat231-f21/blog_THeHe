@@ -470,6 +470,25 @@ ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
 
 
+###############################################################################
+# network? 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###############################################################################
 
 # ESSENTIALLY IGNORE THIS
 
