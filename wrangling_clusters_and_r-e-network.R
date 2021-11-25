@@ -270,8 +270,9 @@ clusters_breakdown
 pres_sum <- pulse_clustered_data %>% 
   group_by(clusters) %>% 
   count(prescription) %>% 
+  # Use same column names so dfs can be stacked into one df
   mutate(total = sum(n),
-         percent_type = n/total,
+         prop_type = n/total,
          type = "presc") %>% 
   rename(value = prescription) %>% 
   select(-c(n, total))
@@ -281,7 +282,7 @@ mhs_sum <- pulse_clustered_data %>%
   group_by(clusters) %>% 
   count(mental_health_services) %>% 
   mutate(total = sum(n),
-         percent_type = n/total,
+         prop_type = n/total,
          type = "mhs") %>% 
   rename(value = mental_health_services) %>% 
   select(-c(n, total))
@@ -291,7 +292,7 @@ no_a_sum <- pulse_clustered_data %>%
   group_by(clusters) %>% 
   count(no_access) %>% 
   mutate(total = sum(n),
-         percent_type = n/total,
+         prop_type = n/total,
          type = "no_a") %>% 
   rename(value = no_access) %>% 
   select(-c(n, total)) %>% 
@@ -304,18 +305,27 @@ healthcare_sum <- pulse_clustered_data %>%
   group_by(clusters) %>% 
   count(healthcare) %>% 
   mutate(total = sum(n),
-         percent_type = n/total,
+         prop_type = n/total,
          type = "healthcare") %>% 
   rename(value = healthcare) %>% 
   select(-c(n, total))
 
 # Combine above dataframes
-clusters_characteristics <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum)
+clusters_characteristics <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum) %>%
+  # Rename values in `type` column so they can easily be called and displayed with `{closest_state}` during animation
+  mutate(type = case_when(type == "presc" ~ "Takes Prescription Medication",
+                          type =="mhs" ~ "Receives counseling or similar mental health services",
+                          type == "no_a" ~ "Needs but does not have access to mental health care",
+                          type == "healthcare" ~ "Has some form of healthcare coverage"))
 
-clusters_temp <- clusters_characteristics %>% 
+# Bug in gganimate makes plotting stacked bar chart as a single `geom_col()` difficult
+# Creating this allows us to plot the stacked bar chart as two layers
+# The "bottom layer" is always 1, i.e., fills up the whole y-axis
+# The top layer then moves across this, so that the proportions of y/n are maintained but show more smoothly in the animation
+clusters_bottom_layer <- clusters_characteristics %>% 
   group_by(clusters, type) %>% 
-  mutate(yep = sum(percent_type)) %>% 
-  select(clusters, type, yep) %>% 
+  mutate(total = sum(prop_type)) %>% 
+  select(clusters, type, total) %>% 
   distinct()
 
 
@@ -323,7 +333,7 @@ clusters_temp <- clusters_characteristics %>%
 stacked <- ggplot(data = pres_sum) +
   geom_col(mapping = aes(x = clusters,
                          y = 1,
-                         fill = value),
+                         fill = "#7FC97F"),
            position = "fill",
            color = "coral2") +
   coord_flip() +
@@ -344,7 +354,7 @@ stacked
 # Try animation
 animate_hc <- ggplot(data = clusters_characteristics) +
   geom_col(mapping = aes(x = clusters,
-                         y = percent_type,
+                         y = prop_type,
                          fill = value),
            position = "fill") +
   transition_states(type, transition_length = 3, state_length = 1) +
@@ -353,23 +363,37 @@ animate_hc <- ggplot(data = clusters_characteristics) +
 # +
 #   ease_aes("linear")
 
-#oh?
+
+# Create animated bar charts to smoothly move between the 4 variables
+# Build up two layers because making a smooth `gganimate` with stacked bar charts did not work well
 animate_hc <- ggplot(data = clusters_characteristics) +
-  geom_col(data = clusters_temp,
+  # First layer represents "no" responses to categories once overlaid by second layer
+  geom_col(data = clusters_bottom_layer,
            mapping = aes(x = clusters,
-                         y = yep, 
-                         fill = "coral2")) +
+                         y = total, 
+                         fill = "No")) +
+  # Filtering for `value == 1` gives `yes` answers
   geom_col(data = clusters_characteristics %>% filter(value == 1),
            mapping = aes(x = clusters,
-                         y = percent_type,
-                         fill = "deepskyblue1")) +
-  scale_fill_discrete(labels = c("yes", "no")) +
-  transition_states(type, transition_length = 3, state_length = 1) +
-  enter_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type) +
+                         y = prop_type,
+                         fill = "Yes")) +
+  # Create legend
+  scale_fill_manual(name = "Respondent's answer",
+                    labels = c("Yes", "No"),
+                      values = c("Yes" = "thistle", "No" = "palegreen3")) +
+  # Transition between the four variables
+  transition_states(type, transition_length = 1, state_length = 5) +
+  # Have new points drift in and travel the full distance they represent
+  enter_drift(x_mod = 0, y_mod = clusters_characteristics$prop_type) +
+  # Have old points shrink out of the animation
   exit_shrink() +
-  # exit_drift(x_mod = 0, y_mod = -clusters_characteristics$percent_type) +
+  # Flip horizontally
   coord_flip() +
-  labs(title = "Comparison of {closest_state}")
+  # Get title to change alongside states
+  labs(title = "{closest_state}",
+       x = "Cluster",
+       y = "Proportion of respondents")
+
 
 # animate_hc <- ggplot(data = clusters_characteristics) +
 #   geom_col(data = clusters_characteristics %>% filter(value == 1),
