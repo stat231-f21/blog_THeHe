@@ -9,6 +9,7 @@ library(shinythemes)
 
 all_headlines <- read_csv("data/news/headlines.csv")
 data("stop_words")
+custom_stops <- read_csv("data/news/custom_stops.csv")
 
 word_frequencies <- all_headlines %>% 
   unnest_tokens(output = word, input = headline_text, drop = TRUE) %>% 
@@ -21,7 +22,8 @@ word_frequencies_trimmed <- word_frequencies %>%
   filter(!str_detect(word, "[:digit:]"),
          !str_detect(word, "\\."),
          !str_detect(word, "covid"),
-         !str_detect(word, tolower(as.character(word_frequencies$state))))
+         !str_detect(word, tolower(as.character(word_frequencies$state)))) %>% 
+  anti_join(custom_stops, by = "word")
 
 ###########
 # mapping #
