@@ -139,7 +139,8 @@ server <- function(input, output) {
     word_data <- wordmap_words()
     ggplot(data = word_data) +
       geom_sf(fill = "white", color = "black") +
-      geom_sf_label(label = word_data$reactive_words) +
+      geom_label_repel(aes(x = X, y = Y, label = word_data$reactive_words),
+                       point.padding = .5) +
       theme_void()
 
   })
