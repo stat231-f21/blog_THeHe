@@ -60,14 +60,14 @@ ui <- navbarPage(
                     max = 5,
                     value = 1,
                     step = 1)
-      )
-    ),
-    
-    mainPanel(
+      ),
       
-      plotOutput(outputId = "wordmap")
-    )
-  ),
+      mainPanel(
+        
+        plotOutput(outputId = "wordmap")
+      )
+     ),
+    ),
   
   tabPanel(
     
