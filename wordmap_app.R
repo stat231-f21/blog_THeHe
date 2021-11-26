@@ -114,61 +114,43 @@ server <- function(input, output) {
     word_frequencies_trimmed %>% 
     filter(week == input$week_slider1) %>% 
     arrange(state, desc(n)) %>% 
-    nest(word_list = c(word, n))
-    
-  })
-  
-  wordmap_words <- reactive({
-    
-    wordmap_words %>% 
-      mutate(reactive_words = map(word_list, ~
+    nest(word_list = c(word, n)) %>% 
+    mutate(state = tolower(state), 
+           reactive_words = map(word_list, ~
                                     .x %>% 
                                     select(word) %>% 
-                                    slice_head(n = input$word_slider1) %>% 
-                                    pull(letter)))
-    
+                                    slice_head(n = input$words_slider1) %>% 
+                                    pull(word))) %>% 
+    right_join(state_map, by = c("state" = "ID")) %>% 
+      st_as_sf()
+
   })
-  
-  full_map <- reactive({
     
-    state_map %>% 
-      left_join(wordmap_words, by = c(id, tolower(state)))
-  })
-  
   output$wordmap <- renderPlot({
-    
-    ggplot(data = state_map) +
+    word_data <- wordmap_words()
+    ggplot(data = word_data) +
       geom_sf(fill = "white", color = "black") +
-      geom_label(label = reactive_words)
+      geom_sf_label(label = word_data$reactive_words) +
       theme_void()
-    
-    
+
   })
   
-  sent_data <- reactive({
-    
-    word_frequencies_trimmed %>% 
+  output$sentmap <- renderPlot({
+  
+    sent_data <- word_frequencies_trimmed %>% 
       filter(week == input$week_slider2) %>% 
       arrange(state, desc(n)) %>% 
       inner_join(afinn_lexicon, by = "word") %>% 
       nest(word_list = c(word, n, value)) %>% 
-      mutate(state = tolower(state))
-    
-    sent_data <- sent_data %>% 
-      inner_join(state_map, by = c("state" = "ID"))
-    
-    sent_data <- sent_data %>% 
+      mutate(state = tolower(state)) %>% 
+      inner_join(state_map, by = c("state" = "ID")) %>% 
       mutate(avg_sent = map_dbl(word_list, ~ .x %>% 
-                                  select(value) %>% 
-                                  mean()))
+                                    select(value) %>% 
+                                    mean())) %>% 
     
-  })
-  
-  output$sentmap <- renderPlot({
-    
-   ggplot(data = sent_data) +
-      geom_sf(fill = avg_sent, color = "black") +
-      theme_void()
+    ggplot() +
+        geom_sf(fill = avg_sent, color = "black") +
+        theme_void()
     
   })
   
