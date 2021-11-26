@@ -25,7 +25,7 @@ anx_visNetwork <- r_e_network %>%
 # Get nodes and weighted edges 
 anx_nodes <- anx_visNetwork$nodes 
 anx_edges <- anx_visNetwork$edges %>% 
-  mutate(width)
+  mutate(value = anx) 
 
 # Select depression
 dep_visNetwork <- r_e_network %>% 
@@ -38,7 +38,7 @@ dep_visNetwork <- r_e_network %>%
 # Get nodes and weighted edges 
 dep_nodes <- dep_visNetwork$nodes 
 dep_edges <- dep_visNetwork$edges %>% 
-  mutate(width = dep)
+  mutate(value  = dep)
 
 # Select prescription
 presc_visNetwork <- r_e_network %>% 
@@ -51,7 +51,7 @@ presc_visNetwork <- r_e_network %>%
 # Get nodes and weighted edges 
 presc_nodes <- presc_visNetwork$nodes 
 presc_edges <- presc_visNetwork$edges %>% 
-  mutate(width = presc)
+  mutate(value = presc)
 
 # Select mental health services
 mhs_visNetwork <- r_e_network %>% 
@@ -64,7 +64,7 @@ mhs_visNetwork <- r_e_network %>%
 # Get nodes and weighted edges 
 mhs_nodes <- mhs_visNetwork$nodes 
 mhs_edges <- mhs_visNetwork$edges %>% 
-  mutate(width = mhs)
+  mutate(value = mhs)
 
 # Select needed access but did not receive
 no_a_visNetwork <- r_e_network %>% 
@@ -77,7 +77,7 @@ no_a_visNetwork <- r_e_network %>%
 # Get nodes and weighted edges 
 no_a_nodes <- no_a_visNetwork$nodes 
 no_a_edges <- no_a_visNetwork$edges %>% 
-  mutate(width = no_a)
+  mutate(value = no_a)
 
 # Select healthcare
 hc_visNetwork <- r_e_network %>% 
@@ -90,7 +90,7 @@ hc_visNetwork <- r_e_network %>%
 # Get nodes and weighted edges 
 hc_nodes <- hc_visNetwork$nodes 
 hc_edges <- hc_visNetwork$edges %>% 
-  mutate(width = hc)
+  mutate(value = hc)
 
 ############
 #    ui    #
@@ -106,7 +106,7 @@ ui <- fluidPage(title = "Racial/Ethnic Groups Network",
                         "Depression" = "dep",
                         "Prescription Medication" = "presc",
                         "Counseling or similar services" = "mhs",
-                        "Needed but did no receive care" = "no_a",
+                        "Needed but did not receive care" = "no_a",
                         "Healthcare coverage" = "hc"),
                       selected = "anx",
                       multiple = FALSE
@@ -145,7 +145,8 @@ server <- function(input, output) {
     )
   })
   output$network_proxy_update_re <- renderVisNetwork({
-    visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
+    visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%",
+               scaling = list(min = min(input$hc_variable), max = max(input$hc_variable)),
                main = list(text = "Network for Racial/Ethnic Groups", 
                            style = "font-family:Arial;font-size:20px"
                ),
