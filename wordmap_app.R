@@ -120,7 +120,12 @@ server <- function(input, output) {
   
   wordmap_words <- reactive({
     
-    head(wordmap_words[[3]], input$words_slider1)
+    wordmap_words %>% 
+      mutate(reactive_words = map(word_list, ~
+                                    .x %>% 
+                                    select(word) %>% 
+                                    slice_head(n = input$word_slider1) %>% 
+                                    pull(letter)))
     
   })
   
@@ -134,6 +139,7 @@ server <- function(input, output) {
     
     ggplot(data = state_map) +
       geom_sf(fill = "white", color = "black") +
+      geom_label(label = reactive_words)
       theme_void()
     
     
