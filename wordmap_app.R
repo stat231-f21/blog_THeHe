@@ -52,7 +52,7 @@ ui <- navbarPage(
     
     sidebarLayout(
       sidebarPanel(
-        sliderInput(inputId = "week_slider",
+        sliderInput(inputId = "week_slider1",
                     label = "Choose a week to look at:",
                     min = 22,
                     max = 39,
@@ -61,7 +61,7 @@ ui <- navbarPage(
                     animate = TRUE,
                     pre = "Week "),
         
-        sliderInput(inputId = "words_slider",
+        sliderInput(inputId = "words_slider1",
                     label = "Choose how many words you would like to look at:",
                     min = 1,
                     max = 5,
@@ -80,12 +80,28 @@ ui <- navbarPage(
     
     title = "Sentiment Analysis",
     
+    tabPanel(
+      
+      title = "Common Words",
+      
+      sidebarLayout(
+        sidebarPanel(
+          sliderInput(inputId = "week_slider2",
+                      label = "Choose a week to look at:",
+                      min = 22,
+                      max = 39,
+                      value = 22,
+                      step = 1,
+                      animate = TRUE,
+                      pre = "Week "),
+        ),
+    
     mainPanel(
       
       plotOutput(outputId = "sentmap")
     )
   )
-)
+)))
 
 ##########
 # server #
@@ -96,7 +112,7 @@ server <- function(input, output) {
   wordmap_words <- reactive({
     
     word_frequencies_trimmed %>% 
-    filter(week == input$week_slider) %>% 
+    filter(week == input$week_slider1) %>% 
     arrange(state, desc(n)) %>% 
     nest(word_list = c(word, n))
     
@@ -104,7 +120,7 @@ server <- function(input, output) {
   
   wordmap_words <- reactive({
     
-    head(wordmap_words[[3]], input$words_slider)
+    head(wordmap_words[[3]], input$words_slider1)
     
   })
   
@@ -126,7 +142,7 @@ server <- function(input, output) {
   sent_data <- reactive({
     
     word_frequencies_trimmed %>% 
-      filter(week == input$week_slider) %>% 
+      filter(week == input$week_slider2) %>% 
       arrange(state, desc(n)) %>% 
       inner_join(afinn_lexicon, by = "word") %>% 
       nest(word_list = c(word, n, value)) %>% 
