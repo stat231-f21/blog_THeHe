@@ -13,7 +13,7 @@ library(shiny)
 # Read in data
 r_e_network <- read.csv("wrangled_csv_data/r-e-network.csv")
 
-# Get nodes and edges for each healthcare variable
+# Get nodes and edges for each health care variable
 # Select anxiety
 anx_visNetwork <- r_e_network %>% 
   select(race_ethnicity_one, race_ethnicity_two, anx) %>% 
@@ -25,7 +25,7 @@ anx_visNetwork <- r_e_network %>%
 # Get nodes and weighted edges 
 anx_nodes <- anx_visNetwork$nodes 
 anx_edges <- anx_visNetwork$edges %>% 
-  mutate(width = anx)
+  mutate(width)
 
 # Select depression
 dep_visNetwork <- r_e_network %>% 
@@ -160,13 +160,7 @@ server <- function(input, output) {
   })
   
   myreVisNetworkProxy <- visNetworkProxy("network_proxy_update_re")
-  
-  # observe ({
-  #   filteredNodes <- active_nodes()[gathering_ban_nodes$id %in% input$filterNodes, ,drop = FALSE]
-  #   hiddenNodes <- anti_join(active_nodes(), filteredNodes)
-  #   visRemoveNodes(myVisNetworkProxy, id = hiddenNodes$id)
-  #   visUpdateNodes(myVisNetworkProxy, nodes = filteredNodes)
-  # })
+
 }
 
 #####################
