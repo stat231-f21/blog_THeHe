@@ -146,9 +146,7 @@ server <- function(input, output) {
     nest(word_list = c(word, n, value)) %>% 
     mutate(state = tolower(state)) %>% 
     right_join(state_map, by = c("state" = "ID")) %>% 
-    mutate(avg_sent = map_dbl(word_list, ~ .x %>% 
-                                  select(value) %>% 
-                                  mean())) %>% 
+    mutate(avg_sent = map_dbl(word_list, ~ mean(.x$value, na.rm = TRUE))) %>% 
       st_as_sf()
     
   })
@@ -156,7 +154,7 @@ server <- function(input, output) {
   output$sentmap <- renderPlot({
     sent_data <- sent_words()
     ggplot(sent_data) +
-      geom_sf(fill = sent_data$avg_sent, color = "black") +
+      geom_sf(aes(fill = sent_data$avg_sent, color = "black")) +
       scale_fill_distiller(palette = "RdBu", direction = -1) +
       theme_void()
     
