@@ -137,22 +137,28 @@ server <- function(input, output) {
 
   })
   
-  output$sentmap <- renderPlot({
-  
-    sent_data <- word_frequencies_trimmed %>% 
-      filter(week == input$week_slider2) %>% 
-      arrange(state, desc(n)) %>% 
-      inner_join(afinn_lexicon, by = "word") %>% 
-      nest(word_list = c(word, n, value)) %>% 
-      mutate(state = tolower(state)) %>% 
-      inner_join(state_map, by = c("state" = "ID")) %>% 
-      mutate(avg_sent = map_dbl(word_list, ~ .x %>% 
-                                    select(value) %>% 
-                                    mean())) %>% 
+  sent_words <- reactive({
     
-    ggplot() +
-        geom_sf(fill = avg_sent, color = "black") +
-        theme_void()
+    word_frequencies_trimmed %>% 
+    filter(week == input$week_slider2) %>% 
+    arrange(state, desc(n)) %>% 
+    inner_join(afinn_lexicon, by = "word") %>% 
+    nest(word_list = c(word, n, value)) %>% 
+    mutate(state = tolower(state)) %>% 
+    right_join(state_map, by = c("state" = "ID")) %>% 
+    mutate(avg_sent = map_dbl(word_list, ~ .x %>% 
+                                  select(value) %>% 
+                                  mean())) %>% 
+      st_as_sf()
+    
+  })
+      
+  output$sentmap <- renderPlot({
+    sent_data <- sent_words()
+    ggplot(sent_data) +
+      geom_sf(fill = sent_data$avg_sent, color = "black") +
+      scale_fill_distiller(palette = "RdBu", direction = -1) +
+      theme_void()
     
   })
   
