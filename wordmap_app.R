@@ -2,6 +2,26 @@ library(tidyverse)
 library(tidytext)
 library(sf)
 
+#############
+# wrangling #
+#############
+
+all_headlines <- read_csv("data/news/headlines.csv")
+data("stop_words")
+
+word_frequencies <- all_headlines %>% 
+  unnest_tokens(output = word, input = headline_text, drop = TRUE) %>% 
+  anti_join(stop_words, by = "word") %>% 
+  add_count(state, week, word) %>% 
+  distinct() %>% 
+  arrange(state, week, desc(n))
+
+word_frequencies_trimmed <- word_frequencies %>% 
+  filter(!str_detect(word, "[:digit:]"),
+         !str_detect(word, "\\."),
+         !str_detect(word, "covid"),
+         !str_detect(word, tolower(as.character(word_frequencies$state))))
+
 ###########
 # mapping #
 ###########
