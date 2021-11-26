@@ -163,7 +163,7 @@ pulse_college_data <- pulse_data %>%
 # Kmeans clustering #
 #####################
 
-# Set seed and cluster with healthcare access variables
+# Set seed for reproducibility and cluster with healthcare access variables
 set.seed(1984)
 clustering_vars <- c("prescription", "mental_health_services", "no_access", "healthcare")
 pulse_all_clusters <- pulse_college_data %>% 
@@ -196,11 +196,12 @@ for (i in 1:10){
 }
 
 # Construct elbow plot
-ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
+clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   geom_point() +
   geom_line() +
   scale_x_continuous(breaks = 1:10) +
-  labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
+  labs(x = "Number of clusters (k)", y = expression("Total Withins"[k]))
+clusters_elbow
 # Indeed, 5 or 6 clusters seems roughly optimal
 
 # Investigate information in the clusters
@@ -436,75 +437,6 @@ animate(animate_hc, renderer=gifski_renderer("test.gif"))
 r_e_network <- pulse_college_data %>% 
   select(race_ethnicity, prescription, mental_health_services, no_access, healthcare, ANXIOUS, DOWN) 
 
-# anxiety_net <- r_e_network %>% 
-#   group_by(race_ethnicity, ANXIOUS) %>% 
-#   count(ANXIOUS) %>% 
-#   ungroup() %>% 
-#   group_by(race_ethnicity) %>% 
-#   mutate(total = sum(n),
-#          prop_anxiety = n/total) %>% 
-#   filter(ANXIOUS == c(3, 4)) %>% 
-#   mutate(prop_a_chronic = sum(prop_anxiety)) %>% 
-#   select(race_ethnicity, prop_a_chronic) %>% 
-#   distinct()
-# 
-# depression_net <- r_e_network %>% 
-#   group_by(race_ethnicity, DOWN) %>% 
-#   count(DOWN) %>% 
-#   ungroup() %>% 
-#   group_by(race_ethnicity) %>% 
-#   mutate(total = sum(n),
-#          prop_depression = n/total) %>% 
-#   filter(DOWN == c(3, 4)) %>% 
-#   mutate(prop_d_chronic = sum(prop_depression)) %>% 
-#   select(race_ethnicity, prop_d_chronic) %>% 
-#   distinct()
-# 
-# presc_net <- r_e_network %>% 
-#   group_by(race_ethnicity, prescription) %>% 
-#   count(prescription) %>% 
-#   ungroup() %>% 
-#   group_by(race_ethnicity) %>% 
-#   mutate(total = sum(n),
-#          prop_p = n/total) %>% 
-#   filter(prescription == 1) %>% 
-#   select(race_ethnicity, prop_p) %>% 
-#   distinct()
-# 
-# mhs_net <- r_e_network %>% 
-#   group_by(race_ethnicity, mental_health_services) %>% 
-#   count(mental_health_services) %>% 
-#   ungroup() %>% 
-#   group_by(race_ethnicity) %>% 
-#   mutate(total = sum(n),
-#          prop_mhs = n/total) %>% 
-#   filter(mental_health_services == 1) %>% 
-#   select(race_ethnicity, prop_mhs) %>% 
-#   distinct()
-# 
-# no_a_net <- r_e_network %>% 
-#   group_by(race_ethnicity, no_access) %>% 
-#   count(no_access) %>% 
-#   ungroup() %>% 
-#   group_by(race_ethnicity) %>% 
-#   mutate(total = sum(n),
-#          prop_no_a = n/total) %>% 
-#   filter(no_access == 1) %>% 
-#   select(race_ethnicity, prop_no_a) %>% 
-#   distinct()
-# 
-# hc_net <- r_e_network %>% 
-#   group_by(race_ethnicity, healthcare) %>% 
-#   count(healthcare) %>% 
-#   ungroup() %>% 
-#   group_by(race_ethnicity) %>% 
-#   mutate(total = sum(n),
-#          prop_hc = n/total,
-#          type = "hc") %>% 
-#   filter(healthcare == 1) %>% 
-#   select(race_ethnicity, prop_hc, type) %>% 
-#   distinct()
-
 # Use mental health / healthcare access variables to show similarities between racial/ethnic groups
 # Quantify similarities to use as edges in network
 
@@ -517,13 +449,13 @@ anxiety_net <- r_e_network %>%
   group_by(race_ethnicity) %>% 
   # Calculate percent of individuals experiencing no, some, etc. anxiety
   mutate(total = sum(n),
-         percent_a = n*100/total,
+         prop_a = n/total,
          type = "anx") %>% 
   # Keep only individuals experiencing chronic anxiety
   filter(ANXIOUS == c(3, 4)) %>% 
-  mutate(percent = sum(percent_a)) %>% 
+  mutate(prop = sum(prop_a)) %>% 
   # Keep needed columns 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   # Remove repeated rows
   distinct()
 
@@ -534,11 +466,11 @@ depression_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent_d = n/total*100,
+         prop_d = n/total,
          type = "dep") %>% 
   filter(DOWN == c(3, 4)) %>% 
-  mutate(percent = sum(percent_d)) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  mutate(prop = sum(prop_d)) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Prescription medication
@@ -548,11 +480,11 @@ presc_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent = n/total*100,
+         prop = n/total,
          type = "presc") %>% 
   # Keep only individuals taking prescription medications
   filter(prescription == 1) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Mental health counseling or similar service
@@ -562,10 +494,10 @@ mhs_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent = n/total*100,
+         prop = n/total,
          type = "mhs") %>% 
   filter(mental_health_services == 1) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Needed access to mental health services but did not receive them
@@ -575,10 +507,10 @@ no_a_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent = n/total*100,
+         prop = n/total,
          type = "no_a") %>% 
   filter(no_access == 1) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Healthcare coverage
@@ -588,17 +520,17 @@ hc_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent = n/total*100,
+         prop = n/total,
          type = "hc") %>% 
   filter(healthcare == 1) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Combine above data-frames for network 
 r_e_net <- rbind(anxiety_net, depression_net, presc_net, mhs_net, no_a_net, hc_net) %>% 
   # Pivot wider to get column for each racial/ethnic group
   pivot_wider(names_from = race_ethnicity,
-              values_from = percent)
+              values_from = prop)
 
 # Create a matrix with all racial/ethnic combinations
 race_ethnicity_Mat <- t(combn(names(r_e_net[,-1]), 2))
@@ -612,14 +544,6 @@ for(i in 1:nrow(race_ethnicity_Mat)) {
   # Get difference in percent of individuals for each combination of racial/ethnic groups, for each variable, and put result in count vector
   race_ethnicity_close[i] <- abs(r_e_1[, 1] - r_e_1[, 2])
 }
-
-# for(j in 1:nrow(df)) {
-#   df[j,] <- race_ethnicity_close[1]
-# }
-# 
-# r_e_network_final <- data.frame("race_ethnicity_one" = race_ethnicity_Mat[,1], 
-#                                 "race_ethnicity_two" = race_ethnicity_Mat[,2], 
-#                                 "closeness"= race_ethnicity_close)
 
 # Convert list to dataframe
 r_e_network_final <- rbind.data.frame(race_ethnicity_close) 
@@ -640,142 +564,112 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          "no_a" = V5,
          "hc" = V6) %>%
   # Subtract all values from 100, so the network will give more edge weight to smaller differences 
-  mutate(anx = 100-anx,
-         dep = 100-dep,
-         presc = 100-presc,
-         mhs = 100-mhs,
-         no_a = 100-no_a,
-         hc = 100-hc)
+  mutate(anx = 1-anx,
+         dep = 1-dep,
+         presc = 1-presc,
+         mhs = 1-mhs,
+         no_a = 1-no_a,
+         hc = 1-hc)
 
 # Save as csv
 write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
 
+# Read in data
+r_e_network <- read.csv("wrangled_csv_data/r-e-network.csv")
 
+# Get nodes and edges for each health care variable
+# Select anxiety
+anx_visNetwork <- r_e_network %>% 
+  select(race_ethnicity_one, race_ethnicity_two, anx) %>% 
+  # Create igraph object
+  graph_from_data_frame(directed = FALSE) %>% 
+  # Create visNetwork object
+  toVisNetworkData()
 
-# Create igraph object
-r_e_igraph <- graph_from_data_frame(r_e_network_final, directed = FALSE)
+# Get nodes and weighted edges, and save them as csv files 
+anx_nodes <- anx_visNetwork$nodes 
+anx_edges <- anx_visNetwork$edges %>% 
+  mutate(value = anx) 
 
-# Assign to visNetwork object
-r_e_visNetwork <- toVisNetworkData(r_e_igraph)
+write.csv(anx_nodes, file = "wrangled_csv_data/anxiety_nodes.csv")
+write.csv(anx_edges, file = "wrangled_csv_data/anxiety_edges.csv")
 
-# Get nodes and weighted edges 
-r_e_edges <- r_e_visNetwork$edges %>% 
-  mutate(width = anx)
-r_e_nodes <- r_e_visNetwork$nodes 
+# Select depression
+dep_visNetwork <- r_e_network %>% 
+  select(race_ethnicity_one, race_ethnicity_two, dep) %>% 
+  # Create igraph object
+  graph_from_data_frame(directed = FALSE) %>% 
+  # Create visNetwork object
+  toVisNetworkData()
 
-# Create network
-visNetwork(r_e_nodes, r_e_edges, height = "700px", width = "100%", 
-           main = list(text = "yeehaw", 
-                       style = "font-family:Arial;font-size:20px"
-           )) %>%
-  visNodes(size = 10) %>%
-  visOptions(highlightNearest = list(enabled = TRUE, hover = TRUE), 
-             nodesIdSelection = TRUE) %>%
-  visPhysics(stabilization = FALSE) %>%
-  visEdges(color = list(color = "black", highlight = "red")) 
+# Get nodes and weighted edges, and save them as csv files  
+dep_nodes <- dep_visNetwork$nodes 
+dep_edges <- dep_visNetwork$edges %>% 
+  mutate(value  = dep)
 
+write.csv(dep_nodes, file = "wrangled_csv_data/depression_nodes.csv")
+write.csv(dep_edges, file = "wrangled_csv_data/depression_edges.csv")
 
+# Select prescription
+presc_visNetwork <- r_e_network %>% 
+  select(race_ethnicity_one, race_ethnicity_two, presc) %>% 
+  # Create igraph object
+  graph_from_data_frame(directed = FALSE) %>% 
+  # Create visNetwork object
+  toVisNetworkData()
 
+# Get nodes and weighted edges, and save them as csv files  
+presc_nodes <- presc_visNetwork$nodes 
+presc_edges <- presc_visNetwork$edges %>% 
+  mutate(value = presc)
 
-# Tried putting together network data frame in a smarter way but could not make it work
+write.csv(presc_nodes, file = "wrangled_csv_data/prescription_nodes.csv")
+write.csv(presc_edges, file = "wrangled_csv_data/prescription_edges.csv")
 
-# r_e_network_final <- data.frame("race_ethnicity_one" = race_ethnicity_Mat[,1], 
-#                                 "race_ethnicity_two" = race_ethnicity_Mat[,2]) %>% 
-#   left_join(ugh)
-# 
-# 
-# # %>% 
-#   # mutate(type = c("anx", "dep", "presc", "mhs", "no_a", "hc")) %>% 
-#   pivot_longer(cols = everything(),
-#                names_to = "type")
-# # , `rownames<-`(ugh, c("anx", "dep", "presc", "mhs", "no_a", "hc")))
-# 
-# s <- as.data.frame(race_ethnicity_close)
-# an <- s[]
-# # ,
-#                    # col.names = c("anx", "dep", "presc", "mhs", "no_a", "hc"))
-# 
-# 
-# 
-# 
-# yeehaw <- do.call(rbind.data.frame(race_ethnicity_close, `colnames<-`(yeehaw, c("anx", "dep", "presc", "mhs", "no_a", "hc"))))
-# colnames(ugh, c("anx", "dep", "presc", "mhs", "no_a", "hc"))
-#   colnames(c("anx", "dep", "presc", "mhs", "no_a", "hc"))
-# 
-# 
-# 
-# for(j in 1:nrow(r_e_net)) {
-#   for(i in 1:nrow(race_ethnicity_Mat)) {
-#     r_e_1 <- r_e_net[, race_ethnicity_Mat[i,]]
-#     # get the number of days each pair of states shared and put result in count vector
-#     race_ethnicity_close[i,j] <- abs(r_e_1[, 1] - r_e_1[, 2])
-#   }
-# }
-# 
-# for(col in df) {
-#   for(j in 1:nrow(r_e_net)) {
-#     for(i in 1:nrow(race_ethnicity_Mat)) {
-#       r_e_1 <- r_e_net[, race_ethnicity_Mat[i,]]
-#       # get the number of days each pair of states shared and put result in count vector
-#       df[df[col == j]] <- race_ethnicity_close[i] <- abs(r_e_1[, 1] - r_e_1[, 2])
-#     }
-#   }
-# }
-# 
-# 
-# for(j in 1:nrow(r_e_net)) {
-#   for(i in 1:nrow(race_ethnicity_Mat)) {
-#     r_e_1 <- r_e_net[, race_ethnicity_Mat[i,]]
-#     # get the number of days each pair of states shared and put result in count vector
-#     df[df[col == j]] <-  abs(r_e_1[, 1] - r_e_1[, 2])
-#   }
-# }
-# 
-# # Construct data.frame 
-# r_e_network_final <- data.frame("race_ethnicity_one" = race_ethnicity_Mat[,1], 
-#                                 "race_ethnicity_two" = race_ethnicity_Mat[,2], 
-#                                 "anx"= s[1,])
-# 
+# Select mental health services
+mhs_visNetwork <- r_e_network %>% 
+  select(race_ethnicity_one, race_ethnicity_two, mhs) %>% 
+  # Create igraph object
+  graph_from_data_frame(directed = FALSE) %>% 
+  # Create visNetwork object
+  toVisNetworkData()
 
+# Get nodes and weighted edges, and save them as csv files  
+mhs_nodes <- mhs_visNetwork$nodes 
+mhs_edges <- mhs_visNetwork$edges %>% 
+  mutate(value = mhs)
 
+write.csv(mhs_nodes, file = "wrangled_csv_data/mental_health_services_nodes.csv")
+write.csv(mhs_edges, file = "wrangled_csv_data/mental_health_services_edges.csv")
 
-###########
-# Dim Red #
-###########
+# Select needed access but did not receive
+no_a_visNetwork <- r_e_network %>% 
+  select(race_ethnicity_one, race_ethnicity_two, no_a) %>% 
+  # Create igraph object
+  graph_from_data_frame(directed = FALSE) %>% 
+  # Create visNetwork object
+  toVisNetworkData()
 
-# Not using!
-pulse_college_data <- pulse_college_data %>% 
-  tibble::rowid_to_column("index")
-pulse_svd <- pulse_college_data %>% 
-  select(-c(birth_year, RHISPANIC, RRACE, EST_ST, week, phase, state, week_start_date, race_ethnicity)) %>% 
-  svd()
+# Get nodes and weighted edges, and save them as csv files  
+no_a_nodes <- no_a_visNetwork$nodes 
+no_a_edges <- no_a_visNetwork$edges %>% 
+  mutate(value = no_a)
 
-num_clusters <- 5
-library(broom)
-pulse_svd_tidy <- pulse_svd %>% 
-  tidy(matrix = "u") %>% 
-  filter(PC < num_clusters) %>% 
-  mutate(PC = paste0("pc_", PC)) %>% 
-  pivot_wider(names_from = PC, values_from = value) %>%
-  select(-row)
+write.csv(no_a_nodes, file = "wrangled_csv_data/no_access_nodes.csv")
+write.csv(no_a_edges, file = "wrangled_csv_data/no_access_edges.csv")
 
-clusts <- pulse_svd_tidy %>% 
-  kmeans(centers = num_clusters)
+# Select healthcare
+hc_visNetwork <- r_e_network %>% 
+  select(race_ethnicity_one, race_ethnicity_two, hc) %>% 
+  # Create igraph object
+  graph_from_data_frame(directed = FALSE) %>% 
+  # Create visNetwork object
+  toVisNetworkData()
 
-tidy(clusts)
+# Get nodes and weighted edges, and save them as csv files  
+hc_nodes <- hc_visNetwork$nodes 
+hc_edges <- hc_visNetwork$edges %>% 
+  mutate(value = hc)
 
-
-pulse_svd_clust <- pulse_college_data %>% 
-  mutate(clusters = factor(clusts$cluster))
-mosaic::tally(race_ethnicity ~ clusters, data = pulse_svd_clust)
-
-pulses <- clusts %>%
-  augment(pulse_svd_tidy)
-
-ggplot(data = pulses, aes(x = pc_1, y = pc_2)) +
-  geom_point(aes(x = 0, y = 0), color = "red", shape = 1, size = 7) + 
-  geom_point(size = 5, alpha = 0.6, aes(color = .cluster)) +
-  xlab("Best Vector from SVD") + 
-  ylab("Second Best Vector from SVD") + 
-  scale_color_brewer(palette = "Set2")
-
+write.csv(hc_nodes, file = "wrangled_csv_data/healthcare_nodes.csv")
+write.csv(hc_edges, file = "wrangled_csv_data/healthcare_edges.csv")
