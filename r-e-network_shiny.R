@@ -54,8 +54,7 @@ ui <- fluidPage(
                     ),
                   ),
                   mainPanel(
-                    visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh"),
-                    width = 9
+                    visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
                   )
                 )))
 
