@@ -29,8 +29,15 @@ word_frequencies_trimmed <- word_frequencies %>%
 # mapping #
 ###########
 
+sf::sf_use_s2(FALSE)
+
 state_map <- maps::map("state", plot = FALSE, fill = TRUE) %>% 
   st_as_sf()
+
+state_points <- data.frame(st_coordinates(st_centroid(state_map$geom)))
+
+state_map <- state_map %>% 
+  bind_cols(state_points)
 
 ##############
 # sentiments #
