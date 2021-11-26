@@ -56,6 +56,7 @@ ui <- fluidPage(title = "Clusters Plot",
                       multiple = FALSE
                     ),
                     submitButton(text = "Make plot", icon = NULL, width = NULL),
+                    h5("The values on this plot are jittered to visualize the density of each cluster. Values near 2 indicate an individual responded `no` to the survey question, while values near 1 indicate a response of `yes`."),
                   ),
                   mainPanel(plotlyOutput("clusters")
                   )
@@ -76,7 +77,7 @@ server <- function(input, output){
              scene = list(xaxis = list(title = paste(choice_axes[choice_values == input$var1])), 
                           yaxis = list(title = paste(choice_axes[choice_values == input$var2])),
                           zaxis = list(title = paste(choice_axes[choice_values == input$var3]))),
-             legend=list(title=list(text='<b> Cluster </b>'))
+             legend = list(title=list(text='<b> Cluster </b>'))
              )
   })
 
