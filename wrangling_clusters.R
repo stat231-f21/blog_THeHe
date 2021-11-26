@@ -476,6 +476,20 @@ ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
 
 
+<<<<<<< HEAD
+###############################################################################
+# network? 
+
+
+
+
+
+
+
+
+
+
+=======
 # Quantify changes in proportion
 
 
@@ -517,10 +531,17 @@ ggplot(data = pulses, aes(x = pc_1, y = pc_2)) +
   xlab("Best Vector from SVD") + 
   ylab("Second Best Vector from SVD") + 
   scale_color_brewer(palette = "Set2")
+>>>>>>> e8ca9f2efc3e9d279e577a8e1cd580559a87a6d8
 
 
 
 
+<<<<<<< HEAD
+
+
+###############################################################################
+=======
+>>>>>>> e8ca9f2efc3e9d279e577a8e1cd580559a87a6d8
 
 # ESSENTIALLY IGNORE THIS
 

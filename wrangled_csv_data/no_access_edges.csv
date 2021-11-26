@@ -1,0 +1,11 @@
+"","from","to","no_a","value"
+"1","Hispanic or Latino","Non-Hispanic Asian",0.932244495428215,0.932244495428215
+"2","Hispanic or Latino","Non-Hispanic Black",0.952364604314028,0.952364604314028
+"3","Hispanic or Latino","Non-Hispanic Other/Multiple Races",0.969750490968712,0.969750490968712
+"4","Hispanic or Latino","Non-Hispanic White",0.993652939777139,0.993652939777139
+"5","Non-Hispanic Asian","Non-Hispanic Black",0.979879891114187,0.979879891114187
+"6","Non-Hispanic Asian","Non-Hispanic Other/Multiple Races",0.901994986396927,0.901994986396927
+"7","Non-Hispanic Asian","Non-Hispanic White",0.925897435205354,0.925897435205354
+"8","Non-Hispanic Black","Non-Hispanic Other/Multiple Races",0.92211509528274,0.92211509528274
+"9","Non-Hispanic Black","Non-Hispanic White",0.946017544091167,0.946017544091167
+"10","Non-Hispanic Other/Multiple Races","Non-Hispanic White",0.976097551191573,0.976097551191573
