@@ -3,27 +3,7 @@ library(tidytext)
 library(sf)
 library(shinythemes)
 
-#############
-# wrangling #
-#############
-
-all_headlines <- read_csv("data/news/headlines.csv")
-data("stop_words")
-custom_stops <- read_csv("data/news/custom_stops.csv")
-
-word_frequencies <- all_headlines %>% 
-  unnest_tokens(output = word, input = headline_text, drop = TRUE) %>% 
-  anti_join(stop_words, by = "word") %>% 
-  add_count(state, week, word) %>% 
-  distinct() %>% 
-  arrange(state, week, desc(n))
-
-word_frequencies_trimmed <- word_frequencies %>% 
-  filter(!str_detect(word, "[:digit:]"),
-         !str_detect(word, "\\."),
-         !str_detect(word, "covid"),
-         !str_detect(word, tolower(as.character(word_frequencies$state)))) %>% 
-  anti_join(custom_stops, by = "word")
+words_wrangled <- read_csv("data/news/words_wrangled.csv")
 
 ###########
 # mapping #
@@ -120,7 +100,7 @@ server <- function(input, output) {
   
   wordmap_words <- reactive({
     
-    word_frequencies_trimmed %>% 
+    words_wrangled %>% 
     filter(week == input$week_slider1) %>% 
     arrange(state, desc(n)) %>% 
     nest(word_list = c(word, n)) %>% 
@@ -147,7 +127,7 @@ server <- function(input, output) {
   
   sent_words <- reactive({
     
-    word_frequencies_trimmed %>% 
+    words_wrangled %>% 
     filter(week == input$week_slider2) %>% 
     arrange(state, desc(n)) %>% 
     inner_join(afinn_lexicon, by = "word") %>% 
