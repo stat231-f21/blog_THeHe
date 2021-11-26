@@ -650,6 +650,8 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
 # Save as csv
 write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
 
+
+
 # Create igraph object
 r_e_igraph <- graph_from_data_frame(r_e_network_final, directed = FALSE)
 
