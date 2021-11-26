@@ -163,7 +163,7 @@ pulse_college_data <- pulse_data %>%
 # Kmeans clustering #
 #####################
 
-# Set seed and cluster with healthcare access variables
+# Set seed for reproducibility and cluster with healthcare access variables
 set.seed(1984)
 clustering_vars <- c("prescription", "mental_health_services", "no_access", "healthcare")
 pulse_all_clusters <- pulse_college_data %>% 
@@ -196,11 +196,12 @@ for (i in 1:10){
 }
 
 # Construct elbow plot
-ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
+clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   geom_point() +
   geom_line() +
   scale_x_continuous(breaks = 1:10) +
-  labs(x = "Number of clusters (k)", y = expression("Total W"[k]))
+  labs(x = "Number of clusters (k)", y = expression("Total Withins"[k]))
+clusters_elbow
 # Indeed, 5 or 6 clusters seems roughly optimal
 
 # Investigate information in the clusters
@@ -517,13 +518,13 @@ anxiety_net <- r_e_network %>%
   group_by(race_ethnicity) %>% 
   # Calculate percent of individuals experiencing no, some, etc. anxiety
   mutate(total = sum(n),
-         percent_a = n*100/total,
+         prop_a = n/total,
          type = "anx") %>% 
   # Keep only individuals experiencing chronic anxiety
   filter(ANXIOUS == c(3, 4)) %>% 
-  mutate(percent = sum(percent_a)) %>% 
+  mutate(prop = sum(prop_a)) %>% 
   # Keep needed columns 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   # Remove repeated rows
   distinct()
 
@@ -534,11 +535,11 @@ depression_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent_d = n/total*100,
+         prop_d = n/total,
          type = "dep") %>% 
   filter(DOWN == c(3, 4)) %>% 
-  mutate(percent = sum(percent_d)) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  mutate(prop = sum(prop_d)) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Prescription medication
@@ -548,11 +549,11 @@ presc_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent = n/total*100,
+         prop = n/total,
          type = "presc") %>% 
   # Keep only individuals taking prescription medications
   filter(prescription == 1) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Mental health counseling or similar service
@@ -562,10 +563,10 @@ mhs_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent = n/total*100,
+         prop = n/total,
          type = "mhs") %>% 
   filter(mental_health_services == 1) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Needed access to mental health services but did not receive them
@@ -575,10 +576,10 @@ no_a_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent = n/total*100,
+         prop = n/total,
          type = "no_a") %>% 
   filter(no_access == 1) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Healthcare coverage
@@ -588,17 +589,17 @@ hc_net <- r_e_network %>%
   ungroup() %>% 
   group_by(race_ethnicity) %>% 
   mutate(total = sum(n),
-         percent = n/total*100,
+         prop = n/total,
          type = "hc") %>% 
   filter(healthcare == 1) %>% 
-  select(race_ethnicity, percent, type) %>% 
+  select(race_ethnicity, prop, type) %>% 
   distinct()
 
 # Combine above data-frames for network 
 r_e_net <- rbind(anxiety_net, depression_net, presc_net, mhs_net, no_a_net, hc_net) %>% 
   # Pivot wider to get column for each racial/ethnic group
   pivot_wider(names_from = race_ethnicity,
-              values_from = percent)
+              values_from = prop)
 
 # Create a matrix with all racial/ethnic combinations
 race_ethnicity_Mat <- t(combn(names(r_e_net[,-1]), 2))
@@ -640,12 +641,12 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          "no_a" = V5,
          "hc" = V6) %>%
   # Subtract all values from 100, so the network will give more edge weight to smaller differences 
-  mutate(anx = 100-anx,
-         dep = 100-dep,
-         presc = 100-presc,
-         mhs = 100-mhs,
-         no_a = 100-no_a,
-         hc = 100-hc)
+  mutate(anx = 1-anx,
+         dep = 1-dep,
+         presc = 1-presc,
+         mhs = 1-mhs,
+         no_a = 1-no_a,
+         hc = 1-hc)
 
 # Save as csv
 write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
