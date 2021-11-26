@@ -88,6 +88,11 @@ server <- function(input, output) {
   
   output$wordmap <- renderPlot({
     
+    wordmap_words <- word_frequencies_trimmed %>% 
+      filter(week == input$week_slider) %>% 
+      arrange(state, desc(n)) %>% 
+      nest(word_list = c(word, n))
+    
     ggplot(data = state_map) +
       geom_sf(fill = "white", color = "black") +
       geom_text(aes(label = ))
