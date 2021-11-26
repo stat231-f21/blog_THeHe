@@ -87,19 +87,31 @@ ui <- navbarPage(
 
 server <- function(input, output) {
   
+  wordmap_words <- reactive({
+    
+    word_frequencies_trimmed %>% 
+    filter(week == input$week_slider) %>% 
+    arrange(state, desc(n)) %>% 
+    nest(word_list = c(word, n))
+    
+  })
+  
+  wordmap_words <- reactive({
+    
+    head(wordmap_words[[3]], input$words_slider)
+    
+  })
+  
+  full_map <- reactive({
+    
+    state_map %>% 
+      left_join(wordmap_words, by = c(id, tolower(state)))
+  })
+  
   output$wordmap <- renderPlot({
-    
-    wordmap_words <- word_frequencies_trimmed %>% 
-      filter(week == input$week_slider) %>% 
-      arrange(state, desc(n)) %>% 
-      nest(word_list = c(word, n))
-    
-    wordmap_words <- 
-      head(wordmap_words[[3]], input$words_slider)
     
     ggplot(data = state_map) +
       geom_sf(fill = "white", color = "black") +
-      geom_text(aes(label = ))
       theme_void()
     
     
