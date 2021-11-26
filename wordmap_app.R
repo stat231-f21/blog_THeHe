@@ -93,6 +93,9 @@ server <- function(input, output) {
       arrange(state, desc(n)) %>% 
       nest(word_list = c(word, n))
     
+    wordmap_words %>% 
+      head(wordmap_words[[3]], input$words_slider)
+    
     ggplot(data = state_map) +
       geom_sf(fill = "white", color = "black") +
       geom_text(aes(label = ))
