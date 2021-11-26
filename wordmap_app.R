@@ -30,6 +30,12 @@ word_frequencies_trimmed <- word_frequencies %>%
 state_map <- maps::map("state", plot = FALSE, fill = TRUE) %>% 
   st_as_sf()
 
+##############
+# sentiments #
+##############
+
+afinn_lexicon <- get_sentiments("afinn")
+
 ######
 # ui #
 ######
@@ -114,6 +120,33 @@ server <- function(input, output) {
       geom_sf(fill = "white", color = "black") +
       theme_void()
     
+    
+  })
+  
+  sent_data <- reactive({
+    
+    word_frequencies_trimmed %>% 
+      filter(week == input$week_slider) %>% 
+      arrange(state, desc(n)) %>% 
+      inner_join(afinn_lexicon, by = "word") %>% 
+      nest(word_list = c(word, n, value)) %>% 
+      mutate(state = tolower(state))
+    
+    sent_data <- sent_data %>% 
+      inner_join(state_map, by = c("state" = "ID"))
+    
+    sent_data <- sent_data %>% 
+      mutate(avg_sent = map_dbl(word_list, ~ .x %>% 
+                                  select(value) %>% 
+                                  mean()))
+    
+  })
+  
+  output$sentmap <- renderPlot({
+    
+   ggplot(data = sent_data) +
+      geom_sf(fill = avg_sent, color = "black") +
+      theme_void()
     
   })
   
