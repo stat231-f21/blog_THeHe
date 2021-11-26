@@ -111,3 +111,4 @@ server <- function(input, output) {
 # shinyApp #
 ############
 
+shinyApp(ui = ui, server = server)
