@@ -517,6 +517,21 @@ write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
 # Read in data
 r_e_network <- read.csv("wrangled_csv_data/r-e-network.csv")
 
+################################################################
+# MOVE ALL THIS IF I USE IT 
+eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
+num_colors <- 5
+
+# Create plot for color legend
+png(filename = "r-e-network_shiny/legends/legend_anx.png")
+anx_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+text(x=1.25, y = seq(0,1,l=5), labels = seq(round(min(anxiety_net$prop), digits = 2), round(max(anxiety_net$prop), digits = 2),l=5))
+anx_image <- rasterImage(anx_image, 0, 0, 1,1)
+dev.off()
+################################################################
+
+
 # Get nodes and edges for each health care variable
 # Select anxiety
 anx_visNetwork <- r_e_network %>% 
@@ -527,7 +542,10 @@ anx_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files 
-anx_nodes <- anx_visNetwork$nodes 
+anx_nodes <- anx_visNetwork$nodes %>% 
+  inner_join(anxiety_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 anx_edges <- anx_visNetwork$edges %>% 
   mutate(value = anx) 
 
