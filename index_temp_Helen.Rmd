@@ -31,28 +31,17 @@ What are the data? What was the source of the data (who collected it, when, in w
 
 # Census Bureau Pulse Survey Data
 
-WE SHOULD SAY SOMETHING ABOUT WHY WE USED THE SAME TIME FRAME AS BEFORE
-AS WELL AS WHY WE IGNORED THE PHASE DIFFERENCES THIS TIME...
-AS WELL AS REITERATE WHAT OUR POP OF INTEREST WAS
+## Introduction
 
-The pulse survey data is collected by the US Census Bureau...
-
-If covid exacerbated inequalities / disparities in access 
-
-We were interested in further parsing out the relationships between mental health, healthcare access, and race and ethnicity during COVID-19. To do so, we investigated whether or not an unsupervised clustering algorithm could identify racial/ethnic groups from healthcare related variables. Further we arranged racial/ethnic groups in a network where connections between groups are weighted by how similar their population samples responded to questions about mental health symptoms, access to mental health resources, and healthcare coverage.
-
-
-What are your findings? What kind of statistical computations (if any) have you done to support those conclusions? (Again, even if you display code showing how some of the calculations were performed, it is up to you to interpret, in simple terms, the results of these calculations.) Do not forget about units, axis labels, etc.
+Young adults, particularly college students, have experienced many difficult and unique struggles during the pandemic. In 2021 alone, uncertainties about living situations, remote or in-person classes, vaccination availability, the Delta variant, and more have impacted the mental and physical health of these individuals. Building off our previous Shiny app project, we were interested in investigating the relationships between mental health, healthcare access, and race and ethnicity during COVID-19. To do so, we investigated whether or not an unsupervised clustering algorithm could identify racial/ethnic groups from healthcare-related variables. Further we arranged racial/ethnic groups in a network where connections between groups are weighted by how similar their population samples responded to questions about mental health symptoms, access to mental health resources, and healthcare coverage.
 
 ## Data Sources 
 
-### Data-sets 
+We created our clustering and racial/ethnic groups network with data from the U.S. Census Bureau's Household Pulse Survey. This ongoing survey is designed to collect information on how COVID-19 has impacted the social and economic lives of American households; it is motivated by the idea that understanding the pandemic's impacts will aid in building policy and outreach programs to help individuals and families recover from the pandemic.
 
-For the clustering and Racial/Ethnic groups network, we used data from the U.S. Census Bureau's Household Pulse Survey. This survey was designed to collect information on how COVID-19 has impacted the social and economic lives of American households; it is motivated by the idea that understanding the pandemic's impacts will help build policy and outreach to help individuals and families recover from the pandemic.
+The specific data-sets we used were those from weeks 22 through 39, which cover 6 January 2021 to 11 October 2021. This time frame encapsulates the introduction of the COVID-19 vaccines as well as the introduction of the Delta Variant into the U.S. We focused on college-aged individuals (18-25) and pulled out the following survey questions:
 
-The specific data-sets we used were those from Weeks 22 through 39, which covers 6 January 2021 to 11 October 2021. This timeframe encapsulates the introduction of the vaccine as well as of the Delta Variant in the U.S. We focused on college-aged individuals (18-25) and pulled out the following survey questions:
-
-* "What is your race?" and "Are you of Hispanic, Latino, or Spanish origin?", from which individuals can be classified as 5 different groups: 
+* "What is your race?" and "Are you of Hispanic, Latino, or Spanish origin?", from which individuals can be classified into 5 different racial/ethnic groups: 
   + Hispanic or Latino
   + Non-Hispanic White
   + Non-Hispanic Black
@@ -78,13 +67,13 @@ MENTION HOW WE PULLED ONLY CHRONIC DEPRESSION/ANXIETY OR DIDNT DO THAT IDK. OR J
 
 Visit [the Census Bureau website](https://www.census.gov/programs-surveys/household-pulse-survey.html) to explore and download the data-sets. 
 
-### Data Wrangling
+## Data Wrangling: Clustering
 
-Clustering:
+After filtering for our population and time frame of interest and combining individuals' answers to the above questions, we further wrangled the data for clustering and the network. 
 
-For clustering, we were particularly interested in the disparities in access to or use of mental health and healthcare resources between racial/ethnic groups, which may be particularly exacerbated during COVID-19. To group similar indiviuals in this regard, we used kmeans clustering and the `mclust` package. Kmeans clustering requires variables to cluster by (the data the algorithm uses to identify implicit patterns), a chosen number of clusters to identify (`centers = `), and a number of initial random cluster centers to try out (`nstart = `). As we suggested that there may be distinct clusters based on racial/ethnic groups, we set the algorithm to identify five clusters.
+For clustering, we were particularly interested in the disparities in access to or use of mental health and healthcare resources between racial/ethnic groups, which may be particularly exacerbated during COVID-19. To group similar individuals in this regard, we used kmeans clustering and the `mclust` package. Kmeans clustering requires variables to cluster by (the data the algorithm uses to identify implicit patterns), a chosen number of clusters to identify (`centers = `), and a number of initial random cluster centers to try out (`nstart = `). As we suggested that there may be distinct clusters based on racial/ethnic groups, we set the algorithm to identify five clusters. We clustered based on individuals' responses to questions of taking prescription medication, using mental health counseling or similar services, needing access to mental health care but not receiving it, and having healthcare coverage.
 
-```{r echo=TRUE, eval=FALSE}
+```{r kmeans, echo=TRUE, eval=FALSE}
 # Set seed for reproducibility 
 set.seed(1984)
 # Cluster with healthcare access variables
@@ -100,7 +89,7 @@ pulse_clustered_data <- pulse_college_data %>%
   mutate(clusters = factor(pulse_all_clusters$cluster))
 ```
 
-We then constructed an elbow plot to assess whether or not five was actually an optimal number of clusters to use. The "elbow" bends where the total within-cluster sum of squares (which measures variation within clusters) begins decreasing linearly. At this point, identifying more clusters becomes less useful. Viewing this plot, it is clear either five or six clusters is optimal. 
+We then constructed an elbow plot to assess whether or not five was an optimal number of clusters to use. The "elbow" bends where the total within-cluster sum of squares (which measures variation within clusters) begins decreasing linearly. At this point, identifying more clusters becomes less useful. Viewing this plot, it is clear either five or six clusters is optimal. 
 
 ```{r echo=TRUE, eval=FALSE}
 # Check usefulness of 5 clusters with elbow plot
@@ -125,60 +114,152 @@ clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
 ```
 
 ```{r}
-clusters_elbow
+knitr::include_graphics("images_and_plots/clusters_elbow.png")
 ```
 
-We can visualize clusters with three-dimensional scatterplots. Since we clustered on four variables, we can use an interactive `plotly` scatterplot to switch between variables and explore the clusters. 
 
-SLIGHTLY MORE EXPLANATION ABOUT THIS HERE MAYBE
+We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive `plotly` scatter plot to switch between variables and explore the clusters.
 
 ## Creating the interactive plotly in Shiny app {.tabset .tabset-fade .tabset-pills}
 
+
+### Setting up choices
+
+```{r echo=TRUE, eval=FALSE}
+# Set up choices for input variables
+# Choose 3 of the 4 vairables used to do the Kmeans Clustering
+choice_values <- c("prescription", "mental_health_services", "no_access", "healthcare")
+# Names for reactive axes
+choice_axes <- c("Prescription", "Counseling or similar", "Needed but did not get", "Some healthcare")
+names(choice_values) <- choice_axes
+# Overwrite previous names to use for the drop-down
+choice_names <- c("Prescription medication", "Mental health counseling or similar service", "Could not access mental health care when needed", "Some form of healthcare")
+names(choice_values) <- choice_names
+```
+
 ### UI
+
+```{r echo=TRUE, eval=FALSE}
+ui <- fluidPage(title = "Clusters Plot",
+                fillPage(sidebarLayout(
+                  sidebarPanel(
+                    selectInput(
+                      inputId = "var1",
+                      label = "Select the first variable to plot",
+                      choices = choice_values,
+                      selected = "prescription",
+                      multiple = FALSE
+                    ),
+                    selectInput(
+                      inputId = "var2",
+                      label = "Select the second variable to plot",
+                      choices = choice_values,
+                      selected = "mental_health_services",
+                      multiple = FALSE
+                    ),
+                    selectInput(
+                      inputId = "var3",
+                      label = "Select the third variable to plot",
+                      choices = choice_values,
+                      selected = "no_access",
+                      multiple = FALSE
+                    ),
+                    # Add submit button so user changes don't take effect until they are done selecting all three variables
+                    submitButton(text = "Make plot", icon = NULL, width = NULL),
+                    # Add note about jitter
+                    h5("The values on this plot are jittered to visualize the density of each cluster. Values near 2 indicate an individual responded `no` to the survey question, while values near 1 indicate a response of `yes`."),
+                  ),
+                  mainPanel(plotlyOutput("clusters")
+                  )
+                )))
+```
 
 ###  Server
 
-ADD THIS
+```{r echo=TRUE, eval=FALSE}
+server <- function(input, output){
 
-To investigate what patterns the clusters identified, we then looked at the breakdown of racial/ethnic groups and responses to the four mental health and healthcare variables within each cluster. 
+  output$clusters <- renderPlotly({
+    # Create plotly 3D scatter, jitter points for clarity, color by cluster
+    plot_ly(pulse_clustered_data, 
+            x = ~jitter(get(input$var1)), 
+            y = ~jitter(get(input$var2)), 
+            z = ~jitter(get(input$var3)), 
+            type="scatter3d", mode="markers", color = ~clusters) %>% 
+      layout(title = list(text = "Mental Health and Healthcare Resources Kmeans Clustering"),
+             scene = list(xaxis = list(title = paste(choice_axes[choice_values == input$var1])), 
+                          yaxis = list(title = paste(choice_axes[choice_values == input$var2])),
+                          zaxis = list(title = paste(choice_axes[choice_values == input$var3]))),
+             legend = list(title=list(text='<b> Cluster </b>'))
+             )
+  })
+  
+}
+```
 
-PASTE THE PLOT AND GGANIMATE BELOW
+## Clusters Patterns
 
-INCLUDE CODE FOR GGANIMATE?
+To investigate what patterns the clusters identified, we then looked at the breakdown of racial/ethnic groups and responses to the four mental health and healthcare variables within each cluster. For the latter, we created an animated stacked bar chart which cycles through the proportions of individuals answering "yes" and answering "no" in each cluster to the four survey questions we clustered on. This was achieved with the `gganimate` package; the function `transition_states()` allows us to plot the previously defined `ggplot` object while cycling through the "type" column in our data frame, which contains information on which of the four healthcare variables a given data point comes from.
 
-<img src="test.gif" /> 
+```{r gganimate, echo=TRUE, eval=FALSE}
+animate_hc <- ggplot() +
+  # First layer always fills entire length of the bar chart (0-1)
+  # Since all proportions add to 1 in total, this layer represents "no" responses once overlaid by the second layer
+  geom_col(data = clusters_bottom_layer,
+           mapping = aes(x = clusters,
+                         y = total, 
+                         fill = "No")) +
+  # Filtering for `value == 1` gives "yes" answers
+  geom_col(data = clusters_characteristics %>% filter(value == 1),
+           mapping = aes(x = clusters,
+                         y = prop_type,
+                         fill = "Yes")) +
+  # Create legend
+  scale_fill_manual(name = "Respondent's answer",
+                    labels = c("Yes", "No"),
+                      values = c("Yes" = "thistle", "No" = "palegreen3")) +
+  # Transition between the four variables with `type`, spend more time on each state than during transition
+  transition_states(type, transition_length = 1, state_length = 6) +
+  # Have new points drift in and travel the full distance they represent
+  enter_drift(x_mod = 0, y_mod = clusters_characteristics$prop_type) +
+  # Have old points shrink out of the animation
+  exit_shrink() +
+  # Flip horizontally
+  coord_flip() +
+  # Get title to change as states change
+  labs(title = "{closest_state}",
+       x = "Cluster",
+       y = "Proportion of respondents")
+```
 
-## Findings
+```{r}
+knitr::include_graphics(c("images_and_plots/clusters_breakdown_r_e.png", "images_and_plots/clusters_breakdown.gif"))
+```
 
-While the kmeans clustering did not exactly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they've largely been able to access mental health care resources when they needed them. 
+## Findings: Clustering
+
+While the kmeans clustering did not elegantly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they've largely been able to access mental health care resources when they needed them. 
 
 Further, the clusters which are more predominantly white than the full respondents pool - clusters 1 and 2 - are also those where the most access to care and resources lie, with the main difference being that individuals in cluster 2 do not utilize counseling or similar mental health services, whereas individuals in cluster 1 do. 
 
-### Limitations?
+## Limitations: Clustering
 
 Overall, while clustering is a fun exercise to see what patterns emerge, this was quite limited by the clustering variables, which, though represented numerically, are actually categorical variables. Quantitative and more nuanced variables would provide more meaningful and complex information to identify similar groups with. 
 
-### Data Wrangling
-
-Network:
-
-"Networks need a format where there are nodes and edges  . In order to convert the data into a format for networks, we utilized the following code, using the `visNetwork` and `igraph` packages." (Tracy)
+## Data Wrangling: Network
 
 For the network, we wanted to connect racial/ethnic groups by the experiences of anxiety and depression, and the access to mental health and healthcare resources of their individuals. To do so, we compared the proportions of individuals in each group who 
-* experienced chronic (at least half the days) anxiety 
+
+* experienced chronic (more than half the days or nearly every day) anxiety 
 * experienced chronic depression
 * took prescription medication
 * participated in counseling or something similar
 * needed access to but did not receive mental health care
 * had some form of healthcare
 
-For each pair of racial/ethnic groups, we calculated the difference in these proportions; smaller differences indicate more similar proportions of individuals. Thus, smaller differences provided more weight to the network edges, indicating more similar experiences between those groups.
+For each pair of racial/ethnic groups, we calculated the difference in these proportions. Thus, smaller differences provided more weight to the network edges, indicating more similar "experiences" (that is, proportions) between those groups.
 
-The following code chunk covers wrangling for the anxiety variable, but the same procedure was repeated with the other five variables. 
-
-" The code chunk covers wrangling for the `Restaurants.csv` data set, but the exact same procedure was repeated with the other four data sets. Once we had our data into a data frame organized into three columns, where there was a     , as well as the edge weight, we can create an igraph object using the `graph_from_data_frame` function in the `igraph` package. We then used the `toVisNetworkData` function from the `visNetwork` package to transform the igraph into a format readily usable for `visNetwork`." 
-OR SIMILAR
-
+The following code wrangles the anxiety variable, but the same procedure was repeated for the other five variables. For an explanation of the `igraph` and `visNetwork` packages, see the Data Wrangling Tab for COVID-19 Restrictions (CAN WE LINK BACK TO THIS). 
 
 ```{r echo=TRUE, eval=FALSE}
 # From larger data set with all mental health variables, select anxiety
@@ -229,7 +310,6 @@ ui <- fluidPage(
                   )
                 )))
 ```
-
 
 ###  Server
 
@@ -282,7 +362,7 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-## Findings 
+## Findings: Network
 
 This network allows users to explore the relationships between different racial/ethnic groups and how individuals within different racial/ethnic groups have experienced their mental health during the pandemic. 
 
@@ -290,7 +370,8 @@ One interesting pattern is that similar proportions of Non-Hispanic white and No
 
 
 
-# Limitations 
+## Limitations: Network
+
 What are the limitations of your work? Be clear so that others do not misinterpret your findings. To what population do your results apply? Do they generalize? Could your work be extended with more data or computational power or time to analyze? How could your study be improved? Suggesting plausible extensions doesn’t weaken your work; it strengthens it by connecting it to future work. 
 
 One big limitation is that this analysis is restricted to during the pandemic. As COVID-19 has opened up many conversations about mental and physical health and access to care, it would be interesting to expand this analysis to before COVID-19. Is it possible that more individuals have access now to forms of mental health care because of the conversations prompted be the pandemic?
