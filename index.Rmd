@@ -172,7 +172,7 @@ We ran into some issues at first, since Google does not allow scraping of Google
 
 The specifics of scraping involved nested `for` loops: we had to scrape news sites from fifty states (taken care of by the outer loop), and for each state, we had to scrape headlines for each of the eighteen "weeks" that we were interested in (the inner loop).
 
-```{r scraping-code, eval = FALSE}
+```{r scraping-code, echo = TRUE, eval = FALSE}
 # Loop for 50 states
 for (i in 1:50) {
   
@@ -223,7 +223,7 @@ head(headlines_ex)
 
 Once we obtained the raw text of every COVID-related headline from Week 22 to Week 39, we began performing text analysis on these headlines. The first wrangling was a simple word frequency analysis, breaking the headlines up and then tallying how often each one appeared (still separated by state and by week, so the tallies were specific to a certain location and time period, i.e. how many times the word **vaccine** appeared in headlines from Massachusetts during Week 33).
 
-```{r freq-analysis, eval = FALSE}
+```{r freq-analysis, echo = TRUE, eval = FALSE}
 word_frequencies <- all_headlines %>% 
   # Break headlines up into unigrams
   unnest_tokens(output = word, input = headline_text, drop = TRUE) %>% 
@@ -239,7 +239,7 @@ word_frequencies <- all_headlines %>%
 
 We then did some custom filtering of the unigrams that we ended up with: we had already filtered out the typical stop words from the built-in dictionary, but looking through the data, it was clear that there were some more words that would not be useful to any of our analysis. For example, the names of the newspapers frequently showed up in the headlines that we scraped (i.e. "Massachusetts COVID-19 Cases Spiking Once Again -- Boston Globe"), and clearly if they were in every headline, then they would clog up our frequency analysis. We therefore removed any newspaper-related and any location-specific words from the raw text, as well as any "textual detritus, such as urls or numbers:
 
-```{r custom-filtering, eval = FALSE}
+```{r custom-filtering, echo = TRUE, eval = FALSE}
 words_wrangled <- word_frequencies %>% 
          # Filter out any numbers
   filter(!str_detect(word, "[:digit:]"),
