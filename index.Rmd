@@ -157,7 +157,7 @@ You should test out updating your GitHub Pages website:
 # Word Map 
 
 ```{r load-data, echo = FALSE}
-headlines_ex <- read_csv("blog_THeHe/data/news/headlines.csv", n_max = 5)
+headlines_ex <- read_csv("data/news/headlines.csv", n_max = 5)
 ```
 
 ## Introduction
