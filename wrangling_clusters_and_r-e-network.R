@@ -203,7 +203,8 @@ clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   labs(x = "Number of clusters (k)", y = expression("Total Withins"[k]))
 clusters_elbow
 # Save as .png
-png(clusters_elbow, file="images_and_plots/clusters_elbow.png", width=600, height=350)
+png(filename="images_and_plots/clusters_elbow.png")
+plot(clusters_elbow)
 dev.off()
 # Indeed, 5 or 6 clusters seems roughly optimal
 
@@ -332,51 +333,16 @@ clusters_bottom_layer <- clusters_characteristics %>%
   select(clusters, type, total) %>% 
   distinct()
 
-
-# Try an individual stacked bar chart
-stacked <- ggplot(data = pres_sum) +
-  geom_col(mapping = aes(x = clusters,
-                         y = 1,
-                         fill = "#7FC97F"),
-           position = "fill",
-           color = "coral2") +
-  coord_flip() +
-  scale_color_manual(values = "black") +
-  guides(color = guide_legend()) 
-
-stacked
-
-
-# animate_hc <- ggplot(data = meep) +
-#   geom_col(mapping = aes(x = clusters,
-#                          y = percent_type,
-#                          fill = value)) +
-#   transition_states(type, transition_length = 3, state_length = 1) +
-#   enter_grow() +
-#   exit_shrink()
-
-# Try animation
-animate_hc <- ggplot(data = clusters_characteristics) +
-  geom_col(mapping = aes(x = clusters,
-                         y = prop_type,
-                         fill = value),
-           position = "fill") +
-  transition_states(type, transition_length = 3, state_length = 1) +
-  enter_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type) +
-  exit_drift(x_mod = 0, y_mod = 1) 
-# +
-#   ease_aes("linear")
-
-
 # Create animated bar charts to smoothly move between the 4 variables
-# Build up two layers because making a smooth `gganimate` with stacked bar charts did not work well
+# Smoothest way to do so is build up two layers
 animate_hc <- ggplot(data = clusters_characteristics) +
-  # First layer represents "no" responses to categories once overlaid by second layer
+  # First layer always fills entire length of the bar chart (0-1)
+  # Since all proportions add to 1 in total, this layer represents "no" responses once overlaid by the second layer
   geom_col(data = clusters_bottom_layer,
            mapping = aes(x = clusters,
                          y = total, 
                          fill = "No")) +
-  # Filtering for `value == 1` gives `yes` answers
+  # Filtering for `value == 1` gives "yes" answers
   geom_col(data = clusters_characteristics %>% filter(value == 1),
            mapping = aes(x = clusters,
                          y = prop_type,
@@ -385,7 +351,7 @@ animate_hc <- ggplot(data = clusters_characteristics) +
   scale_fill_manual(name = "Respondent's answer",
                     labels = c("Yes", "No"),
                       values = c("Yes" = "thistle", "No" = "palegreen3")) +
-  # Transition between the four variables
+  # Transition between the four variables with `type`, spend more time on each state than during transition
   transition_states(type, transition_length = 1, state_length = 6) +
   # Have new points drift in and travel the full distance they represent
   enter_drift(x_mod = 0, y_mod = clusters_characteristics$prop_type) +
@@ -393,45 +359,13 @@ animate_hc <- ggplot(data = clusters_characteristics) +
   exit_shrink() +
   # Flip horizontally
   coord_flip() +
-  # Get title to change alongside states
+  # Get title to change as states change
   labs(title = "{closest_state}",
        x = "Cluster",
        y = "Proportion of respondents")
 
-
-# animate_hc <- ggplot(data = clusters_characteristics) +
-#   geom_col(data = clusters_characteristics %>% filter(value == 1),
-#            mapping = aes(x = clusters,
-#                          y = percent_type),
-#            fill = "coral2") +
-#   geom_col(data = clusters_characteristics %>% filter(value == 2),
-#            mapping = aes(x = clusters,
-#                          y = percent_type),
-#            fill = "deepskyblue1") +
-#   transition_states(type, transition_length = 3, state_length = 1) +
-#   enter_drift(x_mod = 0, y_mod = 1) +
-#   exit_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type)
-# 
-# +
-# enter_drift("2", x_mod = 0, y_mod = -clusters_characteristics$percent_type) +
-# exit_drift("2", x_mod = 0, y_mod = -clusters_characteristics$percent_type)
-
-
-# animate_hc <- ggplot(data = meep) +
-#   geom_col(mapping = aes(x = clusters,
-#                          y = percent_type,
-#                          fill = value)) +
-#   transition_states(type, transition_length = 3, state_length = 1) +
-#   enter_drift(x_mod = 0, y_mod = meep$percent_type) +
-#   exit_drift(x_mod = 0, y_mod = meep$percent_type)
-
-# animate_hc <- ggplot(data = meep, aes(x = clusters, y = percent_type)) +
-#   geom_col(mapping = aes(fill = value), position = "identity", width = 0.8) +
-#   transition_states(type, transition_length = 3, state_length = 1) +
-#   enter_drift(x_mod = 0, y_mod = meep$percent_type) +
-#   exit_drift(x_mod = 0, y_mod = meep$percent_type)
-
-animate(animate_hc, renderer=gifski_renderer("test.gif"))
+# Save animation
+animate(animate_hc, renderer=gifski_renderer("images_and_plots/clusters-breakdown.gif"))
 
 ################################
 # Racial/Ethnic Groups Network #
