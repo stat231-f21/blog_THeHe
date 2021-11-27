@@ -202,6 +202,9 @@ clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   scale_x_continuous(breaks = 1:10) +
   labs(x = "Number of clusters (k)", y = expression("Total Withins"[k]))
 clusters_elbow
+# Save as .png
+png(clusters_elbow, file="images_and_plots/clusters_elbow.png", width=600, height=350)
+dev.off()
 # Indeed, 5 or 6 clusters seems roughly optimal
 
 # Investigate information in the clusters

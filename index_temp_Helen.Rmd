@@ -122,6 +122,9 @@ clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   geom_line() +
   scale_x_continuous(breaks = 1:10) +
   labs(x = "Number of clusters (k)", y = expression("Total Withins"[k]))
+```
+
+```{r}
 clusters_elbow
 ```
 
