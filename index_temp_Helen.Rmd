@@ -127,9 +127,11 @@ clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
 clusters_elbow
 ```
 
-The clusters can be visualized in three-dimensional plots, looking at three of the four variables at a time. We can switch the three variables with an interactive plot. 
+We can visualize clusters with three-dimensional scatterplots. Since we clustered on four variables, we can use an interactive `plotly` scatterplot to switch between variables and explore the clusters. 
 
-## Creating the interactive network using `visNetwork` in Shiny app {.tabset .tabset-fade .tabset-pills}
+SLIGHTLY MORE EXPLANATION ABOUT THIS HERE MAYBE
+
+## Creating the interactive plotly in Shiny app {.tabset .tabset-fade .tabset-pills}
 
 ### UI
 
@@ -159,47 +161,39 @@ Network:
 
 "Networks need a format where there are nodes and edges  . In order to convert the data into a format for networks, we utilized the following code, using the `visNetwork` and `igraph` packages." (Tracy)
 
-This code chunk demonstrates wrangling for the 
+For the network, we wanted to connect racial/ethnic groups by the experiences of anxiety and depression, and the access to mental health and healthcare resources of their individuals. To do so, we compared the proportions of individuals in each group who 
+* experienced chronic (at least half the days) anxiety 
+* experienced chronic depression
+* took prescription medication
+* participated in counseling or something similar
+* needed access to but did not receive mental health care
+* had some form of healthcare
 
-LIMITATION: WE DIDNT GET TO COMPARE BEFORE AND AFTER COVID AND IT MIGHT BE INTERESTED TO SEE HOW DISPARITIES CHANGE DURING THIS TIME. LIKE COULD IT ACTUALLY HAVE GOTTEN BETTER BECAUSE MORE AWARENESS WAS BROUGHT TO IT? 
+For each pair of racial/ethnic groups, we calculated the difference in these proportions; smaller differences indicate more similar proportions of individuals. Thus, smaller differences provided more weight to the network edges, indicating more similar experiences between those groups.
 
-Network: 
+The following code chunk covers wrangling for the anxiety variable, but the same procedure was repeated with the other five variables. 
 
- The code chunk covers wrangling for the `Restaurants.csv` data set, but the exact same procedure was repeated with the other four data sets. Once we had our data into a data frame organized into three columns, where there was a     , as well as the edge weight, we can create an igraph object using the `graph_from_data_frame` function in the `igraph` package. We then used the `toVisNetworkData` function from the `visNetwork` package to transform the igraph into a format readily usable for `visNetwork`. 
+" The code chunk covers wrangling for the `Restaurants.csv` data set, but the exact same procedure was repeated with the other four data sets. Once we had our data into a data frame organized into three columns, where there was a     , as well as the edge weight, we can create an igraph object using the `graph_from_data_frame` function in the `igraph` package. We then used the `toVisNetworkData` function from the `visNetwork` package to transform the igraph into a format readily usable for `visNetwork`." 
+OR SIMILAR
+
 
 ```{r echo=TRUE, eval=FALSE}
-# Create an igraph object
-restaurants_igraph <- graph_from_data_frame(restaurants_final, directed = FALSE)
-
-# Convert igraph to visNetwork format
-restaurants_visNetwork <- toVisNetworkData(restaurants_igraph)
+# From larger data set with all mental health variables, select anxiety
+anx_visNetwork <- r_e_network %>% 
+  select(race_ethnicity_one, race_ethnicity_two, anx) %>% 
+  # Create igraph object
+  graph_from_data_frame(directed = FALSE) %>% 
+  # Create visNetwork object
+  toVisNetworkData()
 ```
 
-The `visNetwork` package allows different attributes for customization of nodes and edges. The edges dataset in the visNetwork object originally contains    columns, but we added a column for edge width and edge labels using the `mutate` function from `dplyr`. The nodes dataset in the visNetwork originally contains     , but we also added a new column for color, where color corresponded to the proportion of annual COVID cases per state population. The `eigScalePal` function creates a gradient of colors from the `colorRampPalette` function, and the `mutate` command essentially breaks the values into   .
+We then got the nodes and edges for the network. For the edges, a new column, `value`, was created, which is where the network will pull the weight or size of the edges from. 
 
 ```{r echo=TRUE, eval=FALSE}
-# Set color palette
-eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
-num_colors <- 5
-
-# Wrangle edges data
-restaurants_edges <- restaurants_visNetwork$edges %>%
-  # Create a new column for edge width
-  mutate(value = as.numeric(restaurants_overLap),
-         width = value/100) %>%
-  select(-value) 
-
-restaurants_edges <- restaurants_edges %>%
-  # Create a new column for edge labels that appear when hovered over
-  mutate(title = paste0(restaurants_edges$restaurants_overLap, " days shared in 2020"))
-
-# Wrangle nodes data
-restaurants_nodes <- restaurants_visNetwork$nodes %>%
-  # Join annual cases dataset
-  inner_join(annual_cases, by = c("id" = "state")) %>%
-  # Create a new column for node color, colored by annual COVID cases in relation to color palette legend
-  mutate(color = eigScalePal(num_colors)[cut(covid_prop, breaks = num_colors)]) %>%
-  select(-c(covid_prop))
+# Get nodes and weighted edges
+anx_nodes <- anx_visNetwork$nodes 
+anx_edges <- anx_visNetwork$edges %>% 
+  mutate(value = anx) 
 ```
 
 ## Creating the interactive network using `visNetwork` in Shiny app {.tabset .tabset-fade .tabset-pills}
@@ -207,36 +201,28 @@ restaurants_nodes <- restaurants_visNetwork$nodes %>%
 ### UI
 
 ```{r echo=TRUE, eval=FALSE}
-ui <- fluidPage(title = "State COVID Restrictions Network",
+ui <- fluidPage(
+  theme = shinytheme("lumen"),
+  title = "Racial/Ethnic Groups Network",
+  
                 fillPage(sidebarLayout(
                   sidebarPanel(
-                    selectizeInput(
-                      inputId = "filterNodes",
-                      label = "Select states:",
-                      choices = node_values,
-                      selected = "AK",
-                      multiple = TRUE
-                    ),
                     selectInput(
-                      inputId = "restriction",
-                      label = "Select a type of COVID restriction",
+                      inputId = "hc_variable",
+                      label = "Select a type of health care variable",
                       choices =  list(
-                        "Resturant Restrictions" = "rest",
-                        "Bar Restrictions" = "bar",
-                        "Mask Mandates" = "mask",
-                        "Gathering Bans" = "gatban",
-                        "Stay at Home Orders" = "stayhome"),
-                      selected = "gatban",
+                        "Anxiety" = "anx",
+                        "Depression" = "dep",
+                        "Prescription Medication" = "presc",
+                        "Counseling or similar services" = "mhs",
+                        "Needed but did not receive care" = "no_a",
+                        "Healthcare coverage" = "hc"),
+                      selected = "anx",
                       multiple = FALSE
                     ),
-                    br(),
-                    p("Proportion of Annual COVID Cases per State Population"),
-                    img(src="covid_legend.png", width = "500px", height = "500px"),
-                    width = 3,
                   ),
                   mainPanel(
-                    visNetworkOutput("network_proxy_update", width = "100%", height = "90vh"),
-                    width = 9
+                    visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
                   )
                 )))
 ```
@@ -245,42 +231,46 @@ ui <- fluidPage(title = "State COVID Restrictions Network",
 ###  Server
 
 ```{r echo=TRUE, eval=FALSE}
-############
-# server   #
-############
-
 server <- function(input, output) {
+  active_nodes <- reactive({
+    switch(input$hc_variable,
+           "anx" = anx_nodes,
+           "dep" = dep_nodes,
+           "presc" = presc_nodes,
+           "mhs" = mhs_nodes,
+           "no_a" = no_a_nodes,
+           "hc" = hc_nodes)
+  })
   
-  output$network_proxy_update <- renderVisNetwork({
-    visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
-               main = list(text = "Network for States Sharing the Same COVID Restrictions in 2020", 
+  active_edges <- reactive({
+    switch(input$hc_variable,
+           "anx" = anx_edges,
+           "dep" = dep_edges,
+           "presc" = presc_edges,
+           "mhs" = mhs_edges,
+           "no_a" = no_a_edges,
+           "hc" = hc_edges
+    )
+  })
+  output$network_proxy_update_re <- renderVisNetwork({
+    visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%",
+               scaling = list(min = min(input$hc_variable), max = max(input$hc_variable)),
+               main = list(text = "Network for Mental Health Symptoms and Access to Resources for Racial/Ethnic Groups", 
                            style = "font-family:Arial;font-size:20px"
                ),
                submain = list(text = 
-                                "*Nodes are colored by proportion of annual COVID cases per state population<br>
-                                 *Edges are weighted by number of days in 2020 that states shared 
-                                 the same restrictions<br>
-                                 Hover over edges to see the exact number of days",
+                                "*Edges are weighted by how similar groups are in terms of the proportion of people<br>
+                                  experiencing mental health symptoms or having access to mental health resources",
                               style = "font-family:Arial;font-size:13px")) %>%
       visNodes(size = 10) %>%
-      visOptions(selectedBy = "group", 
-                 highlightNearest = list(enabled = TRUE, hover = TRUE), 
+      visOptions(highlightNearest = list(enabled = TRUE, hover = TRUE), 
                  nodesIdSelection = TRUE) %>%
       visPhysics(stabilization = FALSE) %>%
       visEdges(color = list(color = "black", highlight = "red")) 
   })
   
-  myVisNetworkProxy <- visNetworkProxy("network_proxy_update")
-  
-  observe ({
-    # Create an object to contain the nodes the user selects
-    filteredNodes <- active_nodes()[gathering_ban_nodes$id %in% input$filterNodes, ,drop = FALSE]
-    # Create an object to create all the nodes the user did not select
-    hiddenNodes <- anti_join(active_nodes(), filteredNodes)
-    # 
-    visRemoveNodes(myVisNetworkProxy, id = hiddenNodes$id)
-    visUpdateNodes(myVisNetworkProxy, nodes = filteredNodes)
-  })
+  myreVisNetworkProxy <- visNetworkProxy("network_proxy_update_re")
+
 }
 
 #####################
@@ -291,14 +281,23 @@ shinyApp(ui = ui, server = server)
 
 ## Findings 
 
-### Helen
+This network allows users to explore the relationships between different racial/ethnic groups and how individuals within different racial/ethnic groups have experienced their mental health during the pandemic. 
 
 
-
-Overall, the network allows users to explore the relationships between different states of their choice in terms of how many days in 2020 they shared the same COVID restrictions, as well as specify which restriction they wanted to look at. There are many different analyses that can come about, but it's interesting to see that there is not one dominant pattern or takeaway, and that states with radically different annual COVID cases per population could share the same restrictions, whereas       . This underlies the complexity, and state restrictions are only one factor within many that influence the proportion of COVID cases that emerge.
 
 # Limitations 
 What are the limitations of your work? Be clear so that others do not misinterpret your findings. To what population do your results apply? Do they generalize? Could your work be extended with more data or computational power or time to analyze? How could your study be improved? Suggesting plausible extensions doesn’t weaken your work; it strengthens it by connecting it to future work. 
+
+One big limitation is that this analysis is restricted to during the pandemic. As COVID-19 has opened up many conversations about mental and physical health and access to care, it would be interesting to expand this analysis to before COVID-19. Is it possible that more individuals have access now to this care because of the conversations the pandemic opened up?
+
+FINISH THIS 
+
+* Population: people with computers lol
+
+* find more quantitative variables
+
+* try to create a predictive model 
+
 
 For example, you can include **Bold** and _Italic_ and `Code` text.  
 
