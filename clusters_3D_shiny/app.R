@@ -4,14 +4,11 @@ library(dplyr)
 library(lubridate)
 library(ggrepel)
 library(plotly)
-library(igraph)
-library(visNetwork)
-library(ggnetwork)
 library(grDevices)
 library(shiny)
 
 # Read in data
-pulse_clustered_data <- read.csv("wrangled_csv_data/pulse_clustered_data.csv")
+pulse_clustered_data <- read.csv("../wrangled_csv_data/pulse_clustered_data.csv")
 # Convert clusters to factor for proper legend
 pulse_clustered_data$clusters <- as.factor(pulse_clustered_data$clusters)
 
@@ -73,7 +70,7 @@ server <- function(input, output){
             y = ~jitter(get(input$var2)), 
             z = ~jitter(get(input$var3)), 
             type="scatter3d", mode="markers", color = ~clusters) %>% 
-      layout(title = list(text = "Kmeans Clustering"),
+      layout(title = list(text = "Mental Health and Healthcare Resources Kmeans Clustering"),
              scene = list(xaxis = list(title = paste(choice_axes[choice_values == input$var1])), 
                           yaxis = list(title = paste(choice_axes[choice_values == input$var2])),
                           zaxis = list(title = paste(choice_axes[choice_values == input$var3]))),
