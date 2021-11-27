@@ -6,11 +6,12 @@ output:
   rmdformats::readthedown:
     thumbnails: false
     highlight: "kate"
+runtime: shiny
 ---
 
 ```{r setup, include = FALSE}
 library(tidyverse)
-library(kableExtra) # for example code; delete if not needed
+library(knitr)
 
 # Set code chunk defaults 
 knitr::opts_chunk$set(echo = FALSE, 
@@ -23,18 +24,160 @@ options(knitr.kable.NA = '')
 ```
 
 # Introduction
-Why should anyone care about this? 
-What is this about? Do not assume your readers have any specific knowledge of your subject matter! 
+Given the devastating effects of the      , we were interested in exploring different relationships 
 
-# Data Sources
-What are the data? What was the source of the data (who collected it, when, in what way, and why)? What kind of data was it? Is there a link to the data or some other way for the reader to follow up on your work? 
+# Word Map 
 
 # COVID State Restrictions Network
 
-We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each state as a node and each edge as displaying the      . The edges are weighted by how many days states share, and the nodes are colored by the proportion of annual COVID cases per state population. 
+We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each node representing a state and each edge connecting two states together. The nodes are colored by the proportion of annual COVID cases per state population, and the edges are weighted by how many days each pair of states shared the same restrictions in 2020. Users can also select the exact states to visualize (we recommend looking at five states or less; otherwise the network becomes too crowded!), as well as the type of COVID restriction to explore. There is a drop-down menu for states above the network; when a state is selected, its edges with other states will be highlighted so they can be more easily seen. Lastly, users can hover over the edges in the network to see the exact number of days that each pair of states shared.
 
-Visit our Shiny app to 
-What are your findings? What kind of statistical computations (if any) have you done to support those conclusions? (Again, even if you display code showing how some of the calculations were performed, it is up to you to interpret, in simple terms, the results of these calculations.) Do not forget about units, axis labels, etc.
+Visit [our Shiny app]("https://th23.shinyapps.io/blog_THeHe/") to explore and interact with the COVID state restrictions network!
+
+```{r include = FALSE}
+# Load packages
+library(tidyverse)
+library(dplyr)
+library(igraph)
+library(visNetwork)
+library(grDevices)
+library(shiny)
+library(shinythemes)
+```
+
+```{r}
+
+#######################
+#    Load Datasets    #
+#######################
+# Load network datasets
+restaurants_edges <- read.csv("wrangled_csv_data/restaurants_edges_data.csv") %>% select(-X)
+restaurants_nodes <- read.csv("wrangled_csv_data/restaurants_nodes_data.csv") %>% select(-X)
+
+bars_edges <- read.csv("wrangled_csv_data/bars_edges_data.csv") %>% select(-X)
+bars_nodes <- read.csv("wrangled_csv_data/bars_nodes_data.csv") %>% select(-X)
+
+mask_mandates_edges <- read.csv("wrangled_csv_data/mask_mandates_edges_data.csv") %>% select(-X)
+mask_mandates_nodes <- read.csv("wrangled_csv_data/mask_mandates_nodes_data.csv") %>% select(-X)
+
+gathering_ban_edges <- read.csv("wrangled_csv_data/gathering_ban_edges_data.csv") %>% select(-X)
+gathering_ban_nodes <- read.csv("wrangled_csv_data/gathering_ban_nodes_data.csv") %>% select(-X)
+
+stay_at_home_orders_edges <- read.csv("wrangled_csv_data/stay_at_home_orders_edges_data.csv") %>% select(-X)
+stay_at_home_orders_nodes <- read.csv("wrangled_csv_data/stay_at_home_orders_nodes_data.csv") %>% select(-X)
+
+# Load proportion of annual COVID cases per state population data
+annual_cases <- read.csv("wrangled_csv_data/proportion_annual_covid_cases_data.csv")
+
+##############################################
+# Define choice values and names for widgets #
+##############################################
+# For nodes
+node_values <- state.abb
+node_names <- state.name
+names(node_values) <- node_names
+
+# For datasets
+dataset_values <- c("rest", "bar", "mask", "gatban", "stayhome")
+dataset_names <- c("Restaurant Restrictions", "Bar Restrictions", "Mask Mandates", "Gathering Bans", "Stay at Home Orders")
+names(dataset_values) <- dataset_names
+
+############
+#    ui    #
+############
+ui <- fluidPage(
+  theme = shinytheme("lumen"),
+  title = "State COVID Restrictions Network",
+                fillPage(sidebarLayout(
+                  sidebarPanel(
+                    selectizeInput(
+                      inputId = "filterNodes",
+                      label = HTML("Select states <br />
+                      (To remove a state, select it and hit the delete button on your keyboard)"),
+                      choices = node_values,
+                      selected = "AK",
+                      multiple = TRUE
+                    ),
+                    selectInput(
+                      inputId = "restriction",
+                      label = "Select a type of COVID restriction",
+                      choices =  dataset_values,
+                      selected = "gatban",
+                      multiple = FALSE
+                    ),
+                    br(),
+                    p("Proportion of Annual COVID Cases per State Population"),
+                    img(src="covid_legend.png", width = "500px", height = "500px"),
+                    width = 3,
+                  ),
+                  mainPanel(
+                    visNetworkOutput("network_proxy_update", width = "100%", height = "90vh"),
+                    width = 9
+                  )
+                )))
+
+############
+# server   #
+############
+
+server <- function(input, output) {
+  
+  active_nodes <- reactive({
+    # Switch nodes dataset depending on user input
+    switch(input$restriction,
+           "rest" = subset(restaurants_nodes, restaurants_nodes$id %in% input$filterNodes), 
+           "bar" = subset(bars_nodes, bars_nodes$id %in% input$filterNodes),
+           "mask" = subset(mask_mandates_nodes, mask_mandates_nodes$id %in% input$filterNodes),
+           "gatban" = subset(gathering_ban_nodes, gathering_ban_nodes$id %in% input$filterNodes),
+           "stayhome" = subset(stay_at_home_orders_nodes, stay_at_home_orders_nodes$id %in% input$filterNodes)
+    )
+  })
+  
+  active_edges <- reactive({
+    # Switch edges dataset depending on user input
+    switch(input$restriction,
+           "rest" = subset(restaurants_edges, restaurants_edges$from %in% input$filterNodes),
+           "bar" = subset(bars_edges, bars_edges$from %in% input$filterNodes),
+           "mask" = subset(mask_mandates_edges, mask_mandates_edges$from %in% input$filterNodes),
+           "gatban" = subset(gathering_ban_edges, gathering_ban_edges$from %in% input$filterNodes),
+           "stayhome" = subset(stay_at_home_orders_edges, stay_at_home_orders_edges$from %in% input$filterNodes)
+    )
+  })
+  
+  output$network_proxy_update <- renderVisNetwork({
+    visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
+               main = list(text = paste("Network for States Sharing the Same COVID", dataset_names[dataset_values == input$restriction], "in 2020"), 
+                           style = "font-family:Arial;font-size:20px"),
+               submain = list(text = "*Nodes are colored by proportion of annual COVID cases per state population<br>
+                                 *Edges are weighted by number of days in 2020 that states shared 
+                                 the same restriction order<br>
+                                 Hover over edges to see the exact number of days",
+                           style = "font-family:Arial;font-size:13px")) %>%
+      visNodes(size = 10) %>%
+      visOptions(selectedBy = "group", 
+                 highlightNearest = list(enabled = TRUE, hover = TRUE), 
+                 nodesIdSelection = TRUE) %>%
+      visPhysics(stabilization = FALSE) %>%
+      visEdges(color = list(color = "black", highlight = "red")) 
+  })
+  
+  myVisNetworkProxy <- visNetworkProxy("network_proxy_update")
+  
+  observe ({
+    # Create a data frame to contain the nodes the user selects
+    filteredNodes <- active_nodes()[gathering_ban_nodes$id %in% input$filterNodes, ,drop = FALSE]
+    # Create a data frame to contain all the nodes the user did not select
+    hiddenNodes <- anti_join(active_nodes(), filteredNodes)
+    visRemoveNodes(myVisNetworkProxy, id = hiddenNodes$id)
+    visUpdateNodes(myVisNetworkProxy, nodes = filteredNodes)
+  })
+}
+
+#####################
+# call to shiny App #
+#####################
+shinyApp(ui = ui, server = server)
+```
 
 ## Data Sources 
 
@@ -56,7 +199,11 @@ Visit [the CDC website](https://data.cdc.gov/browse?category=Policy+Surveillance
 
 ### Data Wrangling
 
-Networks need a format where there are nodes and edges  . In order to convert the data into a format for networks, we utilized the following code, using the `visNetwork` and `igraph` packages. The code chunk covers wrangling for the `Restaurants.csv` data set, but the exact same procedure was repeated with the other four data sets. Once we had our data into a data frame organized into three columns, where there was a     , as well as the edge weight, we can create an igraph object using the `graph_from_data_frame` function in the `igraph` package. We then used the `toVisNetworkData` function from the `visNetwork` package to transform the igraph into a format readily usable for `visNetwork`. 
+_The following code chunks were for wrangling the `Restaurants.csv` data set, but the exact same procedure was repeated with the other four data sets._ 
+
+In order to build a network diagram using the `igraph` package in R, we needed to transform the raw data into an edge list, a data frame where there are three columns; the first column would contain the origin states, the second column would contain the target states, and the third column would contain the number of days the states in the first and second column share. After getting all five raw data sets into this format, we converted them into an `igraph` object using the `graph_from_data_frame` function in the `igraph` package. We also specified that it was an un-directed network by putting FALSE in the `directed` argument, since it did not matter which direction the edges went between each pair of states.
+
+We then wanted to use the `visNetwork` package to create interactive network visualizations. We converted the `igraph` objects into a format usable for `visNetwork` using the `toVisNetworkData` function. 
 
 ```{r echo=TRUE, eval=FALSE}
 # Create an igraph object
@@ -66,13 +213,9 @@ restaurants_igraph <- graph_from_data_frame(restaurants_final, directed = FALSE)
 restaurants_visNetwork <- toVisNetworkData(restaurants_igraph)
 ```
 
-The `visNetwork` package allows different attributes for customization of nodes and edges. The edges dataset in the visNetwork object originally contains    columns, but we added a column for edge width and edge labels using the `mutate` function from `dplyr`. The nodes dataset in the visNetwork originally contains     , but we also added a new column for color, where color corresponded to the proportion of annual COVID cases per state population. The `eigScalePal` function creates a gradient of colors from the `colorRampPalette` function, and the `mutate` command essentially breaks the values into   .
+The `visNetwork` package requires the edges in the network to be a data frame. The original edges data frame in the `visNetwork` object contained three columns: a "from" column and a "to" column that taken together, contained all possible combinations of two states, as well as a column for the number of days each pair of states shared. However, `visNetwork` allows us to add properties to edges by simply adding columns to the data frame. We thus added a column for edge width and edge labels using the `mutate` function from `dplyr`.
 
 ```{r echo=TRUE, eval=FALSE}
-# Set color palette
-eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
-num_colors <- 5
-
 # Wrangle edges data
 restaurants_edges <- restaurants_visNetwork$edges %>%
   # Create a new column for edge width
@@ -83,6 +226,14 @@ restaurants_edges <- restaurants_visNetwork$edges %>%
 restaurants_edges <- restaurants_edges %>%
   # Create a new column for edge labels that appear when hovered over
   mutate(title = paste0(restaurants_edges$restaurants_overLap, " days shared in 2020"))
+```
+
+Similarly, the `visNetwork` package requires the nodes to be a data frame. The original nodes data frame in the `visNetwork` object originally contained two columns, an "id" column and a "label" column that contained the state names for the nodes. However, we also added a new column for the color of each node, where color corresponded to the proportion of annual COVID cases per state population. The `eigScalePal` function creates a gradient of five colors from the `colorRampPalette` function, and the `mutate` command breaks the COVID cases proportions column values into five sections and assigns each value to one out of the five colors.
+
+```{r echo=TRUE, eval=FALSE}
+# Set color palette
+eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
+num_colors <- 5
 
 # Wrangle nodes data
 restaurants_nodes <- restaurants_visNetwork$nodes %>%
@@ -93,66 +244,20 @@ restaurants_nodes <- restaurants_visNetwork$nodes %>%
   select(-c(covid_prop))
 ```
 
-## Creating the interactive network using `visNetwork` in Shiny app {.tabset .tabset-fade .tabset-pills}
+## Creating the interactive network using `visNetwork` in Shiny  
 
-### UI
+In order to create an interactive network in a Shiny app, the function, `visNetwork`, can be used within the `renderVisNetwork` function. The `visNetwork` function needs two arguments, the nodes and the edges, and using the pipe function, there are many other functions that can be used to further customize the network, such as being able to select a node and have its connecting edges highlighted using the `visOptions` function or being able to specify the color of the edges and the different color they should change to when selected using the `visEdges` function. 
 
-```{r echo=TRUE, eval=FALSE}
-ui <- fluidPage(title = "State COVID Restrictions Network",
-                fillPage(sidebarLayout(
-                  sidebarPanel(
-                    selectizeInput(
-                      inputId = "filterNodes",
-                      label = "Select states:",
-                      choices = node_values,
-                      selected = "AK",
-                      multiple = TRUE
-                    ),
-                    selectInput(
-                      inputId = "restriction",
-                      label = "Select a type of COVID restriction",
-                      choices =  list(
-                        "Resturant Restrictions" = "rest",
-                        "Bar Restrictions" = "bar",
-                        "Mask Mandates" = "mask",
-                        "Gathering Bans" = "gatban",
-                        "Stay at Home Orders" = "stayhome"),
-                      selected = "gatban",
-                      multiple = FALSE
-                    ),
-                    br(),
-                    p("Proportion of Annual COVID Cases per State Population"),
-                    img(src="covid_legend.png", width = "500px", height = "500px"),
-                    width = 3,
-                  ),
-                  mainPanel(
-                    visNetworkOutput("network_proxy_update", width = "100%", height = "90vh"),
-                    width = 9
-                  )
-                )))
-```
-
-
-###  Server
+To be able to add and remove nodes interactively, depending on what the user selects, an updated network can be created using the `visNetworkProxy` function. After creating data frames to contain the nodes that the user selected and did not select, `visRemoveNodes` and `visUpdateNodes` can be used to reactively display only the nodes the user selected in the network.
 
 ```{r echo=TRUE, eval=FALSE}
-############
-# server   #
-############
-
 server <- function(input, output) {
   
   output$network_proxy_update <- renderVisNetwork({
     visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
                main = list(text = "Network for States Sharing the Same COVID Restrictions in 2020", 
                            style = "font-family:Arial;font-size:20px"
-               ),
-               submain = list(text = 
-                                "*Nodes are colored by proportion of annual COVID cases per state population<br>
-                                 *Edges are weighted by number of days in 2020 that states shared 
-                                 the same restrictions<br>
-                                 Hover over edges to see the exact number of days",
-                              style = "font-family:Arial;font-size:13px")) %>%
+               ) %>%
       visNodes(size = 10) %>%
       visOptions(selectedBy = "group", 
                  highlightNearest = list(enabled = TRUE, hover = TRUE), 
@@ -164,25 +269,19 @@ server <- function(input, output) {
   myVisNetworkProxy <- visNetworkProxy("network_proxy_update")
   
   observe ({
-    # Create an object to contain the nodes the user selects
+    # Create a data frame to contain the nodes the user selects
     filteredNodes <- active_nodes()[gathering_ban_nodes$id %in% input$filterNodes, ,drop = FALSE]
-    # Create an object to create all the nodes the user did not select
+    # Create a data frame to contain all the nodes the user did not select
     hiddenNodes <- anti_join(active_nodes(), filteredNodes)
-    # 
     visRemoveNodes(myVisNetworkProxy, id = hiddenNodes$id)
     visUpdateNodes(myVisNetworkProxy, nodes = filteredNodes)
   })
 }
-
-#####################
-# call to shiny App #
-#####################
-shinyApp(ui = ui, server = server)
 ```
 
 ## Findings 
 
-Overall, the network allows users to explore the relationships between different states of their choice in terms of how many days in 2020 they shared the same COVID restrictions, as well as specify which restriction they wanted to look at. There are many different analyses that can come about, but it's interesting to see that there is not one dominant pattern or takeaway, and that states with radically different annual COVID cases per population could share the same restrictions, whereas       . This underlies the complexity, and state restrictions are only one factor within many that influence the proportion of COVID cases that emerge.
+Overall, the network allows users to explore the relationships between different states of their choice in terms of how many days in 2020 they shared the same COVID restrictions, as well as specify which restriction they wanted to look at. There are many different analyses that can come from exploring the network, but it's interesting to see that there is not one dominant pattern or takeaway. Some states with radically different annual COVID cases per population share the same state restrictions for the majority of 2020, whereas some states with very similar annual COVID cases per population share very little of the same state restrictions in 2020. This underlies the complexity of COVID severity in states, and it's important to remember that state restrictions are only one factor within many that influence the proportion of COVID cases that emerge in different locations.
 
 # Limitations 
 What are the limitations of your work? Be clear so that others do not misinterpret your findings. To what population do your results apply? Do they generalize? Could your work be extended with more data or computational power or time to analyze? How could your study be improved? Suggesting plausible extensions doesn’t weaken your work; it strengthens it by connecting it to future work. 
@@ -198,24 +297,6 @@ You should test out updating your GitHub Pages website:
 * go to https://stat231-f21.github.io/blog_THeHe/ to see the published test document (this is publicly available!)
 
 ## Including code and plots
-
-You can embed code as normal, for example:
-
-```{r cars}
-summary(cars)
-```
-
-Let's clean up the format of that output instead of using the standard R output:
-
-```{r pretty-table, echo = TRUE}
-summary(cars) %>%
-  kable(col.names = c("Speed", "Distance"),
-        row.names = FALSE) %>%
-  kable_styling(bootstrap_options = "striped",
-                full_width = FALSE) %>%
-  row_spec(0, bold = TRUE) %>%
-  column_spec(1:2, width = "1.5in") 
-```
 
 In a study from the 1920s, fifty cars were used to see how the speed of the car and the distance taken to stop were related.  Speeds ranged between `r min(cars$speed)` and `r max(cars$speed)` mph.  Distances taken to stop ranged between `r min(cars$dist)` and `r max(cars$dist)` feet, with the middle 50% falling between `r as.numeric(quantile(cars$dist)[2])` and `r as.numeric(quantile(cars$dist)[4])` feet.  
 
@@ -252,23 +333,6 @@ knitr::include_graphics("https://media.giphy.com/media/H7ZrrA9V2pd3Tehdds/giphy.
 # You can even create tabs within your webpage if you want! {.tabset .tabset-fade .tabset-pills}
 
 Every subsection heading (starting with `##`) until you create a new section heading (starting with `#`) will be a new tab.
-
-## Bulleted list
-
-You can make a bulleted list like this:
-
-* item 1
-* item 2
-* item 3
-
-
-## Numbered list
-
-You can make a numbered list like this
-
-1. First thing I want to say
-2. Second thing I want to say
-3. Third thing I want to say
 
 # Customizing your blog design
 

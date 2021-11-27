@@ -32,10 +32,15 @@ annual_cases <- read.csv("wrangled_csv_data/proportion_annual_covid_cases_data.c
 ##############################################
 # Define choice values and names for widgets #
 ##############################################
-# # Get column for state abbreviations
+# For nodes
 node_values <- state.abb
 node_names <- state.name
 names(node_values) <- node_names
+
+# For datasets
+dataset_values <- c("rest", "bar", "mask", "gatban", "stayhome")
+dataset_names <- c("Restaurant Restrictions", "Bar Restrictions", "Mask Mandates", "Gathering Bans", "Stay at Home Orders")
+names(dataset_values) <- dataset_names
 
 ############
 #    ui    #
@@ -47,7 +52,8 @@ ui <- fluidPage(
                   sidebarPanel(
                     selectizeInput(
                       inputId = "filterNodes",
-                      label = "Select states:",
+                      label = HTML("Select states <br />
+                      (To remove a state, select it and hit the delete button on your keyboard)"),
                       choices = node_values,
                       selected = "AK",
                       multiple = TRUE
@@ -55,12 +61,7 @@ ui <- fluidPage(
                     selectInput(
                       inputId = "restriction",
                       label = "Select a type of COVID restriction",
-                      choices =  list(
-                        "Resturant Restrictions" = "rest",
-                        "Bar Restrictions" = "bar",
-                        "Mask Mandates" = "mask",
-                        "Gathering Bans" = "gatban",
-                        "Stay at Home Orders" = "stayhome"),
+                      choices =  dataset_values,
                       selected = "gatban",
                       multiple = FALSE
                     ),
@@ -105,15 +106,13 @@ server <- function(input, output) {
   
   output$network_proxy_update <- renderVisNetwork({
     visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
-               main = list(text = "Network for States Sharing the Same COVID Restrictions in 2020", 
-                           style = "font-family:Arial;font-size:20px"
-               ),
-               submain = list(text = 
-                                "*Nodes are colored by proportion of annual COVID cases per state population<br>
+               main = list(text = paste("Network for States Sharing the Same COVID", dataset_names[dataset_values == input$restriction], "in 2020"), 
+                           style = "font-family:Arial;font-size:20px"),
+               submain = list(text = "*Nodes are colored by proportion of annual COVID cases per state population<br>
                                  *Edges are weighted by number of days in 2020 that states shared 
-                                 the same restrictions<br>
+                                 the same restriction order<br>
                                  Hover over edges to see the exact number of days",
-                              style = "font-family:Arial;font-size:13px")) %>%
+                           style = "font-family:Arial;font-size:13px")) %>%
       visNodes(size = 10) %>%
       visOptions(selectedBy = "group", 
                  highlightNearest = list(enabled = TRUE, hover = TRUE), 
@@ -125,9 +124,9 @@ server <- function(input, output) {
   myVisNetworkProxy <- visNetworkProxy("network_proxy_update")
   
   observe ({
-    # Create an object to contain the nodes the user selects
+    # Create a data frame to contain the nodes the user selects
     filteredNodes <- active_nodes()[gathering_ban_nodes$id %in% input$filterNodes, ,drop = FALSE]
-    # Create an object to create all the nodes the user did not select
+    # Create a data frame to contain all the nodes the user did not select
     hiddenNodes <- anti_join(active_nodes(), filteredNodes)
     # 
     visRemoveNodes(myVisNetworkProxy, id = hiddenNodes$id)
