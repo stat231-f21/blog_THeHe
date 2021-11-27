@@ -34,7 +34,7 @@ We wanted to explore how different states are connected by how many days in 2020
 
 ```{r, out.extra="data-external=1"}
 knitr::include_app("https://th23.shinyapps.io/blog_THeHe/", 
-                   height = "600px")
+                   height = "1000px")
 ```
 Visit [our Shiny app](https://th23.shinyapps.io/blog_THeHe/) to explore and interact with the COVID state restrictions network!
 
