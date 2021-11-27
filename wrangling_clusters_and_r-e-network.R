@@ -316,7 +316,7 @@ clusters_characteristics <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum) %
   # Rename values in `type` column so they can easily be called and displayed with `{closest_state}` during animation
   mutate(type = case_when(type == "presc" ~ "Takes Prescription Medication",
                           type =="mhs" ~ "Receives counseling or similar mental health services",
-                          type == "no_a" ~ "Needs but does not have access to mental health care",
+                          type == "no_a" ~ "Able to access to mental health care when needed",
                           type == "healthcare" ~ "Has some form of healthcare coverage"))
 
 # Bug in gganimate makes plotting stacked bar chart as a single `geom_col()` difficult
@@ -383,7 +383,7 @@ animate_hc <- ggplot(data = clusters_characteristics) +
                     labels = c("Yes", "No"),
                       values = c("Yes" = "thistle", "No" = "palegreen3")) +
   # Transition between the four variables
-  transition_states(type, transition_length = 1, state_length = 5) +
+  transition_states(type, transition_length = 1, state_length = 6) +
   # Have new points drift in and travel the full distance they represent
   enter_drift(x_mod = 0, y_mod = clusters_characteristics$prop_type) +
   # Have old points shrink out of the animation

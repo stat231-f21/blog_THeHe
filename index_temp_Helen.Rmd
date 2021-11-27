@@ -100,8 +100,6 @@ pulse_clustered_data <- pulse_college_data %>%
   mutate(clusters = factor(pulse_all_clusters$cluster))
 ```
 
-To check if five clusters was a good number to use, we
-
 We then constructed an elbow plot to assess whether or not five was actually an optimal number of clusters to use. The "elbow" bends where the total within-cluster sum of squares (which measures variation within clusters) begins decreasing linearly. At this point, identifying more clusters becomes less useful. Viewing this plot, it is clear either five or six clusters is optimal. 
 
 ```{r echo=TRUE, eval=FALSE}
@@ -145,9 +143,11 @@ PASTE THE PLOT AND GGANIMATE BELOW
 
 INCLUDE CODE FOR GGANIMATE?
 
+<img src="test.gif" /> 
+
 ## Findings
 
-While the kmeans clustering did not exactly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, have needed mental health resources but have been unable to get to them, and do not have healthcare coverage. 
+While the kmeans clustering did not exactly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they've largely been able to access mental health care resources when they needed them. 
 
 Further, the clusters which are more predominantly white than the full respondents pool - clusters 1 and 2 - are also those where the most access to care and resources lie, with the main difference being that individuals in cluster 2 do not utilize counseling or similar mental health services, whereas individuals in cluster 1 do. 
 

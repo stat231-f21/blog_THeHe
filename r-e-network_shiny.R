@@ -22,6 +22,23 @@ mhs_nodes <- read.csv("wrangled_csv_data/mental_health_services_nodes.csv") %>% 
 no_a_nodes <- read.csv("wrangled_csv_data/no_access_nodes.csv") %>% select(-X)
 hc_nodes <- read.csv("wrangled_csv_data/healthcare_nodes.csv") %>% select(-X)
 
+# MOVE ALL THIS IF I USE IT 
+eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
+num_colors <- 5
+
+# Create plot for color legend
+png(file = "anx_legend.png")
+anx_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+text(x=1.25, y = seq(0,1,l=5), labels = seq(min(anxiety_net$prop), max(anxiety_net$prop),l=5))
+anx_image <- rasterImage(anx_image, 0, 0, 1,1)
+dev.off()
+
+anx_nodes <- anx_nodes %>% 
+  inner_join(anxiety_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
+
 # Load edges datasets
 anx_edges <- read.csv("wrangled_csv_data/anxiety_edges.csv") %>% select(-X)
 dep_edges <- read.csv("wrangled_csv_data/depression_edges.csv") %>% select(-X)
@@ -52,6 +69,11 @@ ui <- fluidPage(
                       selected = "anx",
                       multiple = FALSE
                     ),
+                    # TAKE THIS OUT IF I DON'T USE IT
+                    br(),
+                    p("Proportion"),
+                    img(src="anx_legend.png", width = "200px", height = "200px"),
+                    # width = 3,
                   ),
                   mainPanel(
                     visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
@@ -62,6 +84,7 @@ ui <- fluidPage(
 # server   #
 ############
 server <- function(input, output) {
+  
   active_nodes <- reactive({
     switch(input$hc_variable,
            "anx" = anx_nodes,
