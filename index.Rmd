@@ -26,8 +26,6 @@ options(knitr.kable.NA = '')
 # Introduction
 Given the devastating effects of the      , we were interested in exploring different relationships 
 
-# Word Map 
-
 # COVID State Restrictions Network
 
 We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each node representing a state and each edge connecting two states together. The nodes are colored by the proportion of annual COVID cases per state population, and the edges are weighted by how many days each pair of states shared the same restrictions in 2020. Users can also select the exact states to visualize (we recommend looking at five states or less; otherwise the network becomes too crowded!), as well as the type of COVID restriction to explore. There is a drop-down menu for states above the network; when a state is selected, its edges with other states will be highlighted so they can be more easily seen. Lastly, users can hover over the edges in the network to see the exact number of days that each pair of states shared.
@@ -142,7 +140,7 @@ server <- function(input, output) {
 
 Overall, the network allows users to explore the relationships between different states of their choice in terms of how many days in 2020 they shared the same COVID restrictions, as well as specify which COVID restriction they wanted to look at. There are many different analyses that can come from exploring the network, but it's interesting to see that there is not one dominant pattern or takeaway. Some states with radically different annual COVID cases per population share the same state restrictions for the majority of 2020, whereas some states with very similar annual COVID cases per population share very little of the same state restrictions in 2020. This underlies the complexity of COVID severity in states, and it's important to remember that state restrictions are only one factor within many that influence the proportion of COVID cases that emerge in different locations.
 
-# Limitations 
+## Limitations 
 
 What are the limitations of your work? Be clear so that others do not misinterpret your findings. To what population do your results apply? Do they generalize? Could your work be extended with more data or computational power or time to analyze? How could your study be improved? Suggesting plausible extensions doesn’t weaken your work; it strengthens it by connecting it to future work. 
 
@@ -155,6 +153,126 @@ You should test out updating your GitHub Pages website:
 * knit `index.Rmd` (we will now knit to HTML by default instead of pdf)
 * commit and push **both** `index.Rmd` and `index.html`
 * go to https://stat231-f21.github.io/blog_THeHe/ to see the published test document (this is publicly available!)
+
+# Word Map 
+
+```{r load-data, echo = FALSE}
+headlines_ex <- read_csv("data/news/headlines.csv", n_max = 5)
+```
+
+## Introduction
+
+## Data Sources
+
+The data for the text analysis portion of the project was scraped from local news sites from all fifty states. We found the most widely circulated news outlet in each state (according to [this media source](https://www.agilitypr.com/resources/top-media-outlets/)). At first, we attempted to scrape each news site individually, but this proved very challenging because each site was built differently, so this effort would have required fifty different individualized scraping scripts, which was not feasible. We turned to [Google News](https://news.google.com) as our solution; using this site, we can easily search individual news sites and get back results in a standardized manner.
+
+We were chiefly interested in the sentiments and discussions revolving around the COVID-19 pandemic, so we only searched for articles that included the keyword **"covid"**. Additionally, we restricted each search to time frames that matched up with the time frames that we used in our originally analysis, with the Household Pulse Survey data.
+
+We ran into some issues at first, since Google does not allow scraping of Google News' search results page, which would have been a relatively easy way to obtain headlines. We were able to obtain RSS feeds of Google News searches: these are outputs in XML format that are typically used for email feeds and the like. There was no explicit restriction against scraping these feeds, so we used this output along with the `tidyRSS` package to obtain certain parts of the feed---specifically, headlines. (We were also somewhat ethically assuaged by the fact that each individual news website had no issue with scraping their headlines.)
+
+The specifics of scraping involved nested `for` loops: we had to scrape news sites from fifty states (taken care of by the outer loop), and for each state, we had to scrape headlines for each of the eighteen "weeks" that we were interested in (the inner loop).
+
+```{r scraping-code, echo = TRUE, eval = FALSE}
+# Loop for 50 states
+for (i in 1:50) {
+  
+  # Set current state
+  state <- news_sites$state[i]
+  #Set current news url
+  site <- news_sites$url[i]
+  
+  # Loop for 18 weeks
+  for(j in 1:18){
+    
+    # Set current start date (of time period in question)
+    start_date <- weeks$start[j]
+    # Set current end date (of time period in question)
+    end_date <- weeks$end[j]
+    
+    # Create Google News RSS url to scrape
+    rss_url <- paste0("https://news.google.com/rss/search?q=before%3A", end_date, "%20after%3A", start_date, "%20covid%20", state, "%20site%3A", site, "&hl=en-US&gl=US&ceid=US%3Aen")
+    
+    # Scrape data from RSS feed
+    headlines_scraped <- tryCatch(
+      
+      # Return NA instead of headline text when error is thrown (usually because there are no articles that meet criteria)
+      error = function(cnd) {
+        return(NA)
+      },
+      
+      # Otherwise, pull headline text from the RSS feed
+      scraped_text <- rss_url %>% 
+        tidyfeed() %>% 
+        select(item_title)
+    )
+    
+    # Add scraped headline into our pre-made list
+    headlines$headline_text[(i-1)*18 + j] <- headlines_scraped
+    
+  }
+}
+```
+
+Once the scraping was completed, we had an (enormous) .csv file with an observation for every headline scraped, tagged with the state of the news outlet that it came from and the week that the headlines ran.
+
+```{r example-headlines, echo = FALSE}
+head(headlines_ex)
+```
+
+## Data Wrangling
+
+Once we obtained the raw text of every COVID-related headline from Week 22 to Week 39, we began performing text analysis on these headlines. The first wrangling was a simple word frequency analysis, breaking the headlines up and then tallying how often each one appeared (still separated by state and by week, so the tallies were specific to a certain location and time period, i.e. how many times the word **vaccine** appeared in headlines from Massachusetts during Week 33).
+
+```{r freq-analysis, echo = TRUE, eval = FALSE}
+word_frequencies <- all_headlines %>% 
+  # Break headlines up into unigrams
+  unnest_tokens(output = word, input = headline_text, drop = TRUE) %>% 
+  # Remove typical stop words
+  anti_join(stop_words, by = "word") %>% 
+  # Add word frequencies
+  add_count(state, week, word) %>% 
+  # Remove duplicate entries
+  distinct() %>% 
+  # Group words by state & week, then sort by frequency
+  arrange(state, week, desc(n))
+```
+
+We then did some custom filtering of the unigrams that we ended up with: we had already filtered out the typical stop words from the built-in dictionary, but looking through the data, it was clear that there were some more words that would not be useful to any of our analysis. For example, the names of the newspapers frequently showed up in the headlines that we scraped (i.e. "Massachusetts COVID-19 Cases Spiking Once Again -- Boston Globe"), and clearly if they were in every headline, then they would clog up our frequency analysis. We therefore removed any newspaper-related and any location-specific words from the raw text, as well as any "textual detritus, such as urls or numbers:
+
+```{r custom-filtering, echo = TRUE, eval = FALSE}
+words_wrangled <- word_frequencies %>% 
+         # Filter out any numbers
+  filter(!str_detect(word, "[:digit:]"),
+         # Filter out any phrase with "." (mostly urls)
+         !str_detect(word, "\\."),
+         # Filter out "covid"
+         !str_detect(word, "covid"),
+         # Filter out the state names
+         !str_detect(word, tolower(as.character(word_frequencies$state)))) %>%
+  # Remove custom stop words
+  anti_join(custom_stops, by = "word")
+```
+
+With that, our text was wrangled, and we were ready for our final analysis.
+
+## Conclusions
+
+## Limitations
+
+# Racial/Ethnic Groups: Clustering & Networks
+
+## Introduction
+
+## Data Sources
+
+## Data Wrangling
+
+## Conclusions
+
+## Limitations
+
+
+
 
 ## Including links and images/videos
 
