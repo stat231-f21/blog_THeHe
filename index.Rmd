@@ -26,8 +26,6 @@ options(knitr.kable.NA = '')
 # Introduction
 Given the devastating effects of the      , we were interested in exploring different relationships 
 
-# Word Map 
-
 # COVID State Restrictions Network
 
 We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each node representing a state and each edge connecting two states together. The nodes are colored by the proportion of annual COVID cases per state population, and the edges are weighted by how many days each pair of states shared the same restrictions in 2020. Users can also select the exact states to visualize (we recommend looking at five states or less; otherwise the network becomes too crowded!), as well as the type of COVID restriction to explore. There is a drop-down menu for states above the network; when a state is selected, its edges with other states will be highlighted so they can be more easily seen. Lastly, users can hover over the edges in the network to see the exact number of days that each pair of states shared.
@@ -142,7 +140,7 @@ server <- function(input, output) {
 
 Overall, the network allows users to explore the relationships between different states of their choice in terms of how many days in 2020 they shared the same COVID restrictions, as well as specify which COVID restriction they wanted to look at. There are many different analyses that can come from exploring the network, but it's interesting to see that there is not one dominant pattern or takeaway. Some states with radically different annual COVID cases per population share the same state restrictions for the majority of 2020, whereas some states with very similar annual COVID cases per population share very little of the same state restrictions in 2020. This underlies the complexity of COVID severity in states, and it's important to remember that state restrictions are only one factor within many that influence the proportion of COVID cases that emerge in different locations.
 
-# Limitations 
+## Limitations 
 
 What are the limitations of your work? Be clear so that others do not misinterpret your findings. To what population do your results apply? Do they generalize? Could your work be extended with more data or computational power or time to analyze? How could your study be improved? Suggesting plausible extensions doesn’t weaken your work; it strengthens it by connecting it to future work. 
 
@@ -155,6 +153,33 @@ You should test out updating your GitHub Pages website:
 * knit `index.Rmd` (we will now knit to HTML by default instead of pdf)
 * commit and push **both** `index.Rmd` and `index.html`
 * go to https://stat231-f21.github.io/blog_THeHe/ to see the published test document (this is publicly available!)
+
+# Word Map 
+
+## Introduction
+
+## Data Sources
+
+## Data Wrangling
+
+## Conclusions
+
+## Limitations
+
+# Racial/Ethnic Groups: Clustering & Networks
+
+## Introduction
+
+## Data Sources
+
+## Data Wrangling
+
+## Conclusions
+
+## Limitations
+
+
+
 
 ## Including links and images/videos
 
