@@ -27,7 +27,7 @@ eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
 num_colors <- 5
 
 # Create plot for color legend
-png(file = "anx_legend.png")
+png(file = "legends/anx_legend.png")
 anx_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 text(x=1.25, y = seq(0,1,l=5), labels = seq(min(anxiety_net$prop), max(anxiety_net$prop),l=5))
@@ -70,13 +70,14 @@ ui <- fluidPage(
                       multiple = FALSE
                     ),
                     # TAKE THIS OUT IF I DON'T USE IT
-                    br(),
-                    p("Proportion"),
-                    img(src="anx_legend.png", width = "200px", height = "200px"),
+                    # br(),
+                    # p("Proportion"),
+                    # img(src="anx_legend.png", width = "200px", height = "200px"),
                     # width = 3,
                   ),
-                  mainPanel(
-                    visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
+                  mainPanel(c(
+                    visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh"),
+                    imageOutput("legend"))
                   )
                 )))
 
@@ -123,6 +124,12 @@ server <- function(input, output) {
   })
   
   myreVisNetworkProxy <- visNetworkProxy("network_proxy_update_re")
+  
+  output$legend <- renderImage({
+    if (input$hc_variable = "anx") {
+      img(src = "legends/anx_legend.png") 
+    }
+  })
 
 }
 
