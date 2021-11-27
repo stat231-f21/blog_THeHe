@@ -176,7 +176,7 @@ server <- function(input, output) {
     sent_data <- sent_words()
     # Create ggplot object for sentiment map
     ggplot(sent_data) +
-      # Create map polyhons; fill with average sentiment values
+      # Create map polygons; fill with average sentiment values
       geom_sf(aes(fill = sent_data$avg_sent)) +
       # Add color scales
       scale_fill_distiller(palette = "RdBu") +
