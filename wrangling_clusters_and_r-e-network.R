@@ -252,7 +252,7 @@ racial_ethnic_totals <- pulse_college_data %>%
   rbind(pulse_grouped)
 
 # Create stacked bar charts to compare breakdown of racial/ethnic groups across clusters
-clusters_breakdown <- ggplot(data = racial_ethnic_totals, 
+clusters_breakdown_r_e <- ggplot(data = racial_ethnic_totals, 
                              mapping = aes(x = clusters,
                                            y = value,
                                            fill = race_ethnicity)) +
@@ -268,7 +268,10 @@ clusters_breakdown <- ggplot(data = racial_ethnic_totals,
                                 "Non-Hispanic Black" = "#8DA0CB", 
                                 "Non-Hispanic White" = "#E78AC3",
                                 "Non-Hispanic Other/Multiple Races" = "#A6D854"))
-clusters_breakdown
+# Save as .png
+png(filename="images_and_plots/clusters_breakdown_r_e.png", width = 600, height = 500)
+plot(clusters_breakdown_r_e)
+dev.off()
 
 # Compare access of healthcare across clusters with animated bar chart
 # Find percent of individuals in each cluster taking prescription
@@ -335,7 +338,7 @@ clusters_bottom_layer <- clusters_characteristics %>%
 
 # Create animated bar charts to smoothly move between the 4 variables
 # Smoothest way to do so is build up two layers
-animate_hc <- ggplot(data = clusters_characteristics) +
+animate_hc <- ggplot() +
   # First layer always fills entire length of the bar chart (0-1)
   # Since all proportions add to 1 in total, this layer represents "no" responses once overlaid by the second layer
   geom_col(data = clusters_bottom_layer,
@@ -365,7 +368,7 @@ animate_hc <- ggplot(data = clusters_characteristics) +
        y = "Proportion of respondents")
 
 # Save animation
-animate(animate_hc, renderer=gifski_renderer("images_and_plots/clusters-breakdown.gif"))
+animate(animate_hc, renderer=gifski_renderer("images_and_plots/clusters_breakdown.gif"))
 
 ################################
 # Racial/Ethnic Groups Network #
