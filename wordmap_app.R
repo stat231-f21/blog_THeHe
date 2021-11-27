@@ -2,6 +2,7 @@ library(tidyverse)
 library(tidytext)
 library(sf)
 library(shinythemes)
+library(ggrepel)
 
 # Read in the text-wrangled words
 words_wrangled <- read_csv("data/news/words_wrangled.csv")
