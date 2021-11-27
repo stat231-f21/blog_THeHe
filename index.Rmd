@@ -6,7 +6,7 @@ output:
   rmdformats::readthedown:
     thumbnails: false
     highlight: "kate"
-runtime: shiny
+    self_contained: false
 ---
 
 ```{r setup, include = FALSE}
@@ -32,9 +32,13 @@ Given the devastating effects of the      , we were interested in exploring diff
 
 We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each node representing a state and each edge connecting two states together. The nodes are colored by the proportion of annual COVID cases per state population, and the edges are weighted by how many days each pair of states shared the same restrictions in 2020. Users can also select the exact states to visualize (we recommend looking at five states or less; otherwise the network becomes too crowded!), as well as the type of COVID restriction to explore. There is a drop-down menu for states above the network; when a state is selected, its edges with other states will be highlighted so they can be more easily seen. Lastly, users can hover over the edges in the network to see the exact number of days that each pair of states shared.
 
-Visit [our Shiny app]("https://th23.shinyapps.io/blog_THeHe/") to explore and interact with the COVID state restrictions network!
+```{r, out.extra="data-external=1"}
+knitr::include_app("https://th23.shinyapps.io/blog_THeHe/", 
+                   height = "600px")
+```
+Visit [our Shiny app](https://th23.shinyapps.io/blog_THeHe/) to explore and interact with the COVID state restrictions network!
 
-```{r include = FALSE}
+```{r include = FALSE, eval = FALSE}
 # Load packages
 library(tidyverse)
 library(dplyr)
@@ -45,7 +49,7 @@ library(shiny)
 library(shinythemes)
 ```
 
-```{r}
+```{r eval=FALSE}
 
 #######################
 #    Load Datasets    #
@@ -107,7 +111,7 @@ ui <- fluidPage(
                     ),
                     br(),
                     p("Proportion of Annual COVID Cases per State Population"),
-                    img(src="covid_legend.png", width = "500px", height = "500px"),
+                    img(src="www/covid_legend.png", width = "500px", height = "500px"),
                     width = 3,
                   ),
                   mainPanel(
@@ -176,7 +180,7 @@ server <- function(input, output) {
 #####################
 # call to shiny App #
 #####################
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server, options = list(height = 800, width = 1000))
 ```
 
 ## Data Sources 
@@ -185,15 +189,15 @@ shinyApp(ui = ui, server = server)
 
 For the COVID state restrictions network, we used data from the Centers for Disease Control and Prevention (CDC) on state-issued prevention measures for COVID-19. The specific data-sets we used were:
 
-* `Restaurants.csv`, which contains U.S. State and Territorial Orders Closing and Reopening Restaurants Issued from March 15, 2020 through August 15, 2021 by County by Day
+* `Restaurants.csv`, which contains U.S. state and territorial orders closing and reopening restaurants issued from March 15, 2020 through August 15, 2021 by county by day
 
-* `Bars.csv`, which contains U.S. state and territorial orders closing and reopening bars issued from March 15, 2020 through August 15, 2021 by County by Day
+* `Bars.csv`, which contains U.S. state and territorial orders closing and reopening bars issued from March 15, 2020 through August 15, 2021 by county by day
 
-* `Mask_Mandates.csv`, which contains U.S. State and Territorial Public Mask Mandates From April 10, 2020 through August 15, 2021 by County by Day
+* `Mask_Mandates.csv`, which contains U.S. state and territorial public mask mandates from April 10, 2020 through August 15, 2021 by county by day
 
-* `Gathering_Bans.csv`, which contains U.S. State and Territorial Gathering Bans: March 11, 2020-August 15, 2021 by County by Day
+* `Gathering_Bans.csv`, which contains U.S. state and territorial gathering bans from March 11, 2020 through August 15, 2021 by county by day
 
-* `Stay-At-Home_Orders.csv`, which contains U.S. State and Territorial Public Mask Mandates From March 15, 2020 through August 15, 2021 by County by Day
+* `Stay-At-Home_Orders.csv`, which contains U.S. state and territorial public mask mandates from March 15, 2020 through August 15, 2021 by county by day
 
 Visit [the CDC website](https://data.cdc.gov/browse?category=Policy+Surveillance) to explore and download the data-sets. 
 
@@ -228,7 +232,7 @@ restaurants_edges <- restaurants_edges %>%
   mutate(title = paste0(restaurants_edges$restaurants_overLap, " days shared in 2020"))
 ```
 
-Similarly, the `visNetwork` package requires the nodes to be a data frame. The original nodes data frame in the `visNetwork` object originally contained two columns, an "id" column and a "label" column that contained the state names for the nodes. However, we also added a new column for the color of each node, where color corresponded to the proportion of annual COVID cases per state population. The `eigScalePal` function creates a gradient of five colors from the `colorRampPalette` function, and the `mutate` command breaks the COVID cases proportions column values into five sections and assigns each value to one out of the five colors.
+Similarly, the `visNetwork` package requires the nodes in the network to be a data frame. The original nodes data frame in the `visNetwork` object originally contained two columns, an "id" column and a "label" column that contained the state names for the nodes. However, we also added a new column for the color of each node, where color corresponded to the proportion of annual COVID cases per state population. The `eigScalePal` function creates a gradient of five colors from the `colorRampPalette` function, and the `mutate` command breaks the COVID cases proportions column values into five sections, assigning each value to one out of the five colors.
 
 ```{r echo=TRUE, eval=FALSE}
 # Set color palette
@@ -246,7 +250,7 @@ restaurants_nodes <- restaurants_visNetwork$nodes %>%
 
 ## Creating the interactive network using `visNetwork` in Shiny  
 
-In order to create an interactive network in a Shiny app, the function, `visNetwork`, can be used within the `renderVisNetwork` function. The `visNetwork` function needs two arguments, the nodes and the edges, and using the pipe function, there are many other functions that can be used to further customize the network, such as being able to select a node and have its connecting edges highlighted using the `visOptions` function or being able to specify the color of the edges and the different color they should change to when selected using the `visEdges` function. 
+In order to create an interactive network in a Shiny app, the function, `visNetwork`, can be used within the `renderVisNetwork` function in the Shiny server code. The `visNetwork` function needs two arguments: the nodes and the edges. Using the pipe function, there are also many other functions that can be used to further customize the network. For example, the `visOptions` function allows users to select a node and have its connecting edges highlighted. Another example is the `visEdges` function that specifies the color of the edges and the different color they should change to when selected. 
 
 To be able to add and remove nodes interactively, depending on what the user selects, an updated network can be created using the `visNetworkProxy` function. After creating data frames to contain the nodes that the user selected and did not select, `visRemoveNodes` and `visUpdateNodes` can be used to reactively display only the nodes the user selected in the network.
 
@@ -257,7 +261,7 @@ server <- function(input, output) {
     visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
                main = list(text = "Network for States Sharing the Same COVID Restrictions in 2020", 
                            style = "font-family:Arial;font-size:20px"
-               ) %>%
+               )) %>%
       visNodes(size = 10) %>%
       visOptions(selectedBy = "group", 
                  highlightNearest = list(enabled = TRUE, hover = TRUE), 
@@ -281,9 +285,10 @@ server <- function(input, output) {
 
 ## Findings 
 
-Overall, the network allows users to explore the relationships between different states of their choice in terms of how many days in 2020 they shared the same COVID restrictions, as well as specify which restriction they wanted to look at. There are many different analyses that can come from exploring the network, but it's interesting to see that there is not one dominant pattern or takeaway. Some states with radically different annual COVID cases per population share the same state restrictions for the majority of 2020, whereas some states with very similar annual COVID cases per population share very little of the same state restrictions in 2020. This underlies the complexity of COVID severity in states, and it's important to remember that state restrictions are only one factor within many that influence the proportion of COVID cases that emerge in different locations.
+Overall, the network allows users to explore the relationships between different states of their choice in terms of how many days in 2020 they shared the same COVID restrictions, as well as specify which COVID restriction they wanted to look at. There are many different analyses that can come from exploring the network, but it's interesting to see that there is not one dominant pattern or takeaway. Some states with radically different annual COVID cases per population share the same state restrictions for the majority of 2020, whereas some states with very similar annual COVID cases per population share very little of the same state restrictions in 2020. This underlies the complexity of COVID severity in states, and it's important to remember that state restrictions are only one factor within many that influence the proportion of COVID cases that emerge in different locations.
 
 # Limitations 
+
 What are the limitations of your work? Be clear so that others do not misinterpret your findings. To what population do your results apply? Do they generalize? Could your work be extended with more data or computational power or time to analyze? How could your study be improved? Suggesting plausible extensions doesn’t weaken your work; it strengthens it by connecting it to future work. 
 
 For example, you can include **Bold** and _Italic_ and `Code` text.  
@@ -295,25 +300,6 @@ You should test out updating your GitHub Pages website:
 * knit `index.Rmd` (we will now knit to HTML by default instead of pdf)
 * commit and push **both** `index.Rmd` and `index.html`
 * go to https://stat231-f21.github.io/blog_THeHe/ to see the published test document (this is publicly available!)
-
-## Including code and plots
-
-In a study from the 1920s, fifty cars were used to see how the speed of the car and the distance taken to stop were related.  Speeds ranged between `r min(cars$speed)` and `r max(cars$speed)` mph.  Distances taken to stop ranged between `r min(cars$dist)` and `r max(cars$dist)` feet, with the middle 50% falling between `r as.numeric(quantile(cars$dist)[2])` and `r as.numeric(quantile(cars$dist)[4])` feet.  
-
-You can also embed plots as normal, for example:
-
-```{r figure1}
-ggplot(data = cars, aes(x = speed, y = dist)) + 
-  geom_point() + 
-  labs(x = "Speed of car (mph)",
-       y = "Distance taken to stop (ft)",
-       title = "Stopping distance increases with faster speeds",
-       subtitle = "Based on 1920s study") +
-  theme_classic()
-```
-
-Take note of the default code chunk options in the `setup` code chunk, and adjust individual code chunk options as needed. for example, unlike the rest of the Rmd files we worked in this semester, the default code chunk option is `echo = FALSE`, so you will need to set `echo  = TRUE` for any code chunks you would like to display in the blog. 
-
 
 ## Including links and images/videos
 
