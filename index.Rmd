@@ -148,8 +148,6 @@ The limitations of the network were that        . For future research, it would 
 headlines_ex <- read_csv("data/news/headlines.csv", n_max = 5)
 ```
 
-## Introduction
-
 ## Data Sources
 
 The data for the text analysis portion of the project was scraped from local news sites from all fifty states. We found the most widely circulated news outlet in each state (according to [this media source](https://www.agilitypr.com/resources/top-media-outlets/)). At first, we attempted to scrape each news site individually, but this proved very challenging because each site was built differently, so this effort would have required fifty different individualized scraping scripts, which was not feasible. We turned to [Google News](https://news.google.com) as our solution; using this site, we can easily search individual news sites and get back results in a standardized manner.
@@ -250,8 +248,6 @@ With that, our text was wrangled, and we were ready for our final analysis.
 ## Limitations and Future Research
 
 # Racial/Ethnic Groups: Clustering & Networks
-
-## Introduction
 
 ## Data Sources
 
