@@ -30,13 +30,16 @@ Given the devastating effects of the      , we were interested in exploring diff
 
 We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each node representing a state and each edge connecting two states together. The nodes are colored by the proportion of annual COVID cases per state population, and the edges are weighted by how many days each pair of states shared the same restrictions in 2020. Users can also select the exact states to visualize (we recommend looking at five states or less; otherwise the network becomes too crowded!), as well as the type of COVID restriction to explore. There is a drop-down menu for states above the network; when a state is selected, its edges with other states will be highlighted so they can be more easily seen. Lastly, users can hover over the edges in the network to see the exact number of days that each pair of states shared.
 
+Explore and interact with the COVID state restrictions network below, or alternatively, visit [our Shiny app](https://th23.shinyapps.io/blog_THeHe/) to interact with the network in a browser!
+
 ```{r, out.extra="data-external=1"}
 knitr::include_app("https://th23.shinyapps.io/blog_THeHe/", 
                    height = "1500px")
 ```
-Visit [our Shiny app](https://th23.shinyapps.io/blog_THeHe/) to explore and interact with the COVID state restrictions network!
 
-## Data Sources
+## Data
+
+### Data Sources
 
 For the COVID state restrictions network, we used data from the Centers for Disease Control and Prevention (CDC) on state-issued prevention measures for COVID-19. The specific data-sets we used were:
 
@@ -52,7 +55,7 @@ For the COVID state restrictions network, we used data from the Centers for Dise
 
 Visit [the CDC website](https://data.cdc.gov/browse?category=Policy+Surveillance) to explore and download the data-sets. 
 
-## Data Wrangling {#restrictions-wrangling}
+### Data Wrangling {#restrictions-wrangling}
 
 _The following code chunks were for wrangling the `Restaurants.csv` data set, but the exact same procedure was repeated with the other four data sets._ 
 
@@ -99,7 +102,7 @@ restaurants_nodes <- restaurants_visNetwork$nodes %>%
   select(-c(covid_prop))
 ```
 
-## Creating the interactive network using `visNetwork` in Shiny  
+## Creating the Interactive Network in Shiny  
 
 In order to create an interactive network in a Shiny app, the function, `visNetwork`, can be used within the `renderVisNetwork` function in the Shiny server code. The `visNetwork` function needs two arguments: the nodes and the edges. Using the pipe function, there are also many other functions that can be used to further customize the network. For example, the `visOptions` function allows users to select a node and have its connecting edges highlighted. Another example is the `visEdges` function that specifies the color of the edges and the different color they should change to when selected. 
 
@@ -152,7 +155,9 @@ headlines_ex <- read_csv("data/news/headlines.csv", n_max = 5)
 
 To further understand how the COVID-19 pandemic affected Americans, we have performed textual analysis. Text has the potential to be revealing in an entirely different way from the results of the Household Pulse survey, since language allows for the expression of nuance and feelings and emotions in a way that something so rigid as a census survey cannot. We wanted to go local, so we took news headlines from all fifty states and explored the trends and connections hidden within them. Our main tools in this endeavor were a word frequency analysis and a sentiment analysis, both of which use data that represent a much more colloquial and social view of how the pandemic was digested and affecting Americans than the purely categorical and standardized data that we studied in our first project, which centered around the Household Pulse Survey Data.
 
-## Data Sources
+## Data 
+
+### Data Sources
 
 The data for the text analysis portion of the project was scraped from local news sites from all fifty states. We found the most widely circulated news outlet in each state (according to [this media source](https://www.agilitypr.com/resources/top-media-outlets/)). At first, we attempted to scrape each news site individually, but this proved very challenging because each site was built differently, so this effort would have required fifty different individualized scraping scripts, which was not feasible. We turned to [Google News](https://news.google.com) as our solution; using this site, we can easily search individual news sites and get back results in a standardized manner.
 
@@ -209,7 +214,7 @@ Once the scraping was completed, we had an (enormous) .csv file with an observat
 head(headlines_ex)
 ```
 
-## Data Wrangling
+### Data Wrangling
 
 Once we obtained the raw text of every COVID-related headline from Week 22 to Week 39, we began performing text analysis on these headlines. The first wrangling was a simple word frequency analysis, breaking the headlines up and then tallying how often each one appeared (still separated by state and by week, so the tallies were specific to a certain location and time period, i.e. how many times the word **vaccine** appeared in headlines from Massachusetts during Week 33).
 
@@ -363,17 +368,19 @@ Clearly, this is only a cursory look at how America was thinking about the pande
 
 More specifically, on a very basic level, even though words are very useful markers of collective thought, context is extremely important, and we didn't take it into account at all. We only examined unigrams, whereas a more comprehensive analysis would consider a more diverse spread of n-grams. Additionally, we would have liked to study more data sources. Once again, the sources that we did pull from were determined to be the best for this scope, but the limitations of this project meant that we were forced to look at only fifty sources---which seems like a lot, but considering that each source was meant to cover an entire U.S. state, fifty becomes quite a small number.
 
-Functionally, there are several pieces of the Shiny app that could be improved (and hopefully will be in the coming days). We would like the interface for looking at more than just the top word to be improved. Furthermore, it would be fascinating to explore a more customizable *range* of time periods, as oppoped to the weeks that were predetermined by our prior usage of the Pulse data.
+Functionally, there are several pieces of the Shiny app that could be improved (and hopefully will be in the coming days). We would like the interface for looking at more than just the top word to be improved. Furthermore, it would be fascinating to explore a more customizable *range* of time periods, as opposed to the weeks that were predetermined by our prior usage of the Pulse data.
 
 Finally, much of this project relied on very subjective decisions: we had to determine the news outlets to be scraped, as well as the keywords to narrow our search, as well as the custom stop words that we took out at the last stage of our word frequency analysis. Other researchers could come to very different conclusions with a different set of parameters, and we would like there to be a little more standardization in the way of coming to our final raw textual data.
 
 Overall, the biggest difficulty is the scope of the data for this analysis. Questions such as "How can we get text from a more representative---or perhaps more local---population of news outlets?" will guide future research and our honing of the conclusions that we have made above.
 
-# Racial/Ethnic Groups: Clustering & Networks
+# Mental Health in Racial/Ethnic Groups - Unsupervised Clustering 
 
-Young adults, particularly college students, have experienced many difficult and unique struggles during the pandemic. In 2021 alone, uncertainties about living situations, remote or in-person classes, vaccination availability, the Delta variant, and more have impacted the mental and physical health of these individuals. Building off our previous Shiny app project, we were interested in investigating the relationships between mental health, healthcare access, and race and ethnicity during COVID-19. To do so, we investigated whether or not an unsupervised clustering algorithm could identify racial/ethnic groups from healthcare-related variables. Further we arranged racial/ethnic groups in a network where connections between groups are weighted by how similar their population samples responded to questions about mental health symptoms, access to mental health resources, and healthcare coverage.
+Young adults, particularly college students, have experienced many difficult and unique struggles during the pandemic. In 2021 alone, uncertainties about living situations, remote or in-person classes, vaccination availability, the Delta variant, and more have impacted the mental and physical health of these individuals. Building off our previous Shiny app project, we were interested in investigating the relationships between mental health, healthcare access, and race and ethnicity during COVID-19. To do so, we investigated whether or not an unsupervised clustering algorithm could identify racial/ethnic groups from healthcare-related variables. Furthermore, we arranged racial/ethnic groups in a network where connections between groups are weighted by how similar their population samples responded to questions about mental health symptoms, access to mental health resources, and healthcare coverage.
 
-## Data Sources 
+## Data 
+
+### Data Sources 
 
 We created our clustering and racial/ethnic groups network with data from the U.S. Census Bureau's Household Pulse Survey. This ongoing survey is designed to collect information on how COVID-19 has impacted the social and economic lives of American households; it is motivated by the idea that understanding the pandemic's impacts will aid in building policy and outreach programs to help individuals and families recover from the pandemic.
 
@@ -403,7 +410,7 @@ The specific data-sets we used were those from weeks 22 through 39, which cover 
 
 Visit [the Census Bureau website](https://www.census.gov/programs-surveys/household-pulse-survey.html) to explore and download the data-sets. 
 
-## Data Wrangling: Clustering
+### Data Wrangling
 
 After filtering for our population and time frame of interest and combining individuals' answers to the above questions, we further wrangled the data for clustering and the network. 
 
@@ -573,17 +580,23 @@ animate_hc <- ggplot() +
 knitr::include_graphics(c("images_and_plots/clusters_breakdown_r_e.png", "images_and_plots/clusters_breakdown.gif"))
 ```
 
-## Findings: Clustering
+## Findings
 
 While the kmeans clustering did not elegantly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they've largely been able to access mental health care resources when they needed them. 
 
 Further, the clusters which are more predominantly white than the full respondents pool - clusters 1 and 2 - are also those where the most access to care and resources lie, with the main difference being that individuals in cluster 2 do not utilize counseling or similar mental health services, whereas individuals in cluster 1 do. 
 
-## Limitations: Clustering
+## Limitations
 
 Overall, while clustering is a fun exercise to see what patterns emerge, this was quite limited by the clustering variables, which, though represented numerically, are actually categorical variables. Quantitative and more nuanced variables would provide more meaningful and complex information to identify similar groups with. 
 
-## Data Wrangling: Network
+# Mental Health in Racial/Ethnic Groups Network
+
+## Data 
+
+### Data Sources
+
+### Data Wrangling
 
 For the network, we wanted to connect racial/ethnic groups by the experiences of anxiety and depression, and the access to mental health and healthcare resources of their individuals. To do so, we compared the proportions of individuals in each group who 
 
@@ -727,53 +740,23 @@ shinyApp(ui = ui, server = server)
 
 HERE IS WHERE I'LL EMBED THE SHINY APP ONCE I PUBLISH IT
 
-## Findings: Network
+## Findings
 
 This network allows users to explore the relationships between different racial/ethnic groups and how individuals within different racial/ethnic groups have experienced their mental health during the pandemic. 
 
 One interesting pattern is that similar proportions of Non-Hispanic white and Non-Hispanic other or multiracial individuals experienced anxiety, as well as used mental health services, were covered by healthcare, and could not access care when needed. In each case, the proportions of these two groups were the highest out of all the groups. On the other end, the Non-Hispanic Asian group showed the lowest frequency of individuals experiencing anxiety and depression symptoms, as well as accessing medication and counseling services, and being unable to access resources when needed. Thus, the weakest connections between racial/ethnic groups often occurred between the Non-Hispanic Asian group and the others. When it comes to individuals with some form of healthcare, Non-Hispanic Black and Hispanic or Latino individuals share similar proportions and the lowest proportions out of the five groups. 
 
-## Limitations: Network
+## Limitations
 
 One big limitation of this network analysis is that it is restricted to during the pandemic. As COVID-19 has opened up many conversations about mental and physical health and access to care, it would be interesting to expand this analysis to before COVID-19. Is it possible that more individuals have access now to forms of mental health care because of the conversations prompted be the pandemic?
 
 It is also important to note that the Household Pulse Survey relies on online responses from individuals who opt in, creating response bias and likely leaving out individuals in rural areas. 
 
-While the survey questions are meaningful, categorical variables necessarilly lack nuance. More quantitative questions could provide more powerful information. For example, we might be interested in the number of visits to a healthcare or mental health care provider in a week, the cost of these visits or of prescription medication, or even days taken off from work due to physical or mental health complications. This information may reflect more any patterns of racial/ethnic privilege and disparities, and would open the option for statistical analysis through fitting a predictive model of some sort. 
+While the survey questions are meaningful, categorical variables necessarily lack nuance. More quantitative questions could provide more powerful information. For example, we might be interested in the number of visits to a healthcare or mental health care provider in a week, the cost of these visits or of prescription medication, or even days taken off from work due to physical or mental health complications. This information may reflect more any patterns of racial/ethnic privilege and disparities, and would open the option for statistical analysis through fitting a predictive model of some sort. 
+
+# Concluding Thoughts
+
+# Citations
 
 
 
-
-## Including links and images/videos
-
-You can include [links](https://www.datadreaming.org/post/r-markdown-theme-gallery/) and there are a few ways to embed  images! Both options for embedding images below can be used interchangeably. They both work for png, pdf, jpg, and even gif formats, and both support filepaths that are either URLs (for videos, you can include links to any valid YouTube or Vimeo URLs; see [here](https://bookdown.org/yihui/rmarkdown/learnr-videos.html) for more details) or point to a location within your project directory. 
-
-### Option 1: Markdown approach
-
-<!-- ![This is a figure caption. The artwork is called Safe Space by  [Kenesha Sneed](https://www.keneshasneed.com/#/safespace/)](img/Kenesha-Sneed_safe-space.jpeg) -->
-
-
-### Option 2: Code chunk approach
-
-```{r, fig.cap = "This is also figure caption"}
-knitr::include_graphics("https://media.giphy.com/media/H7ZrrA9V2pd3Tehdds/giphy.gif")
-```
-
-# You can even create tabs within your webpage if you want! {.tabset .tabset-fade .tabset-pills}
-
-Every subsection heading (starting with `##`) until you create a new section heading (starting with `#`) will be a new tab.
-
-# Customizing your blog design
-
-As a *final* detail **only** if you have time, you can explore options for customizing the style of your blog. By default, we are using the `readthedown` theme from the [**rmdformats** package](https://github.com/juba/rmdformats) (see Line 6 of this file if you want to switch out themes). There are, I'm sure, many many many more similar packages with built in themes, or you can look into how to include a CSS code chunk to customize aspects of the current theme.  
-
-There are some easy-to-change options that you can play around with:
-
-* The theme itself (Line 6): `rmdformats::readthedown`, `rmdformats::downcute`, `rmdformats::robobook`, `rmdformats::material`,
-  * For `downcute` only, you can add a new indented line below Line 6 with the code `downcute_theme: "chaos"` for the `downcute chaos` theme
-  * I would *not* recommend the other themes that do not have the sidebar navigation
-  
-* Syntax highlighting options (Line 8, `highlight`): `"default"`, `"tango"`, `"pygments"`, `"kate"`, `"monochrome"`, `"espresso"`, `"zenburn"`, `"haddock"`, or `"textmate"` (or `NULL` for no syntax highlighting)
-
-
-You can explore additional customizable YAML options by looking at the [**rmdformats** package](https://github.com/juba/rmdformats) page or running, for example, `?rmdformats::readthedown()` to see the help documentation for a particular theme from the package.
