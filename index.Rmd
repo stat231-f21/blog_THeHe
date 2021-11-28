@@ -599,6 +599,7 @@ Furthermore, we arranged racial/ethnic groups in a network where connections bet
 We utilized the same datasets that we used in unsupervised clustering for the racial/ethnic groups network. See the [Data Sources Tab](#mentalhealth-data) 
 
 ### Data Wrangling
+_The following code chunks were for wrangling the anxiety variable, but the exact same procedure was repeated for the other five variables._ 
 
 For the network, we wanted to connect racial/ethnic groups by the experiences of anxiety and depression, and the access to mental health and healthcare resources of their individuals. To do so, we compared the proportions of individuals in each group who 
 
@@ -611,7 +612,7 @@ For the network, we wanted to connect racial/ethnic groups by the experiences of
 
 For each pair of racial/ethnic groups, we calculated the difference in these proportions. Thus, smaller differences provided more weight to the network edges, indicating more similar "experiences" (that is, proportions) between those groups.
 
-The following code wrangles the anxiety variable, but the same procedure was repeated for the other five variables. For an explanation of the `igraph` and `visNetwork` packages, see the [Data Wrangling Tab for COVID-19 Restrictions](#restrictions-wrangling).
+For an explanation of the `igraph` and `visNetwork` packages, see the [Data Wrangling Tab for COVID-19 Restrictions](#restrictions-wrangling).
 
 ```{r echo=TRUE, eval=FALSE}
 # From larger data set with all mental health variables, select anxiety
