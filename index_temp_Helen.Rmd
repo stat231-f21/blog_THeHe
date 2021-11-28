@@ -197,6 +197,8 @@ server <- function(input, output){
 }
 ```
 
+EMBED SHINY APP HERE
+
 ## Clusters Patterns
 
 To investigate what patterns the clusters identified, we then looked at the breakdown of racial/ethnic groups and responses to the four mental health and healthcare variables within each cluster. For the latter, we created an animated stacked bar chart which cycles through the proportions of individuals answering "yes" and answering "no" in each cluster to the four survey questions we clustered on. This was achieved with the `gganimate` package; the function `transition_states()` allows us to plot the previously defined `ggplot` object while cycling through the "type" column in our data frame, which contains information on which of the four healthcare variables a given data point comes from.
@@ -361,6 +363,8 @@ server <- function(input, output) {
 #####################
 shinyApp(ui = ui, server = server)
 ```
+
+HERE IS WHERE I'LL EMBED THE SHINY APP ONCE I PUBLISH IT
 
 ## Findings: Network
 
