@@ -38,27 +38,31 @@ ui <- fluidPage(
   theme = shinytheme("lumen"),
   title = "Racial/Ethnic Groups Network",
   
-                fillPage(sidebarLayout(
-                  sidebarPanel(
-                    selectInput(
-                      inputId = "hc_variable",
-                      label = "Select a type of health care variable",
-                      choices =  list(
-                        "Anxiety" = "anx",
-                        "Depression" = "dep",
-                        "Prescription Medication" = "presc",
-                        "Counseling or similar services" = "mhs",
-                        "Needed but did not receive care" = "no_a",
-                        "Healthcare coverage" = "hc"),
-                      selected = "anx",
-                      multiple = FALSE
-                    ),
-                    imageOutput("legend"),
-                  ),
-                  mainPanel(
-                    visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
-                  )
-                )))
+  fluidPage(
+    fluidRow(
+      column(4, 
+             selectInput(
+        inputId = "hc_variable",
+        label = "Select a type of health care variable",
+        choices =  list(
+          "Anxiety" = "anx",
+          "Depression" = "dep",
+          "Prescription Medication" = "presc",
+          "Counseling or similar services" = "mhs",
+          "Needed but did not receive care" = "no_a",
+          "Healthcare coverage" = "hc"),
+        selected = "anx",
+        multiple = FALSE
+      ),
+      br(),
+      imageOutput("legend"),
+    ),
+    
+    column(8,
+      visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
+    )
+  )))
+
 
 ############
 # server   #

@@ -517,20 +517,70 @@ write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
 # Read in data
 r_e_network <- read.csv("wrangled_csv_data/r-e-network.csv")
 
-################################################################
-# MOVE ALL THIS IF I USE IT 
+# Set color palette
 eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
 num_colors <- 5
 
-# Create plot for color legend
-png(filename = "r-e-network_shiny/legends/legend_anx.png")
+# Create plots for color legends for each variable
+# Anxiety
+png(filename = "r-e-network_shiny/legends/legend_anx.png", width = 400, height = 400)
 anx_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-text(x=1.25, y = seq(0,1,l=5), labels = seq(round(min(anxiety_net$prop), digits = 2), round(max(anxiety_net$prop), digits = 2),l=5))
-anx_image <- rasterImage(anx_image, 0, 0, 1,1)
+# Manually set ylab to move it closer to color scale
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(anxiety_net$prop), digits = 2), round(max(anxiety_net$prop), digits = 2),l=5))
+anx_image <- rasterImage(anx_image, 0, 0, 1, 1)
 dev.off()
-################################################################
 
+# Depression
+png(filename = "r-e-network_shiny/legends/legend_dep.png", width = 400, height = 400)
+dep_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(depression_net$prop), digits = 2), round(max(depression_net$prop), digits = 2),l=5))
+dep_image <- rasterImage(dep_image, 0, 0, 1, 1)
+dev.off()
+
+# Prescription
+png(filename = "r-e-network_shiny/legends/legend_presc.png", width = 400, height = 400)
+presc_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(presc_net$prop), digits = 2), round(max(presc_net$prop), digits = 2),l=5))
+presc_image <- rasterImage(presc_image, 0, 0, 1, 1)
+dev.off()
+
+# Mental health services
+png(filename = "r-e-network_shiny/legends/legend_mhs.png", width = 400, height = 400)
+mhs_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(mhs_net$prop), digits = 2), round(max(mhs_net$prop), digits = 2),l=5))
+mhs_image <- rasterImage(mhs_image, 0, 0, 1, 1)
+dev.off()
+
+# No access
+png(filename = "r-e-network_shiny/legends/legend_no_a.png", width = 400, height = 400)
+no_a_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(no_a_net$prop), digits = 2), round(max(no_a_net$prop), digits = 2),l=5))
+no_a_image <- rasterImage(no_a_image, 0, 0, 1, 1)
+dev.off()
+
+# Healthcare
+png(filename = "r-e-network_shiny/legends/legend_hc.png", width = 400, height = 400)
+hc_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(hc_net$prop), digits = 2), round(max(hc_net$prop), digits = 2),l=5))
+hc_image <- rasterImage(hc_image, 0, 0, 1, 1)
+dev.off()
 
 # Get nodes and edges for each health care variable
 # Select anxiety
@@ -543,6 +593,7 @@ anx_visNetwork <- r_e_network %>%
 
 # Get nodes and weighted edges, and save them as csv files 
 anx_nodes <- anx_visNetwork$nodes %>% 
+  # Join data frames to get proportions and assign colors for the legend
   inner_join(anxiety_net, by = c("id" = "race_ethnicity")) %>%
   mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
   select(-c(prop))
@@ -561,7 +612,10 @@ dep_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-dep_nodes <- dep_visNetwork$nodes 
+dep_nodes <- dep_visNetwork$nodes %>% 
+  inner_join(depression_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 dep_edges <- dep_visNetwork$edges %>% 
   mutate(value  = dep)
 
@@ -577,7 +631,10 @@ presc_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-presc_nodes <- presc_visNetwork$nodes 
+presc_nodes <- presc_visNetwork$nodes %>% 
+  inner_join(presc_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 presc_edges <- presc_visNetwork$edges %>% 
   mutate(value = presc)
 
@@ -593,7 +650,10 @@ mhs_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-mhs_nodes <- mhs_visNetwork$nodes 
+mhs_nodes <- mhs_visNetwork$nodes %>% 
+  inner_join(mhs_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 mhs_edges <- mhs_visNetwork$edges %>% 
   mutate(value = mhs)
 
@@ -609,7 +669,10 @@ no_a_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-no_a_nodes <- no_a_visNetwork$nodes 
+no_a_nodes <- no_a_visNetwork$nodes %>% 
+  inner_join(no_a_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 no_a_edges <- no_a_visNetwork$edges %>% 
   mutate(value = no_a)
 
@@ -625,7 +688,10 @@ hc_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-hc_nodes <- hc_visNetwork$nodes 
+hc_nodes <- hc_visNetwork$nodes %>% 
+  inner_join(hc_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 hc_edges <- hc_visNetwork$edges %>% 
   mutate(value = hc)
 
