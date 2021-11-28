@@ -530,7 +530,7 @@ plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
 # Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(anxiety_net$prop), digits = 2), round(max(anxiety_net$prop), digits = 2),l=5))
-anx_image <- rasterImage(anx_image, 0, 0, 1, 1)
+anx_image <- rasterImage(anx_image, 1, 1, 0, 0)
 dev.off()
 
 # Depression
@@ -538,8 +538,8 @@ png(filename = "r-e-network_shiny/legends/legend_dep.png", width = 400, height =
 dep_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(depression_net$prop), digits = 2), round(max(depression_net$prop), digits = 2),l=5))
-dep_image <- rasterImage(dep_image, 0, 0, 1, 1)
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(depression_net$prop), digits = 2), round(max(depression_net$prop), digits = 2), l=5))
+dep_image <- rasterImage(dep_image, 1, 1, 0, 0)
 dev.off()
 
 # Prescription
@@ -549,7 +549,7 @@ plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
 # Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(presc_net$prop), digits = 2), round(max(presc_net$prop), digits = 2),l=5))
-presc_image <- rasterImage(presc_image, 0, 0, 1, 1)
+presc_image <- rasterImage(presc_image, 1, 1, 0, 0)
 dev.off()
 
 # Mental health services
@@ -559,7 +559,7 @@ plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
 # Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(mhs_net$prop), digits = 2), round(max(mhs_net$prop), digits = 2),l=5))
-mhs_image <- rasterImage(mhs_image, 0, 0, 1, 1)
+mhs_image <- rasterImage(mhs_image, 1, 1, 0, 0)
 dev.off()
 
 # No access
@@ -569,7 +569,7 @@ plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
 # Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(no_a_net$prop), digits = 2), round(max(no_a_net$prop), digits = 2),l=5))
-no_a_image <- rasterImage(no_a_image, 0, 0, 1, 1)
+no_a_image <- rasterImage(no_a_image, 1, 1, 0, 0)
 dev.off()
 
 # Healthcare
@@ -579,7 +579,7 @@ plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
 # Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(hc_net$prop), digits = 2), round(max(hc_net$prop), digits = 2),l=5))
-hc_image <- rasterImage(hc_image, 0, 0, 1, 1)
+hc_image <- rasterImage(hc_image, 1, 1, 0, 0)
 dev.off()
 
 # Get nodes and edges for each health care variable
