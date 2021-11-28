@@ -63,7 +63,7 @@ In order to build a network diagram using the `igraph` package in R, we needed t
 
 We then wanted to use the `visNetwork` package to create interactive network visualizations. We converted the `igraph` objects into a format usable for `visNetwork` using the `toVisNetworkData` function. 
 
-```{r echo=TRUE, eval=FALSE}
+```{r echo=TRUE, include=FALSE, eval = FALSE}
 # Create an igraph object
 restaurants_igraph <- graph_from_data_frame(restaurants_final, directed = FALSE)
 
@@ -147,11 +147,9 @@ The limitations of the network were that the edges were difficult to meaningfull
 
 # Word Map 
 
-```{r load-data, echo = FALSE}
+```{r load-data, echo = FALSE, include=FALSE}
 headlines_ex <- read_csv("data/news/headlines.csv", n_max = 5)
 ```
-
-## Introduction
 
 To further understand how the COVID-19 pandemic affected Americans, we have performed textual analysis. Text has the potential to be revealing in an entirely different way from the results of the Household Pulse survey, since language allows for the expression of nuance and feelings and emotions in a way that something so rigid as a census survey cannot. We wanted to go local, so we took news headlines from all fifty states and explored the trends and connections hidden within them. Our main tools in this endeavor were a word frequency analysis and a sentiment analysis, both of which use data that represent a much more colloquial and social view of how the pandemic was digested and affecting Americans than the purely categorical and standardized data that we studied in our first project, which centered around the Household Pulse Survey Data.
 
@@ -376,11 +374,11 @@ Overall, the biggest difficulty is the scope of the data for this analysis. Ques
 
 # Mental Health in Racial/Ethnic Groups - Unsupervised Clustering 
 
-Young adults, particularly college students, have experienced many difficult and unique struggles during the pandemic. In 2021 alone, uncertainties about living situations, remote or in-person classes, vaccination availability, the Delta variant, and more have impacted the mental and physical health of these individuals. Building off our previous Shiny app project, we were interested in investigating the relationships between mental health, healthcare access, and race and ethnicity during COVID-19. To do so, we investigated whether or not an unsupervised clustering algorithm could identify racial/ethnic groups from healthcare-related variables. Furthermore, we arranged racial/ethnic groups in a network where connections between groups are weighted by how similar their population samples responded to questions about mental health symptoms, access to mental health resources, and healthcare coverage.
+Young adults, particularly college students, have experienced many difficult and unique struggles during the pandemic. In 2021 alone, uncertainties about living situations, remote or in-person classes, vaccination availability, the Delta variant, and more have impacted the mental and physical health of these individuals. Building off our previous Shiny app project, we were interested in investigating the relationships between mental health, healthcare access, and race and ethnicity during COVID-19. To do so, we investigated whether or not an unsupervised clustering algorithm could identify racial/ethnic groups from healthcare-related variables. 
 
 ## Data 
 
-### Data Sources 
+### Data Sources {#mentalhealth-data}
 
 We created our clustering and racial/ethnic groups network with data from the U.S. Census Bureau's Household Pulse Survey. This ongoing survey is designed to collect information on how COVID-19 has impacted the social and economic lives of American households; it is motivated by the idea that understanding the pandemic's impacts will aid in building policy and outreach programs to help individuals and families recover from the pandemic.
 
@@ -582,7 +580,7 @@ knitr::include_graphics(c("images_and_plots/clusters_breakdown_r_e.png", "images
 
 ## Findings
 
-While the kmeans clustering did not elegantly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they've largely been able to access mental health care resources when they needed them. 
+While the k-means clustering did not elegantly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they've largely been able to access mental health care resources when they needed them. 
 
 Further, the clusters which are more predominantly white than the full respondents pool - clusters 1 and 2 - are also those where the most access to care and resources lie, with the main difference being that individuals in cluster 2 do not utilize counseling or similar mental health services, whereas individuals in cluster 1 do. 
 
@@ -592,9 +590,13 @@ Overall, while clustering is a fun exercise to see what patterns emerge, this wa
 
 # Mental Health in Racial/Ethnic Groups Network
 
+Furthermore, we arranged racial/ethnic groups in a network where connections between groups are weighted by how similar their population samples responded to questions about mental health symptoms, access to mental health resources, and healthcare coverage.
+
 ## Data 
 
 ### Data Sources
+
+We utilized the same datasets that we used in unsupervised clustering for the racial/ethnic groups network. See the [Data Sources Tab](#mentalhealth-data) 
 
 ### Data Wrangling
 
@@ -638,80 +640,20 @@ anx_edges <- anx_visNetwork$edges %>%
   mutate(value = anx) 
 ```
 
-## Creating an Interactive Network in Shiny {.tabset .tabset-fade .tabset-pills}
-
-### UI
-
-```{r echo=TRUE, eval=FALSE}
-ui <- fluidPage(
-  theme = shinytheme("lumen"),
-  title = "Racial/Ethnic Groups Network",
-  
-  fluidPage(
-    fluidRow(
-      column(4, 
-             selectInput(
-               inputId = "hc_variable",
-               label = "Select a type of health care variable",
-               choices =  list(
-                 "Anxiety" = "anx",
-                 "Depression" = "dep",
-                 "Prescription Medication" = "presc",
-                 "Counseling or similar services" = "mhs",
-                 "Needed but did not receive care" = "no_a",
-                 "Healthcare coverage" = "hc"),
-               selected = "anx",
-               multiple = FALSE
-               ),
-             br(),
-             imageOutput("legend"),
-             ),
-      column(8,
-             visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
-             )
-      )
-    )
-  )
-```
+## Creating an Interactive Network in Shiny 
 
 ###  Server
 
 ```{r echo=TRUE, eval=FALSE}
 server <- function(input, output) {
   
-  # Nodes (and their colors) change based on input
-  active_nodes <- reactive({
-    switch(input$hc_variable,
-           "anx" = anx_nodes,
-           "dep" = dep_nodes,
-           "presc" = presc_nodes,
-           "mhs" = mhs_nodes,
-           "no_a" = no_a_nodes,
-           "hc" = hc_nodes)
-  })
-  
-  # Edge widths change based on input
-  active_edges <- reactive({
-    switch(input$hc_variable,
-           "anx" = anx_edges,
-           "dep" = dep_edges,
-           "presc" = presc_edges,
-           "mhs" = mhs_edges,
-           "no_a" = no_a_edges,
-           "hc" = hc_edges
-    )
-  })
   # Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion
   output$network_proxy_update_re <- renderVisNetwork({
     visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%",
                scaling = list(min = min(input$hc_variable), max = max(input$hc_variable)),
                main = list(text = "Network for Mental Health Symptoms and Access to Resources for Racial/Ethnic Groups", 
                            style = "font-family:Arial;font-size:20px"
-               ),
-               submain = list(text = 
-                                "*Edges are weighted by how similar groups are in terms of the proportion of people<br>
-                                  experiencing mental health symptoms or having access to mental health resources",
-                              style = "font-family:Arial;font-size:13px")) %>%
+               )) %>%
       visNodes(size = 10) %>%
       visOptions(highlightNearest = list(enabled = TRUE, hover = TRUE), 
                  nodesIdSelection = TRUE) %>%
@@ -731,11 +673,6 @@ server <- function(input, output) {
   }, deleteFile = FALSE)
 
 }
-
-#####################
-# call to shiny App #
-#####################
-shinyApp(ui = ui, server = server)
 ```
 
 HERE IS WHERE I'LL EMBED THE SHINY APP ONCE I PUBLISH IT
@@ -758,5 +695,5 @@ While the survey questions are meaningful, categorical variables necessarily lac
 
 # Citations
 
-
+* [visNetwork documentation](https://datastorm-open.github.io/visNetwork/edges.html)
 
