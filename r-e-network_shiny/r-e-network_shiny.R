@@ -42,26 +42,27 @@ ui <- fluidPage(
     fluidRow(
       column(4, 
              selectInput(
-        inputId = "hc_variable",
-        label = "Select a type of health care variable",
-        choices =  list(
-          "Anxiety" = "anx",
-          "Depression" = "dep",
-          "Prescription Medication" = "presc",
-          "Counseling or similar services" = "mhs",
-          "Needed but did not receive care" = "no_a",
-          "Healthcare coverage" = "hc"),
-        selected = "anx",
-        multiple = FALSE
-      ),
-      br(),
-      imageOutput("legend"),
-    ),
-    
-    column(8,
-      visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
+               inputId = "hc_variable",
+               label = "Select a type of health care variable",
+               choices =  list(
+                 "Anxiety" = "anx",
+                 "Depression" = "dep",
+                 "Prescription Medication" = "presc",
+                 "Counseling or similar services" = "mhs",
+                 "Needed but did not receive care" = "no_a",
+                 "Healthcare coverage" = "hc"),
+               selected = "anx",
+               multiple = FALSE
+               ),
+             br(),
+             imageOutput("legend"),
+             ),
+      column(8,
+             visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
+             )
+      )
     )
-  )))
+  )
 
 
 ############
@@ -69,6 +70,7 @@ ui <- fluidPage(
 ############
 server <- function(input, output) {
   
+  # Nodes (and their colors) change based on input
   active_nodes <- reactive({
     switch(input$hc_variable,
            "anx" = anx_nodes,
@@ -79,6 +81,7 @@ server <- function(input, output) {
            "hc" = hc_nodes)
   })
   
+  # Edge widths change based on input
   active_edges <- reactive({
     switch(input$hc_variable,
            "anx" = anx_edges,
@@ -89,6 +92,7 @@ server <- function(input, output) {
            "hc" = hc_edges
     )
   })
+  # Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion
   output$network_proxy_update_re <- renderVisNetwork({
     visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%",
                scaling = list(min = min(input$hc_variable), max = max(input$hc_variable)),
@@ -108,16 +112,12 @@ server <- function(input, output) {
   
   myreVisNetworkProxy <- visNetworkProxy("network_proxy_update_re")
   
-  # output$legend <- renderImage({
-  #   if (input$hc_variable == "Anxiety") {
-  #     img(src = "legends/anx_legend.png") 
-  #   }
-  # })
+  # Reactively call on previously-made legend images
+  # Not temporary images, so set `deleteFile = FALSE`
   output$legend <- renderImage({
     filename <- normalizePath(file.path("./legends",
                               paste("legend_", input$hc_variable, ".png", sep = "")))
     list(src = filename)
-    
     
   }, deleteFile = FALSE)
 

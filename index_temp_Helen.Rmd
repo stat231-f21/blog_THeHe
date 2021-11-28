@@ -273,11 +273,19 @@ anx_visNetwork <- r_e_network %>%
   toVisNetworkData()
 ```
 
-We then got the nodes and edges for the network. For the edges, a new column, `value`, was created, which is where the network will pull the weight or size of the edges from. 
+We then got the nodes and edges for the network. For the edges, a new column, `value`, was created, which is where the network will pull the weight or size of the edges from. The nodes are colored based on the proportion of individuals in the group with the mental health symptom or access of interest.
 
 ```{r echo=TRUE, eval=FALSE}
+# Set color palette
+eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
+num_colors <- 5
+
 # Get nodes and weighted edges
-anx_nodes <- anx_visNetwork$nodes 
+anx_nodes <- anx_visNetwork$nodes %>% 
+  # Join data frames to get proportions and assign colors for the legend
+  inner_join(anxiety_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 anx_edges <- anx_visNetwork$edges %>% 
   mutate(value = anx) 
 ```
@@ -291,32 +299,39 @@ ui <- fluidPage(
   theme = shinytheme("lumen"),
   title = "Racial/Ethnic Groups Network",
   
-                fillPage(sidebarLayout(
-                  sidebarPanel(
-                    selectInput(
-                      inputId = "hc_variable",
-                      label = "Select a type of health care variable",
-                      choices =  list(
-                        "Anxiety" = "anx",
-                        "Depression" = "dep",
-                        "Prescription Medication" = "presc",
-                        "Counseling or similar services" = "mhs",
-                        "Needed but did not receive care" = "no_a",
-                        "Healthcare coverage" = "hc"),
-                      selected = "anx",
-                      multiple = FALSE
-                    ),
-                  ),
-                  mainPanel(
-                    visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
-                  )
-                )))
+  fluidPage(
+    fluidRow(
+      column(4, 
+             selectInput(
+               inputId = "hc_variable",
+               label = "Select a type of health care variable",
+               choices =  list(
+                 "Anxiety" = "anx",
+                 "Depression" = "dep",
+                 "Prescription Medication" = "presc",
+                 "Counseling or similar services" = "mhs",
+                 "Needed but did not receive care" = "no_a",
+                 "Healthcare coverage" = "hc"),
+               selected = "anx",
+               multiple = FALSE
+               ),
+             br(),
+             imageOutput("legend"),
+             ),
+      column(8,
+             visNetworkOutput("network_proxy_update_re", width = "100%", height = "90vh")
+             )
+      )
+    )
+  )
 ```
 
 ###  Server
 
 ```{r echo=TRUE, eval=FALSE}
 server <- function(input, output) {
+  
+  # Nodes (and their colors) change based on input
   active_nodes <- reactive({
     switch(input$hc_variable,
            "anx" = anx_nodes,
@@ -327,6 +342,7 @@ server <- function(input, output) {
            "hc" = hc_nodes)
   })
   
+  # Edge widths change based on input
   active_edges <- reactive({
     switch(input$hc_variable,
            "anx" = anx_edges,
@@ -337,6 +353,7 @@ server <- function(input, output) {
            "hc" = hc_edges
     )
   })
+  # Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion
   output$network_proxy_update_re <- renderVisNetwork({
     visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%",
                scaling = list(min = min(input$hc_variable), max = max(input$hc_variable)),
@@ -355,6 +372,15 @@ server <- function(input, output) {
   })
   
   myreVisNetworkProxy <- visNetworkProxy("network_proxy_update_re")
+  
+  # Reactively call on previously-made legend images
+  # Not temporary images, so set `deleteFile = FALSE`
+  output$legend <- renderImage({
+    filename <- normalizePath(file.path("./legends",
+                              paste("legend_", input$hc_variable, ".png", sep = "")))
+    list(src = filename)
+    
+  }, deleteFile = FALSE)
 
 }
 
