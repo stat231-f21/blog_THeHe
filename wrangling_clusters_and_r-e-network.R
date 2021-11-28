@@ -202,6 +202,10 @@ clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   scale_x_continuous(breaks = 1:10) +
   labs(x = "Number of clusters (k)", y = expression("Total Withins"[k]))
 clusters_elbow
+# Save as .png
+png(filename="images_and_plots/clusters_elbow.png")
+plot(clusters_elbow)
+dev.off()
 # Indeed, 5 or 6 clusters seems roughly optimal
 
 # Investigate information in the clusters
@@ -248,7 +252,7 @@ racial_ethnic_totals <- pulse_college_data %>%
   rbind(pulse_grouped)
 
 # Create stacked bar charts to compare breakdown of racial/ethnic groups across clusters
-clusters_breakdown <- ggplot(data = racial_ethnic_totals, 
+clusters_breakdown_r_e <- ggplot(data = racial_ethnic_totals, 
                              mapping = aes(x = clusters,
                                            y = value,
                                            fill = race_ethnicity)) +
@@ -264,7 +268,10 @@ clusters_breakdown <- ggplot(data = racial_ethnic_totals,
                                 "Non-Hispanic Black" = "#8DA0CB", 
                                 "Non-Hispanic White" = "#E78AC3",
                                 "Non-Hispanic Other/Multiple Races" = "#A6D854"))
-clusters_breakdown
+# Save as .png
+png(filename="images_and_plots/clusters_breakdown_r_e.png", width = 600, height = 500)
+plot(clusters_breakdown_r_e)
+dev.off()
 
 # Compare access of healthcare across clusters with animated bar chart
 # Find percent of individuals in each cluster taking prescription
@@ -316,7 +323,7 @@ clusters_characteristics <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum) %
   # Rename values in `type` column so they can easily be called and displayed with `{closest_state}` during animation
   mutate(type = case_when(type == "presc" ~ "Takes Prescription Medication",
                           type =="mhs" ~ "Receives counseling or similar mental health services",
-                          type == "no_a" ~ "Needs but does not have access to mental health care",
+                          type == "no_a" ~ "Able to access to mental health care when needed",
                           type == "healthcare" ~ "Has some form of healthcare coverage"))
 
 # Bug in gganimate makes plotting stacked bar chart as a single `geom_col()` difficult
@@ -329,51 +336,16 @@ clusters_bottom_layer <- clusters_characteristics %>%
   select(clusters, type, total) %>% 
   distinct()
 
-
-# Try an individual stacked bar chart
-stacked <- ggplot(data = pres_sum) +
-  geom_col(mapping = aes(x = clusters,
-                         y = 1,
-                         fill = "#7FC97F"),
-           position = "fill",
-           color = "coral2") +
-  coord_flip() +
-  scale_color_manual(values = "black") +
-  guides(color = guide_legend()) 
-
-stacked
-
-
-# animate_hc <- ggplot(data = meep) +
-#   geom_col(mapping = aes(x = clusters,
-#                          y = percent_type,
-#                          fill = value)) +
-#   transition_states(type, transition_length = 3, state_length = 1) +
-#   enter_grow() +
-#   exit_shrink()
-
-# Try animation
-animate_hc <- ggplot(data = clusters_characteristics) +
-  geom_col(mapping = aes(x = clusters,
-                         y = prop_type,
-                         fill = value),
-           position = "fill") +
-  transition_states(type, transition_length = 3, state_length = 1) +
-  enter_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type) +
-  exit_drift(x_mod = 0, y_mod = 1) 
-# +
-#   ease_aes("linear")
-
-
 # Create animated bar charts to smoothly move between the 4 variables
-# Build up two layers because making a smooth `gganimate` with stacked bar charts did not work well
-animate_hc <- ggplot(data = clusters_characteristics) +
-  # First layer represents "no" responses to categories once overlaid by second layer
+# Smoothest way to do so is build up two layers
+animate_hc <- ggplot() +
+  # First layer always fills entire length of the bar chart (0-1)
+  # Since all proportions add to 1 in total, this layer represents "no" responses once overlaid by the second layer
   geom_col(data = clusters_bottom_layer,
            mapping = aes(x = clusters,
                          y = total, 
                          fill = "No")) +
-  # Filtering for `value == 1` gives `yes` answers
+  # Filtering for `value == 1` gives "yes" answers
   geom_col(data = clusters_characteristics %>% filter(value == 1),
            mapping = aes(x = clusters,
                          y = prop_type,
@@ -382,53 +354,21 @@ animate_hc <- ggplot(data = clusters_characteristics) +
   scale_fill_manual(name = "Respondent's answer",
                     labels = c("Yes", "No"),
                       values = c("Yes" = "thistle", "No" = "palegreen3")) +
-  # Transition between the four variables
-  transition_states(type, transition_length = 1, state_length = 5) +
+  # Transition between the four variables with `type`, spend more time on each state than during transition
+  transition_states(type, transition_length = 1, state_length = 6) +
   # Have new points drift in and travel the full distance they represent
   enter_drift(x_mod = 0, y_mod = clusters_characteristics$prop_type) +
   # Have old points shrink out of the animation
   exit_shrink() +
   # Flip horizontally
   coord_flip() +
-  # Get title to change alongside states
+  # Get title to change as states change
   labs(title = "{closest_state}",
        x = "Cluster",
        y = "Proportion of respondents")
 
-
-# animate_hc <- ggplot(data = clusters_characteristics) +
-#   geom_col(data = clusters_characteristics %>% filter(value == 1),
-#            mapping = aes(x = clusters,
-#                          y = percent_type),
-#            fill = "coral2") +
-#   geom_col(data = clusters_characteristics %>% filter(value == 2),
-#            mapping = aes(x = clusters,
-#                          y = percent_type),
-#            fill = "deepskyblue1") +
-#   transition_states(type, transition_length = 3, state_length = 1) +
-#   enter_drift(x_mod = 0, y_mod = 1) +
-#   exit_drift(x_mod = 0, y_mod = clusters_characteristics$percent_type)
-# 
-# +
-# enter_drift("2", x_mod = 0, y_mod = -clusters_characteristics$percent_type) +
-# exit_drift("2", x_mod = 0, y_mod = -clusters_characteristics$percent_type)
-
-
-# animate_hc <- ggplot(data = meep) +
-#   geom_col(mapping = aes(x = clusters,
-#                          y = percent_type,
-#                          fill = value)) +
-#   transition_states(type, transition_length = 3, state_length = 1) +
-#   enter_drift(x_mod = 0, y_mod = meep$percent_type) +
-#   exit_drift(x_mod = 0, y_mod = meep$percent_type)
-
-# animate_hc <- ggplot(data = meep, aes(x = clusters, y = percent_type)) +
-#   geom_col(mapping = aes(fill = value), position = "identity", width = 0.8) +
-#   transition_states(type, transition_length = 3, state_length = 1) +
-#   enter_drift(x_mod = 0, y_mod = meep$percent_type) +
-#   exit_drift(x_mod = 0, y_mod = meep$percent_type)
-
-animate(animate_hc, renderer=gifski_renderer("test.gif"))
+# Save animation
+animate(animate_hc, renderer=gifski_renderer("images_and_plots/clusters_breakdown.gif"))
 
 ################################
 # Racial/Ethnic Groups Network #
@@ -577,6 +517,71 @@ write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
 # Read in data
 r_e_network <- read.csv("wrangled_csv_data/r-e-network.csv")
 
+# Set color palette
+eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
+num_colors <- 5
+
+# Create plots for color legends for each variable
+# Anxiety
+png(filename = "r-e-network_shiny/legends/legend_anx.png", width = 400, height = 400)
+anx_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+# Manually set ylab to move it closer to color scale
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(anxiety_net$prop), digits = 2), round(max(anxiety_net$prop), digits = 2),l=5))
+anx_image <- rasterImage(anx_image, 1, 1, 0, 0)
+dev.off()
+
+# Depression
+png(filename = "r-e-network_shiny/legends/legend_dep.png", width = 400, height = 400)
+dep_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(depression_net$prop), digits = 2), round(max(depression_net$prop), digits = 2), l=5))
+dep_image <- rasterImage(dep_image, 1, 1, 0, 0)
+dev.off()
+
+# Prescription
+png(filename = "r-e-network_shiny/legends/legend_presc.png", width = 400, height = 400)
+presc_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(presc_net$prop), digits = 2), round(max(presc_net$prop), digits = 2),l=5))
+presc_image <- rasterImage(presc_image, 1, 1, 0, 0)
+dev.off()
+
+# Mental health services
+png(filename = "r-e-network_shiny/legends/legend_mhs.png", width = 400, height = 400)
+mhs_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(mhs_net$prop), digits = 2), round(max(mhs_net$prop), digits = 2),l=5))
+mhs_image <- rasterImage(mhs_image, 1, 1, 0, 0)
+dev.off()
+
+# No access
+png(filename = "r-e-network_shiny/legends/legend_no_a.png", width = 400, height = 400)
+no_a_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(no_a_net$prop), digits = 2), round(max(no_a_net$prop), digits = 2),l=5))
+no_a_image <- rasterImage(no_a_image, 1, 1, 0, 0)
+dev.off()
+
+# Healthcare
+png(filename = "r-e-network_shiny/legends/legend_hc.png", width = 400, height = 400)
+hc_image <- as.raster(matrix(eigScalePal(5), ncol=1))
+plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
+title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+# Set the limits on the color scale to the min and max proportion
+text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(hc_net$prop), digits = 2), round(max(hc_net$prop), digits = 2),l=5))
+hc_image <- rasterImage(hc_image, 1, 1, 0, 0)
+dev.off()
+
 # Get nodes and edges for each health care variable
 # Select anxiety
 anx_visNetwork <- r_e_network %>% 
@@ -587,7 +592,11 @@ anx_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files 
-anx_nodes <- anx_visNetwork$nodes 
+anx_nodes <- anx_visNetwork$nodes %>% 
+  # Join data frames to get proportions and assign colors for the legend
+  inner_join(anxiety_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 anx_edges <- anx_visNetwork$edges %>% 
   mutate(value = anx) 
 
@@ -603,7 +612,10 @@ dep_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-dep_nodes <- dep_visNetwork$nodes 
+dep_nodes <- dep_visNetwork$nodes %>% 
+  inner_join(depression_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 dep_edges <- dep_visNetwork$edges %>% 
   mutate(value  = dep)
 
@@ -619,7 +631,10 @@ presc_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-presc_nodes <- presc_visNetwork$nodes 
+presc_nodes <- presc_visNetwork$nodes %>% 
+  inner_join(presc_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 presc_edges <- presc_visNetwork$edges %>% 
   mutate(value = presc)
 
@@ -635,7 +650,10 @@ mhs_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-mhs_nodes <- mhs_visNetwork$nodes 
+mhs_nodes <- mhs_visNetwork$nodes %>% 
+  inner_join(mhs_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 mhs_edges <- mhs_visNetwork$edges %>% 
   mutate(value = mhs)
 
@@ -651,7 +669,10 @@ no_a_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-no_a_nodes <- no_a_visNetwork$nodes 
+no_a_nodes <- no_a_visNetwork$nodes %>% 
+  inner_join(no_a_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 no_a_edges <- no_a_visNetwork$edges %>% 
   mutate(value = no_a)
 
@@ -667,7 +688,10 @@ hc_visNetwork <- r_e_network %>%
   toVisNetworkData()
 
 # Get nodes and weighted edges, and save them as csv files  
-hc_nodes <- hc_visNetwork$nodes 
+hc_nodes <- hc_visNetwork$nodes %>% 
+  inner_join(hc_net, by = c("id" = "race_ethnicity")) %>%
+  mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
+  select(-c(prop))
 hc_edges <- hc_visNetwork$edges %>% 
   mutate(value = hc)
 
