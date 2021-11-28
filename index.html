@@ -195,15 +195,28 @@
     <div id="toc">
       <ul>
       <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#word-map">Word Map</a></li>
       <li><a href="#covid-state-restrictions-network">COVID State Restrictions Network</a>
       <ul>
       <li><a href="#data-sources">Data Sources</a></li>
       <li><a href="#creating-the-interactive-network-using-visnetwork-in-shiny">Creating the interactive network using <code>visNetwork</code> in Shiny</a></li>
       <li><a href="#findings">Findings</a></li>
+      <li><a href="#limitations">Limitations</a></li>
       </ul></li>
-      <li><a href="#limitations">Limitations</a>
+      <li><a href="#word-map">Word Map</a>
       <ul>
+      <li><a href="#introduction-1">Introduction</a></li>
+      <li><a href="#data-sources-1">Data Sources</a></li>
+      <li><a href="#data-wrangling-1">Data Wrangling</a></li>
+      <li><a href="#conclusions">Conclusions</a></li>
+      <li><a href="#limitations-1">Limitations</a></li>
+      </ul></li>
+      <li><a href="#racialethnic-groups-clustering-networks">Racial/Ethnic Groups: Clustering &amp; Networks</a>
+      <ul>
+      <li><a href="#introduction-2">Introduction</a></li>
+      <li><a href="#data-sources-2">Data Sources</a></li>
+      <li><a href="#data-wrangling-2">Data Wrangling</a></li>
+      <li><a href="#conclusions-1">Conclusions</a></li>
+      <li><a href="#limitations-2">Limitations</a></li>
       <li><a href="#including-links-and-imagesvideos">Including links and images/videos</a></li>
       </ul></li>
       <li><a href="#you-can-even-create-tabs-within-your-webpage-if-you-want">You can even create tabs within your webpage if you want!</a></li>
@@ -226,13 +239,10 @@
 <h1>Introduction</h1>
 <p>Given the devastating effects of the , we were interested in exploring different relationships</p>
 </div>
-<div id="word-map" class="section level1">
-<h1>Word Map</h1>
-</div>
 <div id="covid-state-restrictions-network" class="section level1">
 <h1>COVID State Restrictions Network</h1>
 <p>We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each node representing a state and each edge connecting two states together. The nodes are colored by the proportion of annual COVID cases per state population, and the edges are weighted by how many days each pair of states shared the same restrictions in 2020. Users can also select the exact states to visualize (we recommend looking at five states or less; otherwise the network becomes too crowded!), as well as the type of COVID restriction to explore. There is a drop-down menu for states above the network; when a state is selected, its edges with other states will be highlighted so they can be more easily seen. Lastly, users can hover over the edges in the network to see the exact number of days that each pair of states shared.</p>
-<iframe src="https://th23.shinyapps.io/blog_THeHe/?showcase=0" width="768" height="600px" data-external="1">
+<iframe src="https://th23.shinyapps.io/blog_THeHe/?showcase=0" width="768" height="1500px" data-external="1">
 </iframe>
 <p>Visit <a href="https://th23.shinyapps.io/blog_THeHe/">our Shiny app</a> to explore and interact with the COVID state restrictions network!</p>
 <div id="data-sources" class="section level2">
@@ -319,9 +329,8 @@
 <h2>Findings</h2>
 <p>Overall, the network allows users to explore the relationships between different states of their choice in terms of how many days in 2020 they shared the same COVID restrictions, as well as specify which COVID restriction they wanted to look at. There are many different analyses that can come from exploring the network, but it’s interesting to see that there is not one dominant pattern or takeaway. Some states with radically different annual COVID cases per population share the same state restrictions for the majority of 2020, whereas some states with very similar annual COVID cases per population share very little of the same state restrictions in 2020. This underlies the complexity of COVID severity in states, and it’s important to remember that state restrictions are only one factor within many that influence the proportion of COVID cases that emerge in different locations.</p>
 </div>
-</div>
-<div id="limitations" class="section level1">
-<h1>Limitations</h1>
+<div id="limitations" class="section level2">
+<h2>Limitations</h2>
 <p>What are the limitations of your work? Be clear so that others do not misinterpret your findings. To what population do your results apply? Do they generalize? Could your work be extended with more data or computational power or time to analyze? How could your study be improved? Suggesting plausible extensions doesn’t weaken your work; it strengthens it by connecting it to future work.</p>
 <p>For example, you can include <strong>Bold</strong> and <em>Italic</em> and <code>Code</code> text.</p>
 <p>You should test out updating your GitHub Pages website:</p>
@@ -332,6 +341,127 @@
 <li>commit and push <strong>both</strong> <code>index.Rmd</code> and <code>index.html</code></li>
 <li>go to <a href="https://stat231-f21.github.io/blog_THeHe/" class="uri">https://stat231-f21.github.io/blog_THeHe/</a> to see the published test document (this is publicly available!)</li>
 </ul>
+</div>
+</div>
+<div id="word-map" class="section level1">
+<h1>Word Map</h1>
+<pre><code>## Rows: 5 Columns: 3</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (2): state, headline_text
+## dbl (1): week</code></pre>
+<pre><code>## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div id="introduction-1" class="section level2">
+<h2>Introduction</h2>
+</div>
+<div id="data-sources-1" class="section level2">
+<h2>Data Sources</h2>
+<p>The data for the text analysis portion of the project was scraped from local news sites from all fifty states. We found the most widely circulated news outlet in each state (according to <a href="https://www.agilitypr.com/resources/top-media-outlets/">this media source</a>). At first, we attempted to scrape each news site individually, but this proved very challenging because each site was built differently, so this effort would have required fifty different individualized scraping scripts, which was not feasible. We turned to <a href="https://news.google.com">Google News</a> as our solution; using this site, we can easily search individual news sites and get back results in a standardized manner.</p>
+<p>We were chiefly interested in the sentiments and discussions revolving around the COVID-19 pandemic, so we only searched for articles that included the keyword <strong>“covid”</strong>. Additionally, we restricted each search to time frames that matched up with the time frames that we used in our originally analysis, with the Household Pulse Survey data.</p>
+<p>We ran into some issues at first, since Google does not allow scraping of Google News’ search results page, which would have been a relatively easy way to obtain headlines. We were able to obtain RSS feeds of Google News searches: these are outputs in XML format that are typically used for email feeds and the like. There was no explicit restriction against scraping these feeds, so we used this output along with the <code>tidyRSS</code> package to obtain certain parts of the feed—specifically, headlines. (We were also somewhat ethically assuaged by the fact that each individual news website had no issue with scraping their headlines.)</p>
+<p>The specifics of scraping involved nested <code>for</code> loops: we had to scrape news sites from fifty states (taken care of by the outer loop), and for each state, we had to scrape headlines for each of the eighteen “weeks” that we were interested in (the inner loop).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop for 50 states</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set current state</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  state <span class="ot">&lt;-</span> news_sites<span class="sc">$</span>state[i]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Set current news url</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  site <span class="ot">&lt;-</span> news_sites<span class="sc">$</span>url[i]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Loop for 18 weeks</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>){</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set current start date (of time period in question)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    start_date <span class="ot">&lt;-</span> weeks<span class="sc">$</span>start[j]</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set current end date (of time period in question)</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    end_date <span class="ot">&lt;-</span> weeks<span class="sc">$</span>end[j]</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create Google News RSS url to scrape</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    rss_url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://news.google.com/rss/search?q=before%3A&quot;</span>, end_date, <span class="st">&quot;%20after%3A&quot;</span>, start_date, <span class="st">&quot;%20covid%20&quot;</span>, state, <span class="st">&quot;%20site%3A&quot;</span>, site, <span class="st">&quot;&amp;hl=en-US&amp;gl=US&amp;ceid=US%3Aen&quot;</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Scrape data from RSS feed</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    headlines_scraped <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Return NA instead of headline text when error is thrown (usually because there are no articles that meet criteria)</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(cnd) {</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Otherwise, pull headline text from the RSS feed</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>      scraped_text <span class="ot">&lt;-</span> rss_url <span class="sc">%&gt;%</span> </span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tidyfeed</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(item_title)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add scraped headline into our pre-made list</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    headlines<span class="sc">$</span>headline_text[(i<span class="dv">-1</span>)<span class="sc">*</span><span class="dv">18</span> <span class="sc">+</span> j] <span class="ot">&lt;-</span> headlines_scraped</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Once the scraping was completed, we had an (enormous) .csv file with an observation for every headline scraped, tagged with the state of the news outlet that it came from and the week that the headlines ran.</p>
+<pre><code>## # A tibble: 5 × 3
+##   state    week headline_text                                                   
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                                           
+## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama …
+## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from …
+## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -…
+## 4 Alabama    22 4,863 new COVID-19 cases in Alabama - al.com                    
+## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines…</code></pre>
+</div>
+<div id="data-wrangling-1" class="section level2">
+<h2>Data Wrangling</h2>
+<p>Once we obtained the raw text of every COVID-related headline from Week 22 to Week 39, we began performing text analysis on these headlines. The first wrangling was a simple word frequency analysis, breaking the headlines up and then tallying how often each one appeared (still separated by state and by week, so the tallies were specific to a certain location and time period, i.e. how many times the word <strong>vaccine</strong> appeared in headlines from Massachusetts during Week 33).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>word_frequencies <span class="ot">&lt;-</span> all_headlines <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Break headlines up into unigrams</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word, <span class="at">input =</span> headline_text, <span class="at">drop =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove typical stop words</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add word frequencies</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>(state, week, word) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove duplicate entries</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Group words by state &amp; week, then sort by frequency</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(state, week, <span class="fu">desc</span>(n))</span></code></pre></div>
+<p>We then did some custom filtering of the unigrams that we ended up with: we had already filtered out the typical stop words from the built-in dictionary, but looking through the data, it was clear that there were some more words that would not be useful to any of our analysis. For example, the names of the newspapers frequently showed up in the headlines that we scraped (i.e. “Massachusetts COVID-19 Cases Spiking Once Again – Boston Globe”), and clearly if they were in every headline, then they would clog up our frequency analysis. We therefore removed any newspaper-related and any location-specific words from the raw text, as well as any "textual detritus, such as urls or numbers:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>words_wrangled <span class="ot">&lt;-</span> word_frequencies <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Filter out any numbers</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">&quot;[:digit:]&quot;</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Filter out any phrase with &quot;.&quot; (mostly urls)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">.&quot;</span>),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Filter out &quot;covid&quot;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">&quot;covid&quot;</span>),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Filter out the state names</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="fu">tolower</span>(<span class="fu">as.character</span>(word_frequencies<span class="sc">$</span>state)))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove custom stop words</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(custom_stops, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>)</span></code></pre></div>
+<p>With that, our text was wrangled, and we were ready for our final analysis.</p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+</div>
+<div id="limitations-1" class="section level2">
+<h2>Limitations</h2>
+</div>
+</div>
+<div id="racialethnic-groups-clustering-networks" class="section level1">
+<h1>Racial/Ethnic Groups: Clustering &amp; Networks</h1>
+<div id="introduction-2" class="section level2">
+<h2>Introduction</h2>
+</div>
+<div id="data-sources-2" class="section level2">
+<h2>Data Sources</h2>
+</div>
+<div id="data-wrangling-2" class="section level2">
+<h2>Data Wrangling</h2>
+</div>
+<div id="conclusions-1" class="section level2">
+<h2>Conclusions</h2>
+</div>
+<div id="limitations-2" class="section level2">
+<h2>Limitations</h2>
+</div>
 <div id="including-links-and-imagesvideos" class="section level2">
 <h2>Including links and images/videos</h2>
 <p>You can include <a href="https://www.datadreaming.org/post/r-markdown-theme-gallery/">links</a> and there are a few ways to embed images! Both options for embedding images below can be used interchangeably. They both work for png, pdf, jpg, and even gif formats, and both support filepaths that are either URLs (for videos, you can include links to any valid YouTube or Vimeo URLs; see <a href="https://bookdown.org/yihui/rmarkdown/learnr-videos.html">here</a> for more details) or point to a location within your project directory.</p>
