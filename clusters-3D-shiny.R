@@ -17,7 +17,7 @@ pulse_clustered_data$clusters <- as.factor(pulse_clustered_data$clusters)
 
 
 # Set up choices for input variables
-# Choose 3 of the 4 vairables used to do the Kmeans Clustering
+# Choose 3 of the 4 variables used to do the K-means Clustering
 choice_values <- c("prescription", "mental_health_services", "no_access", "healthcare")
 # Names for reactive axes
 choice_axes <- c("Prescription", "Counseling or similar", "Needed but did not get", "Some healthcare")
