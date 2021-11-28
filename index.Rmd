@@ -102,11 +102,11 @@ restaurants_nodes <- restaurants_visNetwork$nodes %>%
   select(-c(covid_prop))
 ```
 
-## Creating the Interactive Network in Shiny  
+## Creating the Interactive Network in Shiny {#visnetwork-shiny}
 
-In order to create an interactive network in a Shiny app, the function, `visNetwork`, can be used within the `renderVisNetwork` function in the Shiny server code. The `visNetwork` function needs two arguments: the nodes and the edges. Using the pipe function, there are also many other functions that can be used to further customize the network. For example, the `visOptions` function allows users to select a node and have its connecting edges highlighted. Another example is the `visEdges` function that specifies the color of the edges and the different color they should change to when selected. 
+In order to create an interactive network in a Shiny app, the function, `visNetwork()`, can be used within the `renderVisNetwork()` function in the Shiny server code. The `visNetwork()` function needs two arguments: the nodes and the edges. Using the pipe function, there are also many other functions that can be used to further customize the network. For example, the `visOptions()` function allows users to select a node and have its connecting edges highlighted. Another example is the `visEdges()` function that specifies the color of the edges and the different color they should change to when selected. 
 
-To be able to add and remove nodes interactively, depending on what the user selects, an updated network can be created using the `visNetworkProxy` function. After creating data frames to contain the nodes that the user selected and did not select, `visRemoveNodes` and `visUpdateNodes` can be used to reactively display only the nodes the user selected in the network.
+To be able to add and remove nodes interactively, depending on what the user selects, an updated network can be created using the `visNetworkProxy()` function. After creating data frames to contain the nodes that the user selected and did not select, `visRemoveNodes()` and `visUpdateNodes()` can be used to reactively display only the nodes the user selected in the network.
 
 ```{r echo=TRUE, eval=FALSE}
 server <- function(input, output) {
@@ -143,7 +143,7 @@ Overall, the network allows users to explore the relationships between different
 
 ## Limitations and Future Research
 
-The limitations of the network were that the edges were difficult to meaningfully differentiate by edge width alone, thus necessitating adding labels that users can hover over on each edge to see the exact number of days that states shared the same restrictions in 2020. Furthermore, since each state shared at least one day of COVID restrictions with all the other states for all five types of restrictions, the network becomes crowded very quickly when more nodes are added. If there was a cutoff number of days that we decided on, then it would be enable users to see which states had more connections, like in most networks where not every node connects to every other node. For future research, it would be interesting to look at networks of different counties within states to see how many days they shared the same COVID restrictions within 2020, and whether there were any relationships     . It would also be interesting to conduct clustering analysis on the state restrictions network to see whether 
+The limitations of the network were that the edges were difficult to meaningfully differentiate by edge width alone, thus necessitating the addition of edge labels that users can hover over to see the exact number of days that states shared the same restrictions in 2020. Furthermore, since each state shared at least one day of COVID restrictions with all the other states for all five types of restrictions, the network becomes crowded very quickly when more nodes are added. If there was a cutoff number of days that we decided on, then it would be enable users to see which states had more connections, like in most networks where not every node connects to every other node. We would also be able to use the `cluster_fast_greedy()` function to identify and color communities, sections of the network where are more connections within that section than there are between that section and other sections of the network. For future research, it would be interesting to look at networks of different counties within states to see how many days they shared the same COVID restrictions within 2020, as well as see whether there are meaningful differences between states in terms of sharing the same COVID state restrictions in 2021 compared to 2020.
 
 # Word Map 
 
@@ -643,7 +643,7 @@ anx_edges <- anx_visNetwork$edges %>%
 
 ## Creating an Interactive Network in Shiny 
 
-###  Server
+We similarly used the `renderVisNetwork` and `visNetwork` functions to create an interactive network in Shiny. For more details, see the [interactive network tab for COVID state restrictions](#visnetwork-shiny). We also used the `renderImage` function to reactively change the color legend for the nodes, depending on the variable the user selects to look at. 
 
 ```{r echo=TRUE, eval=FALSE}
 server <- function(input, output) {
