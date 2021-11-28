@@ -140,7 +140,7 @@ Overall, the network allows users to explore the relationships between different
 
 ## Limitations and Future Research
 
-The limitations of the network were that        . For future research, it would be interesting to look at networks of different counties within states to see how many days 
+The limitations of the network were that the edges were difficult to meaningfully differentiate by edge width alone, thus necessitating adding labels that users can hover over on each edge to see the exact number of days that states shared the same restrictions in 2020. Furthermore, since each state shared at least one day of COVID restrictions with all the other states for all five types of restrictions, the network becomes crowded very quickly when more nodes are added. If there was a cutoff number of days that we decided on, then it would be enable users to see which states had more connections, like in most networks where not every node connects to every other node. For future research, it would be interesting to look at networks of different counties within states to see how many days they shared the same COVID restrictions within 2020, and whether there were any relationships     . It would also be interesting to conduct clustering analysis on the state restrictions network to see whether 
 
 # Word Map 
 
