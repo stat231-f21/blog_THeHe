@@ -148,6 +148,10 @@ The limitations of the network were that        . For future research, it would 
 headlines_ex <- read_csv("data/news/headlines.csv", n_max = 5)
 ```
 
+## Introduction
+
+To further understand how the COVID-19 pandemic affected Americans, we have performed textual analysis. Text has the potential to be revealing in an entirely different way from the results of the Household Pulse survey, since language allows for the expression of nuance and feelings and emotions in a way that something so rigid as a census survey cannot. We wanted to go local, so we took news headlines from all fifty states and explored the trends and connections hidden within them. Our main tools in this endeavor were a word frequency analysis and a sentiment analysis, both of which use data that represent a much more colloquial and social view of how the pandemic was digested and affecting Americans than the purely categorical and standardized data that we studied in our first project, which centered around the Household Pulse Survey Data.
+
 ## Data Sources
 
 The data for the text analysis portion of the project was scraped from local news sites from all fifty states. We found the most widely circulated news outlet in each state (according to [this media source](https://www.agilitypr.com/resources/top-media-outlets/)). At first, we attempted to scrape each news site individually, but this proved very challenging because each site was built differently, so this effort would have required fifty different individualized scraping scripts, which was not feasible. We turned to [Google News](https://news.google.com) as our solution; using this site, we can easily search individual news sites and get back results in a standardized manner.
@@ -241,11 +245,129 @@ words_wrangled <- word_frequencies %>%
 
 With that, our text was wrangled, and we were ready for our final analysis.
 
-## Creating Interactive Word Maps in Shiny
+## Creating Interactive Word Maps in Shiny {.tabset .tabset-fade .tabset-pills}
 
-## Conclusions
+### Creating the Shiny app
+
+Our interactive analysis consists of two parts: a word frequency map that explores *qualitatively* how different states were discussing, reporting, contextualizing, and focusing on the pandemic; and a sentiment analysis map, that explores *quantitatively* how different locations in the United States viewed the pandemic. We combined both of these elements into a Shiny app:
+
+```{r text-shiny}
+
+# Henry's shiny app will go here when he gets around to publishing it
+
+```
+
+Pulling the most frequently used words from each state required more wrangling, but it needed to be contained within the Shiny app, since it demanded *reactivity* since the words displayed depended on user input, both for the week in question and the number of words that the user wanted displayed:
+
+```{r wordmap-reactive-wrangling, echo = TRUE, eval = FALSE}
+# Perform reactive wrangling for word frequency map
+  wordmap_words <- reactive({
+    
+    words_wrangled %>%
+    # Filter only weeks specified by slider
+    filter(week == input$week_slider1) %>% 
+    # Arrange words first by state, and then by how often they occur  
+    arrange(state, desc(n)) %>% 
+    # Create a list-column of words & frequency for each state  
+    nest(word_list = c(word, n)) %>%
+           # Make state names lowercase  
+    mutate(state = tolower(state),
+           # Pull out the top however-so-many words from each state
+           reactive_words = map(word_list, ~
+                                    .x %>% 
+                                    select(word) %>% 
+                                    slice_head(n = input$words_slider1) %>% 
+                                    pull(word))) %>%
+    # Add mapping sf data to text data  
+    right_join(state_map, by = c("state" = "ID")) %>% 
+    # Coerce back into sf object
+    st_as_sf()
+    
+  })
+```
+
+The sentiment analysis required a similar amount of reactive wrangling; this time, the focus was on finding the weighted mean sentiment for each state given the time frame of interest:
+
+```{r sentiment-reactive-wrangling, echo = TRUE, eval = FALSE}
+# Perform reactive wrangling for sentiment analysis map
+  sent_words <- reactive({
+    
+    words_wrangled %>% 
+    # Filter only weeks specified  
+    filter(week == input$week_slider2) %>% 
+    # Arrange words first by state, and then by how often they occur
+    arrange(state, desc(n)) %>%
+    # Add sentiment data
+    inner_join(afinn_lexicon, by = "word") %>%
+    # Create list-column of word, frequency, and sentiment value
+    nest(word_list = c(word, n, value)) %>%
+    # Make state names lowercase  
+    mutate(state = tolower(state)) %>% 
+    # Add state sf geometry objects  
+    right_join(state_map, by = c("state" = "ID")) %>% 
+    # Compute & mutate the weighted mean of sentiment values for each state
+    mutate(avg_sent = map_dbl(word_list, ~ mean(.x$value * .x$n, na.rm = TRUE))) %>%
+    # Coerce back into sf object
+    st_as_sf()
+    
+  })
+```
+
+### Exploring our app
+
+We often get the starkest results from our word map when we just look at the "top word" for each week: to a very rough approximation, this view shows us the word that people in each state were using most often to describe the COVID-19 pandemic in a given week. During the first week under investigation, from January 6th to January 18th, 2021, the two dominating words across the United States were **capitol** and **vaccine**:
+
+```{r first-week-photo}
+
+# Henry will add a screenshot of Week 22 here
+
+```
+
+Interestingly, these two words seem to be evenly spread throughout the states: there is not a geographical bias of either one.
+
+As we move to the next week, most if not all of the mentions of the **capitol** disappear, and while **vaccine** remains constant, another topic starts to dominate the United States' psyche: **basketball**.
+
+```{r second-week-photo}
+
+# Henry will add a screenshot of Week 23 here etc etc etc
+
+```
+
+Remember---all of these words come from headlines obtained from a search using the keyword **covid**, so the fact that **basketball** is showing up means that there were articles about, presumably, how the pandemic was affecting the basketball season, and those articles were dominating in those states.
+
+As we move along the never-ending axis of time, coming to the next week shows what we think is a pointed change in mindset. By this time, the beginning of February 2021, there is much more prevalence of words that suggest more local worries, rather than global or national ones (which were reflected by words such as **vaccine**, **capitol**, or **basketball**). We start to see discussions of **school** come up, as well as **governor** and **restaurant**. These reflect concerns that are affecting people on a much more personal level, signifying a shift: the pandemic is now an individual problem. How can *I* live *my* life now? What will *my* summer look like? We can see America becoming, for lack of a better word, a tad selfish.
+
+```{r third-week-photo}
+
+# Thrd week yadda yadda
+
+```
+
+This "selfish" trend gives us a great window into how the way that Americans thought about the pandemic in 2021 twisted and turned. Several other trends are pervasive throughout the following weeks; they are worth exploring and coming to one's own conclusions about. Notable are the increase in words such as **black** and **police**, as well as their timing; the increase in the frequency of **mask** and other restrictions (particularly interesting in the light of [our concurrent network analysis of state's restrictions throughout the pandemic](#restrictions-network)); the prevalence of **delta** and how that changed over time, and last but certainly not least---America's continuing and unwavering fixation on sports: **basketball**, **olympics**, **ncaa**, and more.
+
+Turning now to the sentiment analysis map, there is an overwhelming trend of negative sentiment across the United States for all eighteen weeks in question. This is perhaps unsurprising, given what we know about the constant messaging surrounding the COVID-19 pandemic. It is remarkable, however, to note when and where the sentiment of these COVID-related headlines improves. There is a sharp peak in positive sentiment at Week 30 (i.e. the middle of May):
+
+```{r week-30-sent}
+
+# Week 30 sentiment map screenshot
+
+```
+
+This may be a fluke, or this may be a quick glimmer of hope about the summer. We all heard the rhetoric about how Summer 2021 was going to be the "reclaimed summer" that "makes up for 2020"---and perhaps the sentiment of Week 30 reflects this. It quickly subsides, however, and we do not see overwhelmingly positive sentiment again until Week 33, where it persists for longer, and then transitions back and forth between positive and negative with no clear direction.
+
+If we consider trends in geography rather than trends in time, we make the interesting observation that when there are states with standout positive sentiment, they are almost always located in the Midwest or the Deep South. Again, these could very well be flukes---the data collection process left a lot to be desired---but they might also tell us something about the states where there were more likely to be moments of positive thinking throughout the dark pandemic.
 
 ## Limitations and Future Research
+
+Clearly, this is only a cursory look at how America was thinking about the pandemic. This data represents a sliver of the discourse surrounding the pandemic in the United States, and although we took care to find the most representative sliver that we could, it is impossible to accurately represent how people were thinking about COVID-19 using one word or one value.
+
+More specifically, on a very basic level, even though words are very useful markers of collective thought, context is extremely important, and we didn't take it into account at all. We only examined unigrams, whereas a more comprehensive analysis would consider a more diverse spread of n-grams. Additionally, we would have liked to study more data sources. Once again, the sources that we did pull from were determined to be the best for this scope, but the limitations of this project meant that we were forced to look at only fifty sources---which seems like a lot, but considering that each source was meant to cover an entire U.S. state, fifty becomes quite a small number.
+
+Functionally, there are several pieces of the Shiny app that could be improved (and hopefully will be in the coming days). We would like the interface for looking at more than just the top word to be improved. Furthermore, it would be fascinating to explore a more customizable *range* of time periods, as oppoped to the weeks that were predetermined by our prior usage of the Pulse data.
+
+Finally, much of this project relied on very subjective decisions: we had to determine the news outlets to be scraped, as well as the keywords to narrow our search, as well as the custom stop words that we took out at the last stage of our word frequency analysis. Other researchers could come to very different conclusions with a different set of parameters, and we would like there to be a little more standardization in the way of coming to our final raw textual data.
+
+Overall, the biggest difficulty is the scope of the data for this analysis. Questions such as "How can we get text from a more representative---or perhaps more local---population of news outlets?" will guide future research and our honing of the conclusions that we have made above.
 
 # Racial/Ethnic Groups: Clustering & Networks
 
