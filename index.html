@@ -198,7 +198,7 @@
       <li><a href="#restrictions-network">COVID State Restrictions Network</a>
       <ul>
       <li><a href="#data">Data</a></li>
-      <li><a href="#creating-the-interactive-network-in-shiny">Creating the Interactive Network in Shiny</a></li>
+      <li><a href="#visnetwork-shiny">Creating the Interactive Network in Shiny</a></li>
       <li><a href="#findings">Findings</a></li>
       <li><a href="#limitations-and-future-research">Limitations and Future Research</a></li>
       </ul></li>
@@ -293,10 +293,10 @@
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(covid_prop))</span></code></pre></div>
 </div>
 </div>
-<div id="creating-the-interactive-network-in-shiny" class="section level2">
+<div id="visnetwork-shiny" class="section level2">
 <h2>Creating the Interactive Network in Shiny</h2>
-<p>In order to create an interactive network in a Shiny app, the function, <code>visNetwork</code>, can be used within the <code>renderVisNetwork</code> function in the Shiny server code. The <code>visNetwork</code> function needs two arguments: the nodes and the edges. Using the pipe function, there are also many other functions that can be used to further customize the network. For example, the <code>visOptions</code> function allows users to select a node and have its connecting edges highlighted. Another example is the <code>visEdges</code> function that specifies the color of the edges and the different color they should change to when selected.</p>
-<p>To be able to add and remove nodes interactively, depending on what the user selects, an updated network can be created using the <code>visNetworkProxy</code> function. After creating data frames to contain the nodes that the user selected and did not select, <code>visRemoveNodes</code> and <code>visUpdateNodes</code> can be used to reactively display only the nodes the user selected in the network.</p>
+<p>In order to create an interactive network in a Shiny app, the function, <code>visNetwork()</code>, can be used within the <code>renderVisNetwork()</code> function in the Shiny server code. The <code>visNetwork()</code> function needs two arguments: the nodes and the edges. Using the pipe function, there are also many other functions that can be used to further customize the network. For example, the <code>visOptions()</code> function allows users to select a node and have its connecting edges highlighted. Another example is the <code>visEdges()</code> function that specifies the color of the edges and the different color they should change to when selected.</p>
+<p>To be able to add and remove nodes interactively, depending on what the user selects, an updated network can be created using the <code>visNetworkProxy()</code> function. After creating data frames to contain the nodes that the user selected and did not select, <code>visRemoveNodes()</code> and <code>visUpdateNodes()</code> can be used to reactively display only the nodes the user selected in the network.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>network_proxy_update <span class="ot">&lt;-</span> <span class="fu">renderVisNetwork</span>({</span>
@@ -330,7 +330,7 @@
 </div>
 <div id="limitations-and-future-research" class="section level2">
 <h2>Limitations and Future Research</h2>
-<p>The limitations of the network were that the edges were difficult to meaningfully differentiate by edge width alone, thus necessitating adding labels that users can hover over on each edge to see the exact number of days that states shared the same restrictions in 2020. Furthermore, since each state shared at least one day of COVID restrictions with all the other states for all five types of restrictions, the network becomes crowded very quickly when more nodes are added. If there was a cutoff number of days that we decided on, then it would be enable users to see which states had more connections, like in most networks where not every node connects to every other node. For future research, it would be interesting to look at networks of different counties within states to see how many days they shared the same COVID restrictions within 2020, and whether there were any relationships . It would also be interesting to conduct clustering analysis on the state restrictions network to see whether</p>
+<p>The limitations of the network were that the edges were difficult to meaningfully differentiate by edge width alone, thus necessitating the addition of edge labels that users can hover over to see the exact number of days that states shared the same restrictions in 2020. Furthermore, since each state shared at least one day of COVID restrictions with all the other states for all five types of restrictions, the network becomes crowded very quickly when more nodes are added. If there was a cutoff number of days that we decided on, then it would be enable users to see which states had more connections, like in most networks where not every node connects to every other node. We would also be able to use the <code>cluster_fast_greedy()</code> function to identify and color communities, sections of the network where are more connections within that section than there are between that section and other sections of the network. For future research, it would be interesting to look at networks of different counties within states to see how many days they shared the same COVID restrictions within 2020, as well as see whether there are meaningful differences between states in terms of sharing the same COVID state restrictions in 2021 compared to 2020.</p>
 </div>
 </div>
 <div id="word-map" class="section level1">
@@ -700,6 +700,7 @@
 </div>
 <div id="data-wrangling-2" class="section level3">
 <h3>Data Wrangling</h3>
+<p><em>The following code chunks were for wrangling the anxiety variable, but the exact same procedure was repeated for the other five variables.</em></p>
 <p>For the network, we wanted to connect racial/ethnic groups by the experiences of anxiety and depression, and the access to mental health and healthcare resources of their individuals. To do so, we compared the proportions of individuals in each group who</p>
 <ul>
 <li>experienced chronic (more than half the days or nearly every day) anxiety</li>
@@ -710,7 +711,7 @@
 <li>had some form of healthcare</li>
 </ul>
 <p>For each pair of racial/ethnic groups, we calculated the difference in these proportions. Thus, smaller differences provided more weight to the network edges, indicating more similar “experiences” (that is, proportions) between those groups.</p>
-<p>The following code wrangles the anxiety variable, but the same procedure was repeated for the other five variables. For an explanation of the <code>igraph</code> and <code>visNetwork</code> packages, see the <a href="#restrictions-wrangling">Data Wrangling Tab for COVID-19 Restrictions</a>.</p>
+<p>For an explanation of the <code>igraph</code> and <code>visNetwork</code> packages, see the <a href="#restrictions-wrangling">Data Wrangling Tab for COVID-19 Restrictions</a>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From larger data set with all mental health variables, select anxiety</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>anx_visNetwork <span class="ot">&lt;-</span> r_e_network <span class="sc">%&gt;%</span> </span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(race_ethnicity_one, race_ethnicity_two, anx) <span class="sc">%&gt;%</span> </span>
@@ -735,8 +736,7 @@
 </div>
 <div id="creating-an-interactive-network-in-shiny" class="section level2">
 <h2>Creating an Interactive Network in Shiny</h2>
-<div id="server-1" class="section level3">
-<h3>Server</h3>
+<p>We similarly used the <code>renderVisNetwork</code> and <code>visNetwork</code> functions to create an interactive network in Shiny. For more details, see the <a href="#visnetwork-shiny">interactive network tab for COVID state restrictions</a>. We also used the <code>renderImage</code> function to reactively change the color legend for the nodes, depending on the variable the user selects to look at.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion</span></span>
@@ -766,7 +766,6 @@
 <span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>HERE IS WHERE I’LL EMBED THE SHINY APP ONCE I PUBLISH IT</p>
-</div>
 </div>
 <div id="findings-2" class="section level2">
 <h2>Findings</h2>
