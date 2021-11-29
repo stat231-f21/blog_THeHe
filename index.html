@@ -20,9 +20,9 @@
         <script src="index_files/navigation-1.1/tabsets.js"></script>
         <link href="index_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
         <script src="index_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
-        <link href="index_files/readthedown-0.1/readthedown.css" rel="stylesheet" />
-        <link href="index_files/readthedown-0.1/readthedown_fonts_embed.css" rel="stylesheet" />
-        <script src="index_files/readthedown-0.1/readthedown.js"></script>
+        <link href="index_files/robobook-0.1/robobook.css" rel="stylesheet" />
+        <link href="index_files/robobook-0.1/robobook_fonts_embed.css" rel="stylesheet" />
+        <script src="index_files/robobook-0.1/robobook.js"></script>
     
     
         <style type="text/css">code{white-space: pre;}</style>
@@ -179,67 +179,73 @@
 <body class="preload">
 
    	
-         <!-- readthedown start -->   
-   <div id="content" data-toggle="wy-nav-shift">
-     <nav id="nav-top" role="navigation" aria-label="top navigation">
-       <a role="button" href="#" data-toggle="wy-nav-top"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
-     </nav>
-         
+            <!-- robobook start -->   
+   <div class="book with-summary">
+      <div class="book-summary">
+        <ul>
+          <li class="title">A Deeper Dive Into COVID-Related Relationships</li>
+          <li class="divider"></li>
+        </ul>
+        <nav role="navigation" id="toc">
+          <ul>
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#restrictions-network">COVID State Restrictions Network</a>
+          <ul>
+          <li><a href="#data">Data</a></li>
+          <li><a href="#visnetwork-shiny">Creating the Interactive Network in Shiny</a></li>
+          <li><a href="#findings">Findings</a></li>
+          <li><a href="#limitations-and-future-research">Limitations and Future Research</a></li>
+          </ul></li>
+          <li><a href="#word-map">Word Map</a>
+          <ul>
+          <li><a href="#data-1">Data</a></li>
+          <li><a href="#creating-interactive-word-maps-in-shiny">Creating Interactive Word Maps in Shiny</a></li>
+          <li><a href="#limitations-and-future-research-1">Limitations and Future Research</a></li>
+          </ul></li>
+          <li><a href="#mental-health-in-racialethnic-groups---unsupervised-clustering">Mental Health in Racial/Ethnic Groups - Unsupervised Clustering</a>
+          <ul>
+          <li><a href="#data-2">Data</a></li>
+          <li><a href="#creating-an-interactive-clustering-plot-in-shiny">Creating an Interactive Clustering Plot in Shiny</a></li>
+          <li><a href="#interactive-clusters">Interactive Clusters</a></li>
+          <li><a href="#clusters-patterns">Clusters Patterns</a></li>
+          <li><a href="#findings-1">Findings</a></li>
+          <li><a href="#limitations">Limitations</a></li>
+          </ul></li>
+          <li><a href="#mental-health-in-racialethnic-groups-network">Mental Health in Racial/Ethnic Groups Network</a>
+          <ul>
+          <li><a href="#data-3">Data</a></li>
+          <li><a href="#creating-an-interactive-network-in-shiny">Creating an Interactive Network in Shiny</a></li>
+          <li><a href="#findings-2">Findings</a></li>
+          <li><a href="#limitations-1">Limitations</a></li>
+          </ul></li>
+          <li><a href="#concluding-thoughts">Concluding Thoughts</a></li>
+          <li><a href="#citations">Citations</a></li>
+          </ul>
+        </nav>
+        <ul class="authors">
+          <li class="divider"></li>
+                                <li><span><i class="glyphicon glyphicon-user"></i> Tracy Huang, Helen Feibes, Henry Bassett</span></li>
+                                         <li><span><i class="glyphicon glyphicon-calendar"></i> 12/15/21</span></li>
+                  </ul>     
+      </div>
+      <div class="book-body fixed">
+        <div class="body-inner">
+            <a class="btn pull-left js-toolbar-action toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Sidebar" href="#">
+              <span class="glyphicon glyphicon-menu-hamburger"></span>
+            </a>
+            <div class="page-inner">
+              <section id="content" class="normal">
+      
    
         
       <h1 class="title">A Deeper Dive Into COVID-Related Relationships</h1>
       
-         <!-- readthedown authors -->
-   <div id="sidebar">
-    <h2><a href="#content">A Deeper Dive Into COVID-Related Relationships</a></h2>
-    <div id="toc">
-      <ul>
-      <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#restrictions-network">COVID State Restrictions Network</a>
-      <ul>
-      <li><a href="#data">Data</a></li>
-      <li><a href="#visnetwork-shiny">Creating the Interactive Network in Shiny</a></li>
-      <li><a href="#findings">Findings</a></li>
-      <li><a href="#limitations-and-future-research">Limitations and Future Research</a></li>
-      </ul></li>
-      <li><a href="#word-map">Word Map</a>
-      <ul>
-      <li><a href="#data-1">Data</a></li>
-      <li><a href="#creating-interactive-word-maps-in-shiny">Creating Interactive Word Maps in Shiny</a></li>
-      <li><a href="#limitations-and-future-research-1">Limitations and Future Research</a></li>
-      </ul></li>
-      <li><a href="#mental-health-in-racialethnic-groups---unsupervised-clustering">Mental Health in Racial/Ethnic Groups - Unsupervised Clustering</a>
-      <ul>
-      <li><a href="#data-2">Data</a></li>
-      <li><a href="#creating-an-interactive-clustering-plot-in-shiny">Creating an Interactive Clustering Plot in Shiny</a></li>
-      <li><a href="#interactive-clusters">Interactive Clusters</a></li>
-      <li><a href="#clusters-patterns">Clusters Patterns</a></li>
-      <li><a href="#findings-1">Findings</a></li>
-      <li><a href="#limitations">Limitations</a></li>
-      </ul></li>
-      <li><a href="#mental-health-in-racialethnic-groups-network">Mental Health in Racial/Ethnic Groups Network</a>
-      <ul>
-      <li><a href="#data-3">Data</a></li>
-      <li><a href="#creating-an-interactive-network-in-shiny">Creating an Interactive Network in Shiny</a></li>
-      <li><a href="#findings-2">Findings</a></li>
-      <li><a href="#limitations-1">Limitations</a></li>
-      </ul></li>
-      <li><a href="#concluding-thoughts">Concluding Thoughts</a></li>
-      <li><a href="#citations">Citations</a></li>
-      </ul>
-    </div>
-    <div id="postamble" data-toggle="wy-nav-shift" class="status">
-                  <p class="author"><span class="glyphicon glyphicon-user"></span> Tracy Huang, Helen Feibes, Henry Bassett</p>
-                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 12/15/21</p>
-          </div>
-   </div>
-     
+        
 
    
       
    
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
-<div id="main">
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>The COVID-19 pandemic has had an enormous impact on Americans’ lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines , unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups, and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.</p>
@@ -389,14 +395,14 @@
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Once the scraping was completed, we had an (enormous) .csv file with an observation for every headline scraped, tagged with the state of the news outlet that it came from and the week that the headlines ran.</p>
-<pre><code>## # A tibble: 5 x 3
+<pre><code>## # A tibble: 5 × 3
 ##   state    week headline_text                                                   
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                                           
-## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama ~
-## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from ~
-## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -~
+## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama …
+## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from …
+## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -…
 ## 4 Alabama    22 4,863 new COVID-19 cases in Alabama - al.com                    
-## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines~</code></pre>
+## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines…</code></pre>
 </div>
 <div id="data-wrangling" class="section level3">
 <h3>Data Wrangling</h3>
@@ -803,17 +809,23 @@
 <li><a href="https://ugoproto.github.io/ugo_r_doc/pdf/gganimate.pdf">gganimate “cheat sheet” documentation</a></li>
 </ul>
 </div>
-</div>
 
    
    
-            
+           </section>
+  </div>
+  </div>
+  </div>
+  </div>
+      
       
 
   <script>
     $(document).ready(function () {
 
-			
+		// add bootstrap table styles to pandoc tables
+	$('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+		
  		
 	    });
   </script>

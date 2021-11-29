@@ -3,7 +3,7 @@ title: "A Deeper Dive Into COVID-Related Relationships"
 author: "Tracy Huang, Helen Feibes, Henry Bassett"
 date: "12/15/21"
 output:
-  rmdformats::readthedown:
+  rmdformats::robobook:
     thumbnails: false
     highlight: "kate"
     self_contained: false
