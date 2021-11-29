@@ -24,7 +24,7 @@ options(knitr.kable.NA = '')
 ```
 
 # Introduction
-The COVID-19 pandemic has had an enormous impact on Americans' lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines      , unsupervised clustering      , and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.
+The COVID-19 pandemic has had an enormous impact on Americans' lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines      , unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups, and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.
 
 # COVID State Restrictions Network {#restrictions-network}
 
@@ -432,7 +432,7 @@ pulse_clustered_data <- pulse_college_data %>%
 
 We then constructed an elbow plot to assess whether or not five was an optimal number of clusters to use. The "elbow" bends where the total within-cluster sum of squares (which measures variation within clusters) begins decreasing linearly. At this point, identifying more clusters becomes less useful. Viewing this plot, it is clear either five or six clusters is optimal. 
 
-```{r echo=TRUE, eval=FALSE}
+```{r elbow-plot-kmeans, echo=TRUE, eval=FALSE}
 # Check usefulness of 5 clusters with elbow plot
 elbow_plot <- data.frame(clusters = 1:10,
                          within_ss = rep(NA, 10))
@@ -454,7 +454,7 @@ clusters_elbow <- ggplot(elbow_plot, aes(x = clusters, y = within_ss)) +
   labs(x = "Number of clusters (k)", y = expression("Total Withins"[k]))
 ```
 
-```{r}
+```{r elbow-plot, out.width="50%"}
 knitr::include_graphics("images_and_plots/clusters_elbow.png")
 ```
 
@@ -465,7 +465,7 @@ We can visualize clusters with three-dimensional scatter plots. Since we cluster
 
 ### Setting up choices
 
-```{r echo=TRUE, eval=FALSE}
+```{r kmeans-choices, echo=TRUE, eval=FALSE}
 # Set up choices for input variables
 # Choose 3 of the 4 vairables used to do the Kmeans Clustering
 choice_values <- c("prescription", "mental_health_services", "no_access", "healthcare")
@@ -479,7 +479,7 @@ names(choice_values) <- choice_names
 
 ### UI
 
-```{r echo=TRUE, eval=FALSE}
+```{r kmeans-ui, echo=TRUE, eval=FALSE}
 ui <- fluidPage(title = "Clusters Plot",
                 fillPage(sidebarLayout(
                   sidebarPanel(
@@ -516,7 +516,7 @@ ui <- fluidPage(title = "Clusters Plot",
 
 ###  Server
 
-```{r echo=TRUE, eval=FALSE}
+```{r kmeans-server, echo=TRUE, eval=FALSE}
 server <- function(input, output){
 
   output$clusters <- renderPlotly({
@@ -537,7 +537,10 @@ server <- function(input, output){
 }
 ```
 
-EMBED SHINY APP HERE
+```{r kmeans-shiny, out.extra="data-external=1"}
+knitr::include_app("https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/", 
+                   height = "1500px")
+```
 
 ## Clusters Patterns
 
@@ -574,9 +577,14 @@ animate_hc <- ggplot() +
        y = "Proportion of respondents")
 ```
 
-```{r}
-knitr::include_graphics(c("images_and_plots/clusters_breakdown_r_e.png", "images_and_plots/clusters_breakdown.gif"))
+```{r clusters_breakdown_r_e-png, fig.show='hold', out.width="70%"}
+knitr::include_graphics("images_and_plots/clusters_breakdown_r_e.png")
 ```
+
+```{r clusters_breakdown-gif, fig.show='hold', out.width="60%"}
+knitr::include_graphics("images_and_plots/clusters_breakdown.gif")
+```
+
 
 ## Findings
 
@@ -614,7 +622,7 @@ For each pair of racial/ethnic groups, we calculated the difference in these pro
 
 For an explanation of the `igraph` and `visNetwork` packages, see the [Data Wrangling Tab for COVID-19 Restrictions](#restrictions-wrangling).
 
-```{r echo=TRUE, eval=FALSE}
+```{r r-e-visnet, echo=TRUE, eval=FALSE}
 # From larger data set with all mental health variables, select anxiety
 anx_visNetwork <- r_e_network %>% 
   select(race_ethnicity_one, race_ethnicity_two, anx) %>% 
@@ -624,9 +632,9 @@ anx_visNetwork <- r_e_network %>%
   toVisNetworkData()
 ```
 
-We then got the nodes and edges for the network. For the edges, a new column, `value`, was created, which is where the network will pull the weight or size of the edges from. The nodes are colored based on the proportion of individuals in the group with the mental health symptom or access of interest.
+We then got the nodes and edges for the network. For the edges, a new column, `value`, was created, which is where the network pulls the weight or size of the edges from. The nodes are colored based on the proportion of individuals in the group with the mental health symptom or access of interest.
 
-```{r echo=TRUE, eval=FALSE}
+```{r r-e-color, echo=TRUE, eval=FALSE}
 # Set color palette
 eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
 num_colors <- 5
@@ -645,7 +653,7 @@ anx_edges <- anx_visNetwork$edges %>%
 
 We similarly used the `renderVisNetwork` and `visNetwork` functions to create an interactive network in Shiny. For more details, see the [interactive network tab for COVID state restrictions](#visnetwork-shiny). We also used the `renderImage` function to reactively change the color legend for the nodes, depending on the variable the user selects to look at. 
 
-```{r echo=TRUE, eval=FALSE}
+```{r r-e-server, echo=TRUE, eval=FALSE}
 server <- function(input, output) {
   
   # Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion
@@ -676,7 +684,10 @@ server <- function(input, output) {
 }
 ```
 
-HERE IS WHERE I'LL EMBED THE SHINY APP ONCE I PUBLISH IT
+```{r r-e-net-shiny, out.extra="data-external=1"}
+knitr::include_app("https://hfeibes.shinyapps.io/blog_r-e-network_shiny/", 
+                   height = "1500px")
+```
 
 ## Findings
 
@@ -699,5 +710,6 @@ Overall, we aimed to take a closer look at COVID-related relationships using net
 # Citations
 
 * [visNetwork documentation](https://datastorm-open.github.io/visNetwork/edges.html)
-* Plotly
+* [Plotly 3D](https://plotly.com/r/3d-scatter-plots/)
+* [gganimate "cheat sheet" documentation](https://ugoproto.github.io/ugo_r_doc/pdf/gganimate.pdf)
 
