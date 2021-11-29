@@ -8,7 +8,7 @@ library(grDevices)
 library(shiny)
 
 # Read in data
-pulse_clustered_data <- read.csv("../wrangled_csv_data/pulse_clustered_data.csv")
+pulse_clustered_data <- read.csv("pulse_clustered_data.csv")
 # Convert clusters to factor for proper legend
 pulse_clustered_data$clusters <- as.factor(pulse_clustered_data$clusters)
 

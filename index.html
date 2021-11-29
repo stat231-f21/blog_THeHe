@@ -212,6 +212,7 @@
       <ul>
       <li><a href="#data-2">Data</a></li>
       <li><a href="#creating-an-interactive-clustering-plot-in-shiny">Creating an Interactive Clustering Plot in Shiny</a></li>
+      <li><a href="#interactive-clusters">Interactive Clusters</a></li>
       <li><a href="#clusters-patterns">Clusters Patterns</a></li>
       <li><a href="#findings-1">Findings</a></li>
       <li><a href="#limitations">Limitations</a></li>
@@ -241,7 +242,7 @@
 <div id="main">
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>The COVID-19 pandemic has had an enormous impact on Americans’ lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines , unsupervised clustering , and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.</p>
+<p>The COVID-19 pandemic has had an enormous impact on Americans’ lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines , unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups, and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.</p>
 </div>
 <div id="restrictions-network" class="section level1">
 <h1>COVID State Restrictions Network</h1>
@@ -388,14 +389,14 @@
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Once the scraping was completed, we had an (enormous) .csv file with an observation for every headline scraped, tagged with the state of the news outlet that it came from and the week that the headlines ran.</p>
-<pre><code>## # A tibble: 5 × 3
+<pre><code>## # A tibble: 5 x 3
 ##   state    week headline_text                                                   
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                                           
-## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama …
-## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from …
-## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -…
+## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama ~
+## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from ~
+## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -~
 ## 4 Alabama    22 4,863 new COVID-19 cases in Alabama - al.com                    
-## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines…</code></pre>
+## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines~</code></pre>
 </div>
 <div id="data-wrangling" class="section level3">
 <h3>Data Wrangling</h3>
@@ -575,7 +576,7 @@
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">+</span></span>
 <span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Number of clusters (k)&quot;</span>, <span class="at">y =</span> <span class="fu">expression</span>(<span class="st">&quot;Total Withins&quot;</span>[k]))</span></code></pre></div>
-<p><img src="images_and_plots/clusters_elbow.png" width="240" style="display: block; margin: auto;" /></p>
+<p><img src="images_and_plots/clusters_elbow.png" width="50%" style="display: block; margin: auto;" /></p>
 <p>We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive <code>plotly</code> scatter plot to switch between variables and explore the clusters.</p>
 </div>
 </div>
@@ -648,8 +649,12 @@
 <span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  })</span>
 <span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>EMBED SHINY APP HERE</p>
 </div>
+</div>
+<div id="interactive-clusters" class="section level2">
+<h2>Interactive Clusters</h2>
+<iframe src="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/?showcase=0" width="768" height="1500px" data-external="1">
+</iframe>
 </div>
 <div id="clusters-patterns" class="section level2">
 <h2>Clusters Patterns</h2>
@@ -682,7 +687,8 @@
 <span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;{closest_state}&quot;</span>,</span>
 <span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Cluster&quot;</span>,</span>
 <span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Proportion of respondents&quot;</span>)</span></code></pre></div>
-<p><img src="images_and_plots/clusters_breakdown_r_e.png" width="300" style="display: block; margin: auto;" /><img src="images_and_plots/clusters_breakdown.gif" style="display: block; margin: auto;" /></p>
+<p><img src="images_and_plots/clusters_breakdown_r_e.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="images_and_plots/clusters_breakdown.gif" width="60%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="findings-1" class="section level2">
 <h2>Findings</h2>
@@ -724,7 +730,7 @@
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_from_data_frame</span>(<span class="at">directed =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create visNetwork object</span></span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">toVisNetworkData</span>()</span></code></pre></div>
-<p>We then got the nodes and edges for the network. For the edges, a new column, <code>value</code>, was created, which is where the network will pull the weight or size of the edges from. The nodes are colored based on the proportion of individuals in the group with the mental health symptom or access of interest.</p>
+<p>We then got the nodes and edges for the network. For the edges, a new column, <code>value</code>, was created, which is where the network pulls the weight or size of the edges from. The nodes are colored based on the proportion of individuals in the group with the mental health symptom or access of interest.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set color palette</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>eigScalePal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">bias =</span> <span class="dv">5</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>num_colors <span class="ot">&lt;-</span> <span class="dv">5</span></span>
@@ -770,7 +776,8 @@
 <span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">deleteFile =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>HERE IS WHERE I’LL EMBED THE SHINY APP ONCE I PUBLISH IT</p>
+<iframe src="https://hfeibes.shinyapps.io/blog_r-e-network_shiny/?showcase=0" width="768" height="1500px" data-external="1">
+</iframe>
 </div>
 <div id="findings-2" class="section level2">
 <h2>Findings</h2>
@@ -792,7 +799,8 @@
 <h1>Citations</h1>
 <ul>
 <li><a href="https://datastorm-open.github.io/visNetwork/edges.html">visNetwork documentation</a></li>
-<li>Plotly</li>
+<li><a href="https://plotly.com/r/3d-scatter-plots/">Plotly 3D</a></li>
+<li><a href="https://ugoproto.github.io/ugo_r_doc/pdf/gganimate.pdf">gganimate “cheat sheet” documentation</a></li>
 </ul>
 </div>
 </div>
