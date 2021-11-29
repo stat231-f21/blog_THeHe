@@ -248,7 +248,7 @@
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>The COVID-19 pandemic has had an enormous impact on Americans’ lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines , unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups, and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.</p>
+<p>The COVID-19 pandemic has had an enormous impact on Americans’ lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines changed as the pandemic went on, unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups, and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.</p>
 </div>
 <div id="restrictions-network" class="section level1">
 <h1>COVID State Restrictions Network</h1>
@@ -313,28 +313,32 @@
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>network_proxy_update <span class="ot">&lt;-</span> <span class="fu">renderVisNetwork</span>({</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visNetwork</span>(<span class="fu">active_nodes</span>(), <span class="fu">active_edges</span>(), <span class="at">height =</span> <span class="st">&quot;700px&quot;</span>, <span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">main =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Network for States Sharing the Same COVID Restrictions in 2020&quot;</span>, </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">style =</span> <span class="st">&quot;font-family:Arial;font-size:20px&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>               )) <span class="sc">%&gt;%</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visNodes</span>(<span class="at">size =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visOptions</span>(<span class="at">selectedBy =</span> <span class="st">&quot;group&quot;</span>, </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visPhysics</span>(<span class="at">stabilization =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visEdges</span>(<span class="at">color =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">highlight =</span> <span class="st">&quot;red&quot;</span>)) </span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  myVisNetworkProxy <span class="ot">&lt;-</span> <span class="fu">visNetworkProxy</span>(<span class="st">&quot;network_proxy_update&quot;</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observe</span> ({</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a data frame to contain the nodes the user selects</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    filteredNodes <span class="ot">&lt;-</span> <span class="fu">active_nodes</span>()[gathering_ban_nodes<span class="sc">$</span>id <span class="sc">%in%</span> input<span class="sc">$</span>filterNodes, ,drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a data frame to contain all the nodes the user did not select</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    hiddenNodes <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(<span class="fu">active_nodes</span>(), filteredNodes)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visRemoveNodes</span>(myVisNetworkProxy, <span class="at">id =</span> hiddenNodes<span class="sc">$</span>id)</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visUpdateNodes</span>(myVisNetworkProxy, <span class="at">nodes =</span> filteredNodes)</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Create a title for network</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">main =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Network for States Sharing the Same COVID Restrictions in 2020&quot;</span>, </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">style =</span> <span class="st">&quot;font-family:Arial;font-size:20px&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>               )) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Specify size of nodes</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visNodes</span>(<span class="at">size =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Allow users to select a node and have its edges highlighted</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visOptions</span>(<span class="at">selectedBy =</span> <span class="st">&quot;group&quot;</span>, </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visPhysics</span>(<span class="at">stabilization =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Specify color of edges</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visEdges</span>(<span class="at">color =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">highlight =</span> <span class="st">&quot;red&quot;</span>)) </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  myVisNetworkProxy <span class="ot">&lt;-</span> <span class="fu">visNetworkProxy</span>(<span class="st">&quot;network_proxy_update&quot;</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observe</span> ({</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a data frame to contain the nodes the user selects</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    filteredNodes <span class="ot">&lt;-</span> <span class="fu">active_nodes</span>()[gathering_ban_nodes<span class="sc">$</span>id <span class="sc">%in%</span> input<span class="sc">$</span>filterNodes, ,drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a data frame to contain all the nodes the user did not select</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    hiddenNodes <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(<span class="fu">active_nodes</span>(), filteredNodes)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visRemoveNodes</span>(myVisNetworkProxy, <span class="at">id =</span> hiddenNodes<span class="sc">$</span>id)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visUpdateNodes</span>(myVisNetworkProxy, <span class="at">nodes =</span> filteredNodes)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="findings" class="section level2">
 <h2>Findings</h2>

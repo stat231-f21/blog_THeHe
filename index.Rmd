@@ -24,7 +24,7 @@ options(knitr.kable.NA = '')
 ```
 
 # Introduction
-The COVID-19 pandemic has had an enormous impact on Americans' lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines      , unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups, and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.
+The COVID-19 pandemic has had an enormous impact on Americans' lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines changed as the pandemic went on, unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups, and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.
 
 # COVID State Restrictions Network {#restrictions-network}
 
@@ -113,14 +113,18 @@ server <- function(input, output) {
   
   output$network_proxy_update <- renderVisNetwork({
     visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
+               # Create a title for network
                main = list(text = "Network for States Sharing the Same COVID Restrictions in 2020", 
                            style = "font-family:Arial;font-size:20px"
                )) %>%
+      # Specify size of nodes
       visNodes(size = 10) %>%
+      # Allow users to select a node and have its edges highlighted
       visOptions(selectedBy = "group", 
                  highlightNearest = list(enabled = TRUE, hover = TRUE), 
                  nodesIdSelection = TRUE) %>%
       visPhysics(stabilization = FALSE) %>%
+      # Specify color of edges
       visEdges(color = list(color = "black", highlight = "red")) 
   })
   
