@@ -63,7 +63,7 @@ In order to build a network diagram using the `igraph` package in R, we needed t
 
 We then wanted to use the `visNetwork` package to create interactive network visualizations. We converted the `igraph` objects into a format usable for `visNetwork` using the `toVisNetworkData` function. 
 
-```{r echo=TRUE, include=FALSE, eval = FALSE}
+```{r echo=TRUE, eval = FALSE}
 # Create an igraph object
 restaurants_igraph <- graph_from_data_frame(restaurants_final, directed = FALSE)
 
