@@ -5,7 +5,7 @@ library(shinythemes)
 library(ggrepel)
 
 # Read in the text-wrangled words
-words_wrangled <- read_csv("data/news/words_wrangled.csv")
+words_wrangled <- read_csv("words_wrangled.csv")
 
 ###########
 # mapping #
