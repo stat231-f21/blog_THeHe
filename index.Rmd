@@ -537,6 +537,8 @@ server <- function(input, output){
 }
 ```
 
+## Interactive Clusters
+
 ```{r kmeans-shiny, out.extra="data-external=1"}
 knitr::include_app("https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/", 
                    height = "1500px")
