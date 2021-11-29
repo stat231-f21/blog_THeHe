@@ -1,0 +1,14 @@
+name: blog_THeHe
+title:
+username:
+account: th23
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5211176
+bundleId: 5299295
+url: https://th23.shinyapps.io/blog_THeHe/
+when: 1638022380.39355
+lastSyncTime: 1638022380.39358
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: clusters-3D-shiny.R|COVID-restrictions-network_wrangling.R|img/.DS_Store|index.html|index.Rmd|news_scraping.R|r-e-network_shiny.R|README.md|restrictions_network_wrangling.Rmd|test.gif|text_wrangling.R|wordmap_app.R|wrangling_clusters_and_r-e-network.R|wrangling_clusters.R|data
