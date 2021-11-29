@@ -15,21 +15,21 @@ library(shinythemes)
 #    Load Datasets    #
 #######################
 # Load nodes datasets
-anx_nodes <- read.csv("../wrangled_csv_data/anxiety_nodes.csv") %>% select(-X)
-dep_nodes <- read.csv("../wrangled_csv_data/depression_nodes.csv") %>% select(-X)
-presc_nodes <- read.csv("../wrangled_csv_data/prescription_nodes.csv") %>% select(-X)
-mhs_nodes <- read.csv("../wrangled_csv_data/mental_health_services_nodes.csv") %>% select(-X)
-no_a_nodes <- read.csv("../wrangled_csv_data/no_access_nodes.csv") %>% select(-X)
-hc_nodes <- read.csv("../wrangled_csv_data/healthcare_nodes.csv") %>% select(-X)
+anx_nodes <- read.csv("anxiety_nodes.csv") %>% select(-X)
+dep_nodes <- read.csv("depression_nodes.csv") %>% select(-X)
+presc_nodes <- read.csv("prescription_nodes.csv") %>% select(-X)
+mhs_nodes <- read.csv("mental_health_services_nodes.csv") %>% select(-X)
+no_a_nodes <- read.csv("no_access_nodes.csv") %>% select(-X)
+hc_nodes <- read.csv("healthcare_nodes.csv") %>% select(-X)
 
 
 # Load edges datasets
-anx_edges <- read.csv("../wrangled_csv_data/anxiety_edges.csv") %>% select(-X)
-dep_edges <- read.csv("../wrangled_csv_data/depression_edges.csv") %>% select(-X)
-presc_edges <- read.csv("../wrangled_csv_data/prescription_edges.csv") %>% select(-X)
-mhs_edges <- read.csv("../wrangled_csv_data/mental_health_services_edges.csv") %>% select(-X)
-no_a_edges <- read.csv("../wrangled_csv_data/no_access_edges.csv") %>% select(-X)
-hc_edges <- read.csv("../wrangled_csv_data/healthcare_edges.csv") %>% select(-X)
+anx_edges <- read.csv("anxiety_edges.csv") %>% select(-X)
+dep_edges <- read.csv("depression_edges.csv") %>% select(-X)
+presc_edges <- read.csv("prescription_edges.csv") %>% select(-X)
+mhs_edges <- read.csv("mental_health_services_edges.csv") %>% select(-X)
+no_a_edges <- read.csv("no_access_edges.csv") %>% select(-X)
+hc_edges <- read.csv("healthcare_edges.csv") %>% select(-X)
 
 ############
 #    ui    #
