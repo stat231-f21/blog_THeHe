@@ -24,7 +24,12 @@ options(knitr.kable.NA = '')
 ```
 
 # Introduction
-The COVID-19 pandemic has had an enormous impact on Americans' lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We used a network to explore how related different states were in terms of sharing the same COVID restrictions, an interactive map to explore how different local news headlines changed as the pandemic went on, unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups, and lastly, a network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.
+
+```{r, out.width="80%"}
+knitr::include_graphics("images_and_plots/coronavirus_intro.png")
+```
+
+The COVID-19 pandemic has had an enormous impact on Americans' lives on so many dimensions and levels, from the nationwide level to the state level, all the way down to the individual level. We were thus interested in exploring different COVID-related relationships using networks, unsupervised clustering, text analysis, and geo-spatial data, given the vast possibility of analyses that could shed more insight into how COVID has affected America. We firstly created an interactive network to explore how related different states were in terms of sharing the same COVID restrictions. Secondly, we created an interactive map to explore how different local news headlines changed in terms of content and sentiment as the pandemic went on. Thirdly, we used unsupervised clustering to determine if mental healthcare access and healthcare coverage was patterned by racial/ethnic groups. Lastly, we created an interactive network to explore how related different racial/ethnic groups were in terms of sharing the same mental health-related attributes.
 
 # COVID State Restrictions Network {#restrictions-network}
 
