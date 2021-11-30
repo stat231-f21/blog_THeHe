@@ -163,6 +163,8 @@ headlines_ex <- read_csv("data/news/headlines.csv", n_max = 5)
 
 To further understand how the COVID-19 pandemic affected Americans, we have performed textual analysis. Text has the potential to be revealing in an entirely different way from the results of the Household Pulse survey, since language allows for the expression of nuance and feelings and emotions in a way that something so rigid as a census survey cannot. We wanted to go local, so we took news headlines from all fifty states and explored the trends and connections hidden within them. Our main tools in this endeavor were a word frequency analysis and a sentiment analysis, both of which use data that represent a much more colloquial and social view of how the pandemic was digested and affecting Americans than the purely categorical and standardized data that we studied in our first project, which centered around the Household Pulse Survey Data.
 
+View our findings and explore further with our [Text Analysis Shiny App!](https://hbassett23.shinyapps.io/blog_text-analysis/)
+
 ## Data {.tabset .tabset-fade .tabset-pills}
 
 ### Data Sources
