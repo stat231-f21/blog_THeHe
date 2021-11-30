@@ -27,9 +27,6 @@ num_colors <- 5
 png(file = "www/covid_legend.png")
 legend_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-# Set numeric labels on the color scale
-#title(ylab = "Proportion", line=0, cex.lab=1.2)
-#text(x=1.25, y = seq(0,1,l=5), labels = seq(0.01,.12,l=5))
 legend_image <- rasterImage(legend_image, 1, 1, 0, 0)
 dev.off()
 
@@ -126,6 +123,7 @@ restaurants_final <- data.frame("state_one" = nameMat[,1],
 
 # Create an igraph object
 restaurants_igraph <- graph_from_data_frame(restaurants_final, directed = FALSE)
+
 # Convert igraph to visNetwork format
 restaurants_visNetwork <- toVisNetworkData(restaurants_igraph)
 
@@ -153,6 +151,8 @@ write.csv(restaurants_edges,
           file = "wrangled_csv_data/restaurants_edges_data.csv")
 write.csv(restaurants_nodes, 
           file = "wrangled_csv_data/restaurants_nodes_data.csv")
+
+# Repeat the wrangling above for the four other datasets
 
 ##########################
 #    Bar Restrictions    #
@@ -185,27 +185,26 @@ bars_new <- bars %>%
               values_from = Bar_Action)
 
 # Bars Network Data
-# Create a matrix with all state combinations
 nameMat <- t(combn(names(bars_new[,-1]), 2))
 
-# Pre-allocate space for a count vector
 bars_overLap <- integer(nrow(nameMat))
 
-# Loop through name combos
 for(i in 1:nrow(nameMat)) {
   data_combo <- bars_new[, nameMat[i,]]
   bars_overLap[i] <- sum(data_combo[1] == data_combo[2])
 }
 
-# Construct data.frame 
 bars_final <- data.frame("state_one" = nameMat[,1], 
                          "state_two" = nameMat[,2], 
                          "bars_overLap"= bars_overLap)
 
+# Create an igraph object
 bars_igraph <- graph_from_data_frame(bars_final, directed = FALSE)
 
+# Convert igraph to visNetwork format
 bars_visNetwork <- toVisNetworkData(bars_igraph)
 
+# Wrangle edges data
 bars_edges <- bars_visNetwork$edges %>%
   mutate(value = as.numeric(bars_overLap),
          width = value/100) %>%
@@ -214,6 +213,7 @@ bars_edges <- bars_visNetwork$edges %>%
 bars_edges <- bars_edges %>%
   mutate(title = paste0(bars_edges$bars_overLap, " days shared in 2020"))
 
+# Wrangle nodes data
 bars_nodes <- bars_visNetwork$nodes %>%
   inner_join(annual_cases, by = c("id" = "state")) %>%
   mutate(color = eigScalePal(num_colors)[cut(covid_prop, breaks = num_colors)]) %>%
@@ -252,29 +252,27 @@ mask_mandates_new <- mask_mandates %>%
   pivot_wider(names_from = State_Tribe_Territory, 
               values_from = Mask_Action)
 
-
 # Mask Mandates Network Data
-# Create a matrix with all state combinations
 nameMat <- t(combn(names(mask_mandates_new[,-1]), 2))
 
-# Pre-allocate space for a count vector
 mask_mandates_overLap <- integer(nrow(nameMat))
 
-# Loop through name combos
 for(i in 1:nrow(nameMat)) {
   data_combo <- mask_mandates_new[, nameMat[i,]]
   mask_mandates_overLap[i] <- sum(data_combo[1] == data_combo[2])
 }
 
-# Construct data.frame 
 mask_mandates_final <- data.frame("state_one" = nameMat[,1], 
                                   "state_two" = nameMat[,2], 
                                   "mask_mandates_overLap"= mask_mandates_overLap)
 
+# Create an igraph object
 mask_mandates_igraph <- graph_from_data_frame(mask_mandates_final, directed = FALSE)
 
+# Convert igraph to visNetwork format
 mask_mandates_visNetwork <- toVisNetworkData(mask_mandates_igraph)
 
+# Wrangle edges data
 mask_mandates_edges <- mask_mandates_visNetwork$edges %>%
   mutate(value = as.numeric(mask_mandates_overLap),
          width = value/100) %>%
@@ -283,6 +281,7 @@ mask_mandates_edges <- mask_mandates_visNetwork$edges %>%
 mask_mandates_edges <- mask_mandates_edges %>%
   mutate(title = paste0(mask_mandates_edges$mask_mandates_overLap, " days shared in 2020"))
 
+# Wrangle nodes data
 mask_mandates_nodes <- mask_mandates_visNetwork$nodes %>%
   inner_join(annual_cases, by = c("id" = "state")) %>%
   mutate(color = eigScalePal(5)[cut(covid_prop, breaks = 5)]) %>%
@@ -319,27 +318,26 @@ gathering_bans_new <- gathering_bans %>%
               values_from = GatheringBan_Action)
 
 # Gathering Bans Network Data
-# Create a matrix with all state combinations
 nameMat <- t(combn(names(gathering_bans_new[,-1]), 2))
 
-# Pre-allocate space for a count vector
 gathering_bans_overLap <- integer(nrow(nameMat))
 
-# Loop through name combos
 for(i in 1:nrow(nameMat)) {
   data_combo <- gathering_bans_new[, nameMat[i,]]
   gathering_bans_overLap[i] <- sum(data_combo[1] == data_combo[2])
 }
 
-# Construct data.frame 
 gathering_bans_final <- data.frame("state_one" = nameMat[,1], 
                                    "state_two" = nameMat[,2], 
                                    "gathering_bans_overLap"= gathering_bans_overLap)
 
+# Create an igraph object
 gathering_bans_igraph <- graph_from_data_frame(gathering_bans_final, directed = FALSE)
 
+# Convert igraph to visNetwork format
 gathering_bans_visNetwork <- toVisNetworkData(gathering_bans_igraph)
 
+# Wrangle edges data
 gathering_ban_edges <- gathering_bans_visNetwork$edges %>%
   mutate(value = as.numeric(gathering_bans_overLap),
          width = value/100) %>%
@@ -348,6 +346,7 @@ gathering_ban_edges <- gathering_bans_visNetwork$edges %>%
 gathering_ban_edges <- gathering_ban_edges %>%
   mutate(title = paste0(gathering_ban_edges$gathering_bans_overLap, " days shared in 2020"))
 
+# Wrangle nodes data
 gathering_ban_nodes <- gathering_bans_visNetwork$nodes %>%
   inner_join(annual_cases, by = c("id" = "state")) %>%
   mutate(color = eigScalePal(num_colors)[cut(covid_prop, breaks = num_colors)]) %>%
@@ -358,7 +357,6 @@ write.csv(gathering_ban_edges,
           file = "wrangled_csv_data/gathering_ban_edges_data.csv")
 write.csv(gathering_ban_nodes, 
           file = "wrangled_csv_data/gathering_ban_nodes_data.csv")
-
 
 ##########################
 #   Stay at Home Orders  #
@@ -397,29 +395,27 @@ stay_at_home_orders_new <- stay_at_home_orders %>%
   pivot_wider(names_from = State_Tribe_Territory, 
               values_from = StayHome_Action)
 
-
 # Stay-at-home Orders Network Data
-# Create a matrix with all state combinations
 nameMat <- t(combn(names(stay_at_home_orders_new[,-1]), 2))
 
-# Pre-allocate space for a count vector
 stay_at_home_orders_overLap <- integer(nrow(nameMat))
 
-# Loop through name combos
 for(i in 1:nrow(nameMat)) {
   data_combo <- stay_at_home_orders_new[, nameMat[i,]]
   stay_at_home_orders_overLap[i] <- sum(data_combo[1] == data_combo[2])
 }
 
-# Construct data.frame 
 stay_at_home_orders_final <- data.frame("state_one" = nameMat[,1], 
                                         "state_two" = nameMat[,2], 
                                         "stay_at_home_orders_overLap"= stay_at_home_orders_overLap)
 
+# Create an igraph object
 stay_at_home_orders_igraph <- graph_from_data_frame(stay_at_home_orders_final, directed = FALSE)
 
+# Convert igraph to visNetwork format
 stay_at_home_orders_visNetwork <- toVisNetworkData(stay_at_home_orders_igraph)
 
+# Wrangle edges data
 stay_at_home_orders_edges <- stay_at_home_orders_visNetwork$edges %>%
   mutate(value = as.numeric(stay_at_home_orders_overLap),
          width = value/100) %>%
@@ -428,6 +424,7 @@ stay_at_home_orders_edges <- stay_at_home_orders_visNetwork$edges %>%
 stay_at_home_orders_edges <- stay_at_home_orders_edges %>%
   mutate(title = paste0(stay_at_home_orders_edges$stay_at_home_orders_overLap, " days shared in 2020"))
 
+# Wrangle nodes data
 stay_at_home_orders_nodes <- stay_at_home_orders_visNetwork$nodes %>%
   inner_join(annual_cases, by = c("id" = "state")) %>%
   mutate(color = eigScalePal(num_colors)[cut(covid_prop, breaks = num_colors)]) %>%
