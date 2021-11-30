@@ -215,6 +215,7 @@
           <ul>
           <li><a href="#data-3">Data</a></li>
           <li><a href="#creating-an-interactive-network-in-shiny">Creating an Interactive Network in Shiny</a></li>
+          <li><a href="#interactive-network">Interactive Network</a></li>
           <li><a href="#findings-2">Findings</a></li>
           <li><a href="#limitations-1">Limitations</a></li>
           </ul></li>
@@ -400,14 +401,14 @@
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Once the scraping was completed, we had an (enormous) .csv file with an observation for every headline scraped, tagged with the state of the news outlet that it came from and the week that the headlines ran.</p>
-<pre><code>## # A tibble: 5 × 3
+<pre><code>## # A tibble: 5 x 3
 ##   state    week headline_text                                                   
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                                           
-## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama …
-## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from …
-## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -…
+## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama ~
+## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from ~
+## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -~
 ## 4 Alabama    22 4,863 new COVID-19 cases in Alabama - al.com                    
-## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines…</code></pre>
+## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines~</code></pre>
 </div>
 <div id="data-wrangling" class="section level3">
 <h3>Data Wrangling</h3>
@@ -588,123 +589,77 @@
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">+</span></span>
 <span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Number of clusters (k)&quot;</span>, <span class="at">y =</span> <span class="fu">expression</span>(<span class="st">&quot;Total Withins&quot;</span>[k]))</span></code></pre></div>
 <p><img src="images_and_plots/clusters_elbow.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive <code>plotly</code> scatter plot to switch between variables and explore the clusters.</p>
 </div>
 </div>
 <div id="creating-an-interactive-clustering-plot-in-shiny" class="section level2 tabset tabset-fade tabset-pills">
 <h2 class="tabset tabset-fade tabset-pills">Creating an Interactive Clustering Plot in Shiny</h2>
-<div id="setting-up-choices" class="section level3">
-<h3>Setting up choices</h3>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up choices for input variables</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Choose 3 of the 4 vairables used to do the Kmeans Clustering</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>choice_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;prescription&quot;</span>, <span class="st">&quot;mental_health_services&quot;</span>, <span class="st">&quot;no_access&quot;</span>, <span class="st">&quot;healthcare&quot;</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Names for reactive axes</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>choice_axes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Prescription&quot;</span>, <span class="st">&quot;Counseling or similar&quot;</span>, <span class="st">&quot;Needed but did not get&quot;</span>, <span class="st">&quot;Some healthcare&quot;</span>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(choice_values) <span class="ot">&lt;-</span> choice_axes</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Overwrite previous names to use for the drop-down</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>choice_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Prescription medication&quot;</span>, <span class="st">&quot;Mental health counseling or similar service&quot;</span>, <span class="st">&quot;Could not access mental health care when needed&quot;</span>, <span class="st">&quot;Some form of healthcare&quot;</span>)</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(choice_values) <span class="ot">&lt;-</span> choice_names</span></code></pre></div>
-</div>
-<div id="ui" class="section level3">
-<h3>UI</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(<span class="at">title =</span> <span class="st">&quot;Clusters Plot&quot;</span>,</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">fillPage</span>(<span class="fu">sidebarLayout</span>(</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">sidebarPanel</span>(</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">selectInput</span>(</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">inputId =</span> <span class="st">&quot;var1&quot;</span>,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> <span class="st">&quot;Select the first variable to plot&quot;</span>,</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">choices =</span> choice_values,</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">selected =</span> <span class="st">&quot;prescription&quot;</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">multiple =</span> <span class="cn">FALSE</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                    ),</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">selectInput</span>(</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">inputId =</span> <span class="st">&quot;var2&quot;</span>,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> <span class="st">&quot;Select the second variable to plot&quot;</span>,</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">choices =</span> choice_values,</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                      <span class="at">selected =</span> <span class="st">&quot;mental_health_services&quot;</span>,</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                      <span class="at">multiple =</span> <span class="cn">FALSE</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>                    ),</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">selectInput</span>(</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>                      <span class="at">inputId =</span> <span class="st">&quot;var3&quot;</span>,</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> <span class="st">&quot;Select the third variable to plot&quot;</span>,</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>                      <span class="at">choices =</span> choice_values,</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>                      <span class="at">selected =</span> <span class="st">&quot;no_access&quot;</span>,</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">multiple =</span> <span class="cn">FALSE</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>                    ),</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># Add submit button so user changes don&#39;t take effect until they are done selecting all three variables</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">submitButton</span>(<span class="at">text =</span> <span class="st">&quot;Make plot&quot;</span>, <span class="at">icon =</span> <span class="cn">NULL</span>, <span class="at">width =</span> <span class="cn">NULL</span>),</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># Add note about jitter</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">h5</span>(<span class="st">&quot;The values on this plot are jittered to visualize the density of each cluster. Values near 2 indicate an individual responded `no` to the survey question, while values near 1 indicate a response of `yes`.&quot;</span>),</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>                  ),</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">mainPanel</span>(<span class="fu">plotlyOutput</span>(<span class="st">&quot;clusters&quot;</span>)</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>                  )</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>                )))</span></code></pre></div>
-</div>
+<p>We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive <code>plotly</code> scatter plot in the Shiny app server to switch between variables and explore the clusters. The input variables and the specified plot type, <code>type = "scatter3d"</code>, are passed as arguments to <code>plot_ly()</code>, and <code>renderPlotly()</code> then works just as <code>renderPlot()</code> does with <code>ggplot</code> objects to produce the reactive plot object. The inclusion of a <code>submitButton()</code> within the ui allows users to pick all variables before generating the plot.</p>
 <div id="server" class="section level3">
 <h3>Server</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output){</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>clusters <span class="ot">&lt;-</span> <span class="fu">renderPlotly</span>({</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotly 3D scatter, jitter points for clarity, color by cluster</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_ly</span>(pulse_clustered_data, </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var1)), </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var2)), </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">z =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var3)), </span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">type=</span><span class="st">&quot;scatter3d&quot;</span>, <span class="at">mode=</span><span class="st">&quot;markers&quot;</span>, <span class="at">color =</span> <span class="sc">~</span>clusters) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Mental Health and Healthcare Resources Kmeans Clustering&quot;</span>),</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var1])), </span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var2])),</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var3]))),</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">title=</span><span class="fu">list</span>(<span class="at">text=</span><span class="st">&#39;&lt;b&gt; Cluster &lt;/b&gt;&#39;</span>))</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output){</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>clusters <span class="ot">&lt;-</span> <span class="fu">renderPlotly</span>({</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotly 3D scatter, jitter points for clarity, color by cluster</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_ly</span>(pulse_clustered_data, </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var1)), </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var2)), </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">z =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var3)), </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">type=</span><span class="st">&quot;scatter3d&quot;</span>, <span class="at">mode=</span><span class="st">&quot;markers&quot;</span>, <span class="at">color =</span> <span class="sc">~</span>clusters) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Mental Health and Healthcare Resources Kmeans Clustering&quot;</span>),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var1])), </span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var2])),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var3]))),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">title=</span><span class="fu">list</span>(<span class="at">text=</span><span class="st">&#39;&lt;b&gt; Cluster &lt;/b&gt;&#39;</span>))</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 </div>
 <div id="interactive-clusters" class="section level2">
 <h2>Interactive Clusters</h2>
+<p>Explore and interact with the clusters 3D plot below, or alternatively, visit <a href="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/">our Shiny app</a> to interact with the network in a browser!</p>
 <iframe src="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/?showcase=0" width="768" height="1500px" data-external="1">
 </iframe>
 </div>
 <div id="clusters-patterns" class="section level2">
 <h2>Clusters Patterns</h2>
 <p>To investigate what patterns the clusters identified, we then looked at the breakdown of racial/ethnic groups and responses to the four mental health and healthcare variables within each cluster. For the latter, we created an animated stacked bar chart which cycles through the proportions of individuals answering “yes” and answering “no” in each cluster to the four survey questions we clustered on. This was achieved with the <code>gganimate</code> package; the function <code>transition_states()</code> allows us to plot the previously defined <code>ggplot</code> object while cycling through the “type” column in our data frame, which contains information on which of the four healthcare variables a given data point comes from.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>animate_hc <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># First layer always fills entire length of the bar chart (0-1)</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Since all proportions add to 1 in total, this layer represents &quot;no&quot; responses once overlaid by the second layer</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> clusters_bottom_layer,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> clusters,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> total, </span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> <span class="st">&quot;No&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filtering for `value == 1` gives &quot;yes&quot; answers</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> clusters_characteristics <span class="sc">%&gt;%</span> <span class="fu">filter</span>(value <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> clusters,</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> prop_type,</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> <span class="st">&quot;Yes&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create legend</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">name =</span> <span class="st">&quot;Respondent&#39;s answer&quot;</span>,</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span> <span class="ot">=</span> <span class="st">&quot;thistle&quot;</span>, <span class="st">&quot;No&quot;</span> <span class="ot">=</span> <span class="st">&quot;palegreen3&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transition between the four variables with `type`, spend more time on each state than during transition</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(type, <span class="at">transition_length =</span> <span class="dv">1</span>, <span class="at">state_length =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Have new points drift in and travel the full distance they represent</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enter_drift</span>(<span class="at">x_mod =</span> <span class="dv">0</span>, <span class="at">y_mod =</span> clusters_characteristics<span class="sc">$</span>prop_type) <span class="sc">+</span></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Have old points shrink out of the animation</span></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exit_shrink</span>() <span class="sc">+</span></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Flip horizontally</span></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get title to change as states change</span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;{closest_state}&quot;</span>,</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Cluster&quot;</span>,</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Proportion of respondents&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>animate_hc <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># First layer always fills entire length of the bar chart (0-1)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Since all proportions add to 1 in total, this layer represents &quot;no&quot; responses once overlaid by the second layer</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> clusters_bottom_layer,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> clusters,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> total, </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> <span class="st">&quot;No&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filtering for `value == 1` gives &quot;yes&quot; answers</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> clusters_characteristics <span class="sc">%&gt;%</span> <span class="fu">filter</span>(value <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> clusters,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> prop_type,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> <span class="st">&quot;Yes&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create legend</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">name =</span> <span class="st">&quot;Respondent&#39;s answer&quot;</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span> <span class="ot">=</span> <span class="st">&quot;thistle&quot;</span>, <span class="st">&quot;No&quot;</span> <span class="ot">=</span> <span class="st">&quot;palegreen3&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transition between the four variables with `type`, spend more time on each state than during transition</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(type, <span class="at">transition_length =</span> <span class="dv">1</span>, <span class="at">state_length =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Have new points drift in and travel the full distance they represent</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enter_drift</span>(<span class="at">x_mod =</span> <span class="dv">0</span>, <span class="at">y_mod =</span> clusters_characteristics<span class="sc">$</span>prop_type) <span class="sc">+</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Have old points shrink out of the animation</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exit_shrink</span>() <span class="sc">+</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Flip horizontally</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get title to change as states change</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;{closest_state}&quot;</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Cluster&quot;</span>,</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Proportion of respondents&quot;</span>)</span></code></pre></div>
 <p><img src="images_and_plots/clusters_breakdown_r_e.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><img src="images_and_plots/clusters_breakdown.gif" width="60%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="findings-1" class="section level2">
 <h2>Findings</h2>
-<p>While the k-means clustering did not elegantly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they’ve largely been able to access mental health care resources when they needed them.</p>
-<p>Further, the clusters which are more predominantly white than the full respondents pool - clusters 1 and 2 - are also those where the most access to care and resources lie, with the main difference being that individuals in cluster 2 do not utilize counseling or similar mental health services, whereas individuals in cluster 1 do.</p>
+<p>While the k-means clustering did not elegantly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources differs between racial/ethnic groups. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they’ve largely been able to access mental health care resources when they needed them.</p>
+<p>Further, the clusters which are more predominantly white than the full respondents pool - clusters 1 and 2 - are also those where the most access to care and resources lies, with the main difference being that individuals in cluster 2 do not utilize counseling or similar mental health services, whereas individuals in cluster 1 do. Of course, these survey questions are multifaceted, and not taking prescription medication, for example, does not directly imply not having access to it.</p>
 </div>
 <div id="limitations" class="section level2">
 <h2>Limitations</h2>
@@ -734,72 +689,78 @@
 </ul>
 <p>For each pair of racial/ethnic groups, we calculated the difference in these proportions. Thus, smaller differences provided more weight to the network edges, indicating more similar “experiences” (that is, proportions) between those groups.</p>
 <p>For an explanation of the <code>igraph</code> and <code>visNetwork</code> packages, see the <a href="#restrictions-wrangling">Data Wrangling Tab for COVID-19 Restrictions</a>.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From larger data set with all mental health variables, select anxiety</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>anx_visNetwork <span class="ot">&lt;-</span> r_e_network <span class="sc">%&gt;%</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(race_ethnicity_one, race_ethnicity_two, anx) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create igraph object</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_from_data_frame</span>(<span class="at">directed =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create visNetwork object</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">toVisNetworkData</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From larger data set with all mental health variables, select anxiety</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>anx_visNetwork <span class="ot">&lt;-</span> r_e_network <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(race_ethnicity_one, race_ethnicity_two, anx) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create igraph object</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_from_data_frame</span>(<span class="at">directed =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create visNetwork object</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">toVisNetworkData</span>()</span></code></pre></div>
 <p>We then got the nodes and edges for the network. For the edges, a new column, <code>value</code>, was created, which is where the network pulls the weight or size of the edges from. The nodes are colored based on the proportion of individuals in the group with the mental health symptom or access of interest.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set color palette</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>eigScalePal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">bias =</span> <span class="dv">5</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>num_colors <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get nodes and weighted edges</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>anx_nodes <span class="ot">&lt;-</span> anx_visNetwork<span class="sc">$</span>nodes <span class="sc">%&gt;%</span> </span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Join data frames to get proportions and assign colors for the legend</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(anxiety_net, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span> <span class="ot">=</span> <span class="st">&quot;race_ethnicity&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color =</span> <span class="fu">eigScalePal</span>(num_colors)[<span class="fu">cut</span>(prop, <span class="at">breaks =</span> num_colors)]) <span class="sc">%&gt;%</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(prop))</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>anx_edges <span class="ot">&lt;-</span> anx_visNetwork<span class="sc">$</span>edges <span class="sc">%&gt;%</span> </span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> anx) </span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set color palette</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>eigScalePal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">bias =</span> <span class="dv">5</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>num_colors <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get nodes and weighted edges</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>anx_nodes <span class="ot">&lt;-</span> anx_visNetwork<span class="sc">$</span>nodes <span class="sc">%&gt;%</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Join data frames to get proportions and assign colors for the legend</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(anxiety_net, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span> <span class="ot">=</span> <span class="st">&quot;race_ethnicity&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color =</span> <span class="fu">eigScalePal</span>(num_colors)[<span class="fu">cut</span>(prop, <span class="at">breaks =</span> num_colors)]) <span class="sc">%&gt;%</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(prop))</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>anx_edges <span class="ot">&lt;-</span> anx_visNetwork<span class="sc">$</span>edges <span class="sc">%&gt;%</span> </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> anx) </span></code></pre></div>
 </div>
 </div>
 <div id="creating-an-interactive-network-in-shiny" class="section level2">
 <h2>Creating an Interactive Network in Shiny</h2>
 <p>We similarly used the <code>renderVisNetwork</code> and <code>visNetwork</code> functions to create an interactive network in Shiny. For more details, see the <a href="#visnetwork-shiny">interactive network tab for COVID state restrictions</a>. We also used the <code>renderImage</code> function to reactively change the color legend for the nodes, depending on the variable the user selects to look at.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>network_proxy_update_re <span class="ot">&lt;-</span> <span class="fu">renderVisNetwork</span>({</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visNetwork</span>(<span class="fu">active_nodes</span>(), <span class="fu">active_edges</span>(), <span class="at">height =</span> <span class="st">&quot;700px&quot;</span>, <span class="at">width =</span> <span class="st">&quot;100%&quot;</span>,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">scaling =</span> <span class="fu">list</span>(<span class="at">min =</span> <span class="fu">min</span>(input<span class="sc">$</span>hc_variable), <span class="at">max =</span> <span class="fu">max</span>(input<span class="sc">$</span>hc_variable)),</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">main =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Network for Mental Health Symptoms and Access to Resources for Racial/Ethnic Groups&quot;</span>, </span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">style =</span> <span class="st">&quot;font-family:Arial;font-size:20px&quot;</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>               )) <span class="sc">%&gt;%</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visNodes</span>(<span class="at">size =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visOptions</span>(<span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visPhysics</span>(<span class="at">stabilization =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visEdges</span>(<span class="at">color =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">highlight =</span> <span class="st">&quot;red&quot;</span>)) </span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  myreVisNetworkProxy <span class="ot">&lt;-</span> <span class="fu">visNetworkProxy</span>(<span class="st">&quot;network_proxy_update_re&quot;</span>)</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reactively call on previously-made legend images</span></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Not temporary images, so set `deleteFile = FALSE`</span></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>legend <span class="ot">&lt;-</span> <span class="fu">renderImage</span>({</span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    filename <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(<span class="fu">file.path</span>(<span class="st">&quot;./legends&quot;</span>,</span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">paste</span>(<span class="st">&quot;legend_&quot;</span>, input<span class="sc">$</span>hc_variable, <span class="st">&quot;.png&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)))</span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">src =</span> filename)</span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">deleteFile =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>network_proxy_update_re <span class="ot">&lt;-</span> <span class="fu">renderVisNetwork</span>({</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visNetwork</span>(<span class="fu">active_nodes</span>(), <span class="fu">active_edges</span>(), <span class="at">height =</span> <span class="st">&quot;700px&quot;</span>, <span class="at">width =</span> <span class="st">&quot;100%&quot;</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">scaling =</span> <span class="fu">list</span>(<span class="at">min =</span> <span class="fu">min</span>(input<span class="sc">$</span>hc_variable), <span class="at">max =</span> <span class="fu">max</span>(input<span class="sc">$</span>hc_variable)),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">main =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Network for Mental Health Symptoms and Access to Resources for Racial/Ethnic Groups&quot;</span>, </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">style =</span> <span class="st">&quot;font-family:Arial;font-size:20px&quot;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>               )) <span class="sc">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visNodes</span>(<span class="at">size =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visOptions</span>(<span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visPhysics</span>(<span class="at">stabilization =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visEdges</span>(<span class="at">color =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">highlight =</span> <span class="st">&quot;red&quot;</span>)) </span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  myreVisNetworkProxy <span class="ot">&lt;-</span> <span class="fu">visNetworkProxy</span>(<span class="st">&quot;network_proxy_update_re&quot;</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reactively call on previously-made legend images</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Not temporary images, so set `deleteFile = FALSE`</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>legend <span class="ot">&lt;-</span> <span class="fu">renderImage</span>({</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    filename <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(<span class="fu">file.path</span>(<span class="st">&quot;./legends&quot;</span>,</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">paste</span>(<span class="st">&quot;legend_&quot;</span>, input<span class="sc">$</span>hc_variable, <span class="st">&quot;.png&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)))</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">src =</span> filename)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">deleteFile =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="interactive-network" class="section level2">
+<h2>Interactive Network</h2>
+<p>Explore and interact with the racial/ethnic groups network below, or alternatively, visit <a href="https://hfeibes.shinyapps.io/blog_r-e-network_shiny/">our Shiny app</a> to interact with the network in a browser!</p>
 <iframe src="https://hfeibes.shinyapps.io/blog_r-e-network_shiny/?showcase=0" width="768" height="1500px" data-external="1">
 </iframe>
 </div>
 <div id="findings-2" class="section level2">
 <h2>Findings</h2>
 <p>This network allows users to explore the relationships between different racial/ethnic groups and how individuals within different racial/ethnic groups have experienced their mental health during the pandemic.</p>
-<p>One interesting pattern is that similar proportions of Non-Hispanic white and Non-Hispanic other or multiracial individuals experienced anxiety, as well as used mental health services, were covered by healthcare, and could not access care when needed. In each case, the proportions of these two groups were the highest out of all the groups. On the other end, the Non-Hispanic Asian group showed the lowest frequency of individuals experiencing anxiety and depression symptoms, as well as accessing medication and counseling services, and being unable to access resources when needed. Thus, the weakest connections between racial/ethnic groups often occurred between the Non-Hispanic Asian group and the others. When it comes to individuals with some form of healthcare, Non-Hispanic Black and Hispanic or Latino individuals share similar proportions and the lowest proportions out of the five groups.</p>
+<p>One interesting pattern is that similar proportions of Non-Hispanic white and Non-Hispanic other or multiracial individuals experienced anxiety, as well as used mental health services, were covered by healthcare, and could not access care when needed. In each case, the proportions of these two groups were the highest out of all the groups. On the other end, the Non-Hispanic Asian group showed the lowest frequency of individuals experiencing anxiety and depression symptoms, as well as accessing medication and counseling services, and being unable to access resources when needed. Thus, the thinnest connections between racial/ethnic groups often occurred between the Non-Hispanic Asian group and one of the other groups. When it comes to individuals with some form of healthcare, Non-Hispanic Black and Hispanic or Latino individuals share similar proportions and the lowest proportions out of the five groups.</p>
+<p>The variable which tracks whether or not individuals are able to access mental health resources when needed helps put other survey questions into perspective. In other words, while we can see that the Non-Hispanic Asian group had the lowest proportion of utilizing medications or therapy, we also recognize that the individuals in the group expressed generally being able to access that type of care when needed. Responses to these questions represent complex individuals and experiences, and not accessing care does not necessarily mean not having access to it.</p>
 </div>
 <div id="limitations-1" class="section level2">
 <h2>Limitations</h2>
-<p>One big limitation of this network analysis is that it is restricted to during the pandemic. As COVID-19 has opened up many conversations about mental and physical health and access to care, it would be interesting to expand this analysis to before COVID-19. Is it possible that more individuals have access now to forms of mental health care because of the conversations prompted be the pandemic?</p>
+<p>One big limitation of this network analysis is that it is restricted to time during the pandemic. As COVID-19 has opened up many conversations about mental and physical health and access to care, it would be interesting to expand this analysis to before COVID-19. Is it possible that more individuals have access now to forms of mental health care because of the conversations prompted by the pandemic? Or is it that COVID-19 has exacerbated previous disparities?</p>
 <p>It is also important to note that the Household Pulse Survey relies on online responses from individuals who opt in, creating response bias and likely leaving out individuals in rural areas.</p>
-<p>While the survey questions are meaningful, categorical variables necessarily lack nuance. More quantitative questions could provide more powerful information. For example, we might be interested in the number of visits to a healthcare or mental health care provider in a week, the cost of these visits or of prescription medication, or even days taken off from work due to physical or mental health complications. This information may reflect more any patterns of racial/ethnic privilege and disparities, and would open the option for statistical analysis through fitting a predictive model of some sort.</p>
+<p>While the survey questions are meaningful, categorical variables necessarily lack nuance. As discussed above, it is tempting to regard a lower proportion of people receiving counseling, for example, as direct evidence of a lack of access to or allocation of resources. However, a lower proportion may reflect individuals not wanting or needing those forms of care, or reflect deeper issues of stigma associated with reaching out to access that care.</p>
+<p>More quantitative questions could provide more powerful information. For example, we might be interested in the number of visits to a healthcare or mental health care provider in a week, the cost of these visits or of prescription medication, or even days taken off from work due to physical or mental health complications (or days forced to work despite these complications). This information may reflect complex patterns of privileges and disparities, and would open the option for statistical analysis through fitting a predictive model. We should always keep in mind, too, that there are real people behind these data, and that these analyses can only go so far.</p>
 </div>
 </div>
 <div id="concluding-thoughts" class="section level1">

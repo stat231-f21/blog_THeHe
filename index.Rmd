@@ -469,60 +469,9 @@ knitr::include_graphics("images_and_plots/clusters_elbow.png")
 ```
 
 
-We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive `plotly` scatter plot to switch between variables and explore the clusters.
-
 ## Creating an Interactive Clustering Plot in Shiny {.tabset .tabset-fade .tabset-pills}
 
-### Setting up choices
-
-```{r kmeans-choices, echo=TRUE, eval=FALSE}
-# Set up choices for input variables
-# Choose 3 of the 4 vairables used to do the Kmeans Clustering
-choice_values <- c("prescription", "mental_health_services", "no_access", "healthcare")
-# Names for reactive axes
-choice_axes <- c("Prescription", "Counseling or similar", "Needed but did not get", "Some healthcare")
-names(choice_values) <- choice_axes
-# Overwrite previous names to use for the drop-down
-choice_names <- c("Prescription medication", "Mental health counseling or similar service", "Could not access mental health care when needed", "Some form of healthcare")
-names(choice_values) <- choice_names
-```
-
-### UI
-
-```{r kmeans-ui, echo=TRUE, eval=FALSE}
-ui <- fluidPage(title = "Clusters Plot",
-                fillPage(sidebarLayout(
-                  sidebarPanel(
-                    selectInput(
-                      inputId = "var1",
-                      label = "Select the first variable to plot",
-                      choices = choice_values,
-                      selected = "prescription",
-                      multiple = FALSE
-                    ),
-                    selectInput(
-                      inputId = "var2",
-                      label = "Select the second variable to plot",
-                      choices = choice_values,
-                      selected = "mental_health_services",
-                      multiple = FALSE
-                    ),
-                    selectInput(
-                      inputId = "var3",
-                      label = "Select the third variable to plot",
-                      choices = choice_values,
-                      selected = "no_access",
-                      multiple = FALSE
-                    ),
-                    # Add submit button so user changes don't take effect until they are done selecting all three variables
-                    submitButton(text = "Make plot", icon = NULL, width = NULL),
-                    # Add note about jitter
-                    h5("The values on this plot are jittered to visualize the density of each cluster. Values near 2 indicate an individual responded `no` to the survey question, while values near 1 indicate a response of `yes`."),
-                  ),
-                  mainPanel(plotlyOutput("clusters")
-                  )
-                )))
-```
+We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive `plotly` scatter plot in the Shiny app server to switch between variables and explore the clusters. The input variables and the specified plot type, `type = "scatter3d"`, are passed as arguments to `plot_ly()`, and `renderPlotly()` then works just as `renderPlot()` does with `ggplot` objects to produce the reactive plot object. The inclusion of a `submitButton()` within the ui allows users to pick all variables before generating the plot. 
 
 ###  Server
 
@@ -548,6 +497,8 @@ server <- function(input, output){
 ```
 
 ## Interactive Clusters
+
+Explore and interact with the clusters 3D plot below, or alternatively, visit [our Shiny app](https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/) to interact with the network in a browser!
 
 ```{r kmeans-shiny, out.extra="data-external=1"}
 knitr::include_app("https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/", 
@@ -600,9 +551,9 @@ knitr::include_graphics("images_and_plots/clusters_breakdown.gif")
 
 ## Findings
 
-While the k-means clustering did not elegantly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources is not independent of race and ethnicity. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they've largely been able to access mental health care resources when they needed them. 
+While the k-means clustering did not elegantly separate out the five racial/ethnic groups, it did demonstrate that access to mental health and healthcare resources differs between racial/ethnic groups. That is the distribution of racial/ethnic groups across clusters and compared to the distribution for all Pulse Survey respondents differs. Most strikingly, cluster 5 has prominently more Hispanic or Latino and Black individuals in it, and fewer white individuals, than the distribution of all respondents. Importantly, cluster 5 is also the cluster where nearly all individuals do not use prescription medication, do not participate in counseling or something similar, and do not have healthcare coverage. However, maybe surprisingly, individuals in this cluster indicated that they've largely been able to access mental health care resources when they needed them. 
 
-Further, the clusters which are more predominantly white than the full respondents pool - clusters 1 and 2 - are also those where the most access to care and resources lie, with the main difference being that individuals in cluster 2 do not utilize counseling or similar mental health services, whereas individuals in cluster 1 do. 
+Further, the clusters which are more predominantly white than the full respondents pool - clusters 1 and 2 - are also those where the most access to care and resources lies, with the main difference being that individuals in cluster 2 do not utilize counseling or similar mental health services, whereas individuals in cluster 1 do. Of course, these survey questions are multifaceted, and not taking prescription medication, for example, does not directly imply not having access to it. 
 
 ## Limitations
 
@@ -696,6 +647,10 @@ server <- function(input, output) {
 }
 ```
 
+## Interactive Network
+
+Explore and interact with the racial/ethnic groups network below, or alternatively, visit [our Shiny app](https://hfeibes.shinyapps.io/blog_r-e-network_shiny/) to interact with the network in a browser!
+
 ```{r r-e-net-shiny, out.extra="data-external=1"}
 knitr::include_app("https://hfeibes.shinyapps.io/blog_r-e-network_shiny/", 
                    height = "1500px")
@@ -705,15 +660,19 @@ knitr::include_app("https://hfeibes.shinyapps.io/blog_r-e-network_shiny/",
 
 This network allows users to explore the relationships between different racial/ethnic groups and how individuals within different racial/ethnic groups have experienced their mental health during the pandemic. 
 
-One interesting pattern is that similar proportions of Non-Hispanic white and Non-Hispanic other or multiracial individuals experienced anxiety, as well as used mental health services, were covered by healthcare, and could not access care when needed. In each case, the proportions of these two groups were the highest out of all the groups. On the other end, the Non-Hispanic Asian group showed the lowest frequency of individuals experiencing anxiety and depression symptoms, as well as accessing medication and counseling services, and being unable to access resources when needed. Thus, the weakest connections between racial/ethnic groups often occurred between the Non-Hispanic Asian group and the others. When it comes to individuals with some form of healthcare, Non-Hispanic Black and Hispanic or Latino individuals share similar proportions and the lowest proportions out of the five groups. 
+One interesting pattern is that similar proportions of Non-Hispanic white and Non-Hispanic other or multiracial individuals experienced anxiety, as well as used mental health services, were covered by healthcare, and could not access care when needed. In each case, the proportions of these two groups were the highest out of all the groups. On the other end, the Non-Hispanic Asian group showed the lowest frequency of individuals experiencing anxiety and depression symptoms, as well as accessing medication and counseling services, and being unable to access resources when needed. Thus, the thinnest connections between racial/ethnic groups often occurred between the Non-Hispanic Asian group and one of the other groups. When it comes to individuals with some form of healthcare, Non-Hispanic Black and Hispanic or Latino individuals share similar proportions and the lowest proportions out of the five groups. 
+
+The variable which tracks whether or not individuals are able to access mental health resources when needed helps put other survey questions into perspective. In other words, while we can see that the Non-Hispanic Asian group had the lowest proportion of utilizing medications or therapy, we also recognize that the individuals in the group expressed generally being able to access that type of care when needed. Responses to these questions represent complex individuals and experiences, and not accessing care does not necessarily mean not having access to it.
 
 ## Limitations
 
-One big limitation of this network analysis is that it is restricted to during the pandemic. As COVID-19 has opened up many conversations about mental and physical health and access to care, it would be interesting to expand this analysis to before COVID-19. Is it possible that more individuals have access now to forms of mental health care because of the conversations prompted be the pandemic?
+One big limitation of this network analysis is that it is restricted to time during the pandemic. As COVID-19 has opened up many conversations about mental and physical health and access to care, it would be interesting to expand this analysis to before COVID-19. Is it possible that more individuals have access now to forms of mental health care because of the conversations prompted by the pandemic? Or is it that COVID-19 has exacerbated previous disparities?
 
 It is also important to note that the Household Pulse Survey relies on online responses from individuals who opt in, creating response bias and likely leaving out individuals in rural areas. 
 
-While the survey questions are meaningful, categorical variables necessarily lack nuance. More quantitative questions could provide more powerful information. For example, we might be interested in the number of visits to a healthcare or mental health care provider in a week, the cost of these visits or of prescription medication, or even days taken off from work due to physical or mental health complications. This information may reflect more any patterns of racial/ethnic privilege and disparities, and would open the option for statistical analysis through fitting a predictive model of some sort. 
+While the survey questions are meaningful, categorical variables necessarily lack nuance. As discussed above, it is tempting to regard a lower proportion of people receiving counseling, for example, as direct evidence of a lack of access to or allocation of resources. However, a lower proportion may reflect individuals not wanting or needing those forms of care, or reflect deeper issues of stigma associated with reaching out to access that care. 
+
+More quantitative questions could provide more powerful information. For example, we might be interested in the number of visits to a healthcare or mental health care provider in a week, the cost of these visits or of prescription medication, or even days taken off from work due to physical or mental health complications (or days forced to work despite these complications). This information may reflect complex patterns of privileges and disparities, and would open the option for statistical analysis through fitting a predictive model. We should always keep in mind, too, that there are real people behind these data, and that these analyses can only go so far.
 
 # Concluding Thoughts
 
