@@ -3,6 +3,7 @@ library(tidytext)
 library(sf)
 library(shinythemes)
 library(ggrepel)
+library(textdata)
 
 # Read in the text-wrangled words
 words_wrangled <- read_csv("words_wrangled.csv")
@@ -31,7 +32,7 @@ state_map <- state_map %>%
 ##############
 
 # Obtain AFINN sentiments lexicon (this rates words from -5 to +5)
-afinn_lexicon <- get_sentiments("afinn")
+afinn_lexicon <- read_csv("afinn_lexicon.csv")
 
 ######
 # ui #
