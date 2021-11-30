@@ -1,3 +1,6 @@
+# Shiny app code for COVID state restrictions network
+# Tracy Huang
+
 # Load packages
 library(tidyverse)
 library(dplyr)
@@ -85,6 +88,7 @@ server <- function(input, output) {
   active_nodes <- reactive({
     # Switch nodes dataset depending on user input
     switch(input$restriction,
+           # subset each nodes dataset to only include the nodes the user selects
            "rest" = subset(restaurants_nodes, restaurants_nodes$id %in% input$filterNodes), 
            "bar" = subset(bars_nodes, bars_nodes$id %in% input$filterNodes),
            "mask" = subset(mask_mandates_nodes, mask_mandates_nodes$id %in% input$filterNodes),
@@ -96,6 +100,7 @@ server <- function(input, output) {
   active_edges <- reactive({
     # Switch edges dataset depending on user input
     switch(input$restriction,
+           # subset each edges dataset to only include the nodes the user selects
            "rest" = subset(restaurants_edges, restaurants_edges$from %in% input$filterNodes),
            "bar" = subset(bars_edges, bars_edges$from %in% input$filterNodes),
            "mask" = subset(mask_mandates_edges, mask_mandates_edges$from %in% input$filterNodes),
@@ -106,6 +111,7 @@ server <- function(input, output) {
   
   output$network_proxy_update <- renderVisNetwork({
     visNetwork(active_nodes(), active_edges(), height = "700px", width = "100%", 
+               # Create a title and subtitle for network
                main = list(text = paste("Network for States Sharing the Same COVID", dataset_names[dataset_values == input$restriction], "in 2020"), 
                            style = "font-family:Arial;font-size:20px"),
                submain = list(text = "*Nodes are colored by proportion of annual COVID cases per state population<br>
@@ -113,14 +119,18 @@ server <- function(input, output) {
                                  the same restriction order<br>
                                  Hover over edges to see the exact number of days",
                            style = "font-family:Arial;font-size:13px")) %>%
+      # Specify size of nodes
       visNodes(size = 10) %>%
+      # Allow users to select a node and have its edges highlighted
       visOptions(selectedBy = "group", 
                  highlightNearest = list(enabled = TRUE, hover = TRUE), 
                  nodesIdSelection = TRUE) %>%
       visPhysics(stabilization = FALSE) %>%
+      # Specify color of edges
       visEdges(color = list(color = "black", highlight = "red")) 
   })
   
+  # Create an updated network object
   myVisNetworkProxy <- visNetworkProxy("network_proxy_update")
   
   observe ({
@@ -128,8 +138,9 @@ server <- function(input, output) {
     filteredNodes <- active_nodes()[gathering_ban_nodes$id %in% input$filterNodes, ,drop = FALSE]
     # Create a data frame to contain all the nodes the user did not select
     hiddenNodes <- anti_join(active_nodes(), filteredNodes)
-    # 
+    # Remove nodes that user did not select
     visRemoveNodes(myVisNetworkProxy, id = hiddenNodes$id)
+    # Add nodes that user selects
     visUpdateNodes(myVisNetworkProxy, nodes = filteredNodes)
   })
 }
