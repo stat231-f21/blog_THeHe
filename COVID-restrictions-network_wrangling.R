@@ -10,7 +10,6 @@ library(dplyr)
 library(lubridate)
 library(igraph)
 library(visNetwork)
-library(ggnetwork)
 library(grDevices)
 
 # Load COVID state restrictions datasets
@@ -25,11 +24,13 @@ eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
 num_colors <- 5
 
 # Create plot for color legend
-png(file = "covid_legend.png")
+png(file = "www/covid_legend.png")
 legend_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-text(x=1.25, y = seq(0,1,l=5), labels = seq(0.01,.12,l=5))
-legend_image <- rasterImage(legend_image, 0, 0, 1,1)
+# Set numeric labels on the color scale
+#title(ylab = "Proportion", line=0, cex.lab=1.2)
+#text(x=1.25, y = seq(0,1,l=5), labels = seq(0.01,.12,l=5))
+legend_image <- rasterImage(legend_image, 1, 1, 0, 0)
 dev.off()
 
 #############################

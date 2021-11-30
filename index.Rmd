@@ -36,10 +36,10 @@ The COVID-19 pandemic has had an enormous impact on Americans' lives on so many 
 
 We wanted to explore how different states are connected by how many days in 2020 they shared the same COVID restrictions (restaurant restrictions, bar restrictions, mask mandates, gathering bans, and stay at home orders). Hence, we were interested in creating a network, with each node representing a state and each edge connecting two states together. The nodes are colored by the proportion of annual COVID cases per state population, and the edges are weighted by how many days each pair of states shared the same restrictions in 2020. Users can also select the exact states to visualize (we recommend looking at five states or less; otherwise the network becomes too crowded!), as well as the type of COVID restriction to explore. There is a drop-down menu for states above the network; when a state is selected, its edges with other states will be highlighted so they can be more easily seen. Lastly, users can hover over the edges in the network to see the exact number of days that each pair of states shared.
 
-Explore and interact with the COVID state restrictions network below, or alternatively, visit [our Shiny app](https://th23.shinyapps.io/blog_THeHe/) to interact with the network in a browser!
+Explore and interact with the COVID state restrictions network below, or alternatively, visit [our Shiny app](https://th23.shinyapps.io/state_restrictions_network_shiny/) to interact with the network in a browser!
 
 ```{r, out.extra="data-external=1"}
-knitr::include_app("https://th23.shinyapps.io/blog_THeHe/", 
+knitr::include_app("https://th23.shinyapps.io/state_restrictions_network_shiny/", 
                    height = "1500px")
 ```
 

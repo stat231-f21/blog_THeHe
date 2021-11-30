@@ -11,23 +11,23 @@ library(shinythemes)
 #    Load Datasets    #
 #######################
 # Load network datasets
-restaurants_edges <- read.csv("wrangled_csv_data/restaurants_edges_data.csv") %>% select(-X)
-restaurants_nodes <- read.csv("wrangled_csv_data/restaurants_nodes_data.csv") %>% select(-X)
+restaurants_edges <- read.csv("restaurants_edges_data.csv") %>% select(-X)
+restaurants_nodes <- read.csv("restaurants_nodes_data.csv") %>% select(-X)
 
-bars_edges <- read.csv("wrangled_csv_data/bars_edges_data.csv") %>% select(-X)
-bars_nodes <- read.csv("wrangled_csv_data/bars_nodes_data.csv") %>% select(-X)
+bars_edges <- read.csv("bars_edges_data.csv") %>% select(-X)
+bars_nodes <- read.csv("bars_nodes_data.csv") %>% select(-X)
 
-mask_mandates_edges <- read.csv("wrangled_csv_data/mask_mandates_edges_data.csv") %>% select(-X)
-mask_mandates_nodes <- read.csv("wrangled_csv_data/mask_mandates_nodes_data.csv") %>% select(-X)
+mask_mandates_edges <- read.csv("mask_mandates_edges_data.csv") %>% select(-X)
+mask_mandates_nodes <- read.csv("mask_mandates_nodes_data.csv") %>% select(-X)
 
-gathering_ban_edges <- read.csv("wrangled_csv_data/gathering_ban_edges_data.csv") %>% select(-X)
-gathering_ban_nodes <- read.csv("wrangled_csv_data/gathering_ban_nodes_data.csv") %>% select(-X)
+gathering_ban_edges <- read.csv("gathering_ban_edges_data.csv") %>% select(-X)
+gathering_ban_nodes <- read.csv("gathering_ban_nodes_data.csv") %>% select(-X)
 
-stay_at_home_orders_edges <- read.csv("wrangled_csv_data/stay_at_home_orders_edges_data.csv") %>% select(-X)
-stay_at_home_orders_nodes <- read.csv("wrangled_csv_data/stay_at_home_orders_nodes_data.csv") %>% select(-X)
+stay_at_home_orders_edges <- read.csv("stay_at_home_orders_edges_data.csv") %>% select(-X)
+stay_at_home_orders_nodes <- read.csv("stay_at_home_orders_nodes_data.csv") %>% select(-X)
 
 # Load proportion of annual COVID cases per state population data
-annual_cases <- read.csv("wrangled_csv_data/proportion_annual_covid_cases_data.csv")
+annual_cases <- read.csv("proportion_annual_covid_cases_data.csv")
 
 ##############################################
 # Define choice values and names for widgets #
@@ -67,7 +67,7 @@ ui <- fluidPage(
                     ),
                     br(),
                     p("Proportion of Annual COVID Cases per State Population"),
-                    img(src="covid_legend.png", width = "500px", height = "500px"),
+                    img(src="covid_legend.png", width = "200px", height = "400px"),
                     width = 3,
                   ),
                   mainPanel(
