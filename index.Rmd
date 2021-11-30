@@ -678,7 +678,7 @@ More quantitative questions could provide more powerful information. For example
 
 # Concluding Thoughts
 
-Overall, we aimed to take a closer look at COVID-related relationships using networks, unsupervised clustering, and geo-spatial analysis. 
+Overall, we aimed to take a closer look at COVID-related relationships using networks, unsupervised clustering, and geo-spatial analysis. We each came to separate conclusions, since our elements of the projects were using very different techniques and therefore brought us to different analyses, but we all realized the value of using these more advanced techniques in enriching our understanding of how the COVID-19 pandemic affected Americans. There is so much more nuance in these discoveries---as opposed to the much more limited conclusions that we were able to draw from the very rigid Household Pulse Survey---that let us challenge our prior assumptions, gave us fresh insights into important elements of the pandemic that we may have overlooked previously, and provided more engaging ways for our audience to interact with our findings. By using these techniques for this "color commentary," so to speak, we were able to feel like we were interacting with Americans and their lives themselves, rather than interfacing with them through the language of data that could not conform fully to the realities of pandemic life. We are grateful that this project allowed us to delve deeper into our exploration of the pandemic and look forward to continuing to widen our understanding of COVID-19's lasting impact.
 
 # Citations
 
