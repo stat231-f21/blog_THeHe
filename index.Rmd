@@ -43,6 +43,8 @@ knitr::include_app("https://th23.shinyapps.io/state_restrictions_network_shiny/"
                    height = "1500px")
 ```
 
+<iframe height="500" width="100%" frameborder="no" src="https://th23.shinyapps.io/state_restrictions_network_shiny/"> </iframe>
+
 ## Data {.tabset .tabset-fade .tabset-pills}
 
 ### Data Sources
