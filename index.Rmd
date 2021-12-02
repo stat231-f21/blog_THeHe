@@ -265,7 +265,7 @@ With that, our text was wrangled, and we were ready for our final analysis.
 
 Our interactive analysis consists of two parts: a word frequency map that explores *qualitatively* how different states were discussing, reporting, contextualizing, and focusing on the pandemic; and a sentiment analysis map, that explores *quantitatively* how different locations in the United States viewed the pandemic. We combined both of these elements into a Shiny app:
 
-<iframe height="1000" width="100%" frameborder="no" data-external="1" src="https://hbassett23.shinyapps.io/blog_text-analysis/"> </iframe>
+<iframe height="800" width="100%" frameborder="no" data-external="1" src="https://hbassett23.shinyapps.io/blog_text-analysis/"> </iframe>
 
 Pulling the most frequently used words from each state required more wrangling, but it needed to be contained within the Shiny app, since it demanded *reactivity* since the words displayed depended on user input, both for the week in question and the number of words that the user wanted displayed:
 
@@ -497,10 +497,7 @@ server <- function(input, output){
 
 Explore and interact with the clusters 3D plot below, or alternatively, visit [our Shiny app](https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/) to interact with the network in a browser!
 
-```{r kmeans-shiny, out.extra="data-external=1"}
-knitr::include_app("https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/", 
-                   height = "1500px")
-```
+<iframe height="800" width="100%" frameborder="no" data-external="1" src="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/"> </iframe>
 
 ## Clusters Patterns
 
@@ -648,10 +645,7 @@ server <- function(input, output) {
 
 Explore and interact with the racial/ethnic groups network below, or alternatively, visit [our Shiny app](https://hfeibes.shinyapps.io/blog_r-e-network_shiny/) to interact with the network in a browser!
 
-```{r r-e-net-shiny, out.extra="data-external=1"}
-knitr::include_app("https://hfeibes.shinyapps.io/blog_r-e-network_shiny/", 
-                   height = "1500px")
-```
+<iframe height="1400" width="100%" frameborder="no" data-external="1" src="https://hfeibes.shinyapps.io/blog_r-e-network_shiny/"> </iframe>
 
 ## Findings
 
