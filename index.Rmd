@@ -37,12 +37,7 @@ We wanted to explore how different states are connected by how many days in 2020
 
 Explore and interact with the COVID state restrictions network below, or alternatively, visit [our Shiny app](https://th23.shinyapps.io/state_restrictions_network_shiny/) to interact with the network in a browser!
 
-```{r, out.width = "100%", out.extra = 'data-external="1" frameborder="no"'}
-knitr::include_app("https://th23.shinyapps.io/state_restrictions_network_shiny/", 
-                   height = "1500px")
-```
-
-<iframe height="500" width="100%" frameborder="no" src="https://th23.shinyapps.io/state_restrictions_network_shiny/"> </iframe>
+<iframe height="1200" width="100%" frameborder="no" data-external="1" src="https://th23.shinyapps.io/state_restrictions_network_shiny/"> </iframe>
 
 ## Data {.tabset .tabset-fade .tabset-pills}
 
