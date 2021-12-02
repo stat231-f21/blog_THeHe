@@ -497,7 +497,7 @@ server <- function(input, output){
 
 Explore and interact with the clusters 3D plot below, or alternatively, visit [our Shiny app](https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/) to interact with the network in a browser!
 
-<iframe height="850" width="100%" frameborder="no" data-external="1" src="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/"> </iframe>
+<iframe height="800" width="100%" frameborder="no" data-external="1" src="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/"> </iframe>
 
 ## Clusters Patterns
 
