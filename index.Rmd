@@ -467,7 +467,7 @@ knitr::include_graphics("images_and_plots/clusters_elbow.png")
 ```
 
 
-## Creating an Interactive Clustering Plot in Shiny {.tabset .tabset-fade .tabset-pills}
+## Creating an Interactive Clustering Plot in Shiny 
 
 We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive `plotly` scatter plot in the Shiny app server to switch between variables and explore the clusters. The input variables and the specified plot type, `type = "scatter3d"`, are passed as arguments to `plot_ly()`, and `renderPlotly()` then works just as `renderPlot()` does with `ggplot` objects to produce the reactive plot object. The inclusion of a `submitButton()` within the ui allows users to pick all variables before generating the plot. 
 
