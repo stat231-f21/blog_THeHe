@@ -37,7 +37,7 @@ We wanted to explore how different states are connected by how many days in 2020
 
 Explore and interact with the COVID state restrictions network below, or alternatively, visit [our Shiny app](https://th23.shinyapps.io/state_restrictions_network_shiny/) to interact with the network in a browser!
 
-<iframe height="1200" width="100%" frameborder="no" data-external="1" src="https://th23.shinyapps.io/state_restrictions_network_shiny/"> </iframe>
+<iframe height="1500" width="100%" frameborder="no" data-external="1" src="https://th23.shinyapps.io/state_restrictions_network_shiny/"> </iframe>
 
 ## Data {.tabset .tabset-fade .tabset-pills}
 
@@ -265,12 +265,7 @@ With that, our text was wrangled, and we were ready for our final analysis.
 
 Our interactive analysis consists of two parts: a word frequency map that explores *qualitatively* how different states were discussing, reporting, contextualizing, and focusing on the pandemic; and a sentiment analysis map, that explores *quantitatively* how different locations in the United States viewed the pandemic. We combined both of these elements into a Shiny app:
 
-```{r text-shiny}
-
-# Henry's shiny app will go here when he gets around to publishing it
-knitr::include_app("https://hbassett23.shinyapps.io/blog_text-analysis/")
-
-```
+<iframe height="1000" width="100%" frameborder="no" data-external="1" src="https://hbassett23.shinyapps.io/blog_text-analysis/"> </iframe>
 
 Pulling the most frequently used words from each state required more wrangling, but it needed to be contained within the Shiny app, since it demanded *reactivity* since the words displayed depended on user input, both for the week in question and the number of words that the user wanted displayed:
 
