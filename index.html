@@ -438,7 +438,7 @@
 <div id="creating-the-shiny-app" class="section level3">
 <h3>Creating the Shiny app</h3>
 <p>Our interactive analysis consists of two parts: a word frequency map that explores <em>qualitatively</em> how different states were discussing, reporting, contextualizing, and focusing on the pandemic; and a sentiment analysis map, that explores <em>quantitatively</em> how different locations in the United States viewed the pandemic. We combined both of these elements into a Shiny app:</p>
-<iframe height="1000" width="100%" frameborder="no" data-external="1" src="https://hbassett23.shinyapps.io/blog_text-analysis/"> </iframe>
+<iframe height="800" width="100%" frameborder="no" data-external="1" src="https://hbassett23.shinyapps.io/blog_text-analysis/"> </iframe>
 <p>Pulling the most frequently used words from each state required more wrangling, but it needed to be contained within the Shiny app, since it demanded <em>reactivity</em> since the words displayed depended on user input, both for the week in question and the number of words that the user wanted displayed:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Perform reactive wrangling for word frequency map</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>  wordmap_words &lt;-<span class="st"> </span><span class="kw">reactive</span>({</span>
@@ -614,8 +614,7 @@
 <div id="interactive-clusters" class="section level2">
 <h2>Interactive Clusters</h2>
 <p>Explore and interact with the clusters 3D plot below, or alternatively, visit <a href="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/">our Shiny app</a> to interact with the network in a browser!</p>
-<iframe src="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/?showcase=0" width="768" height="1500px" data-external="1" data-external="1">
-</iframe>
+<iframe height="800" width="100%" frameborder="no" data-external="1" src="https://hfeibes.shinyapps.io/blog_clusters_3D_shiny/"> </iframe>
 </div>
 <div id="clusters-patterns" class="section level2">
 <h2>Clusters Patterns</h2>
