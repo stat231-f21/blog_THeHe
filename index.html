@@ -586,7 +586,7 @@
 <p><img src="images_and_plots/clusters_elbow.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="creating-an-interactive-clustering-plot-in-shiny">
+<div id="creating-an-interactive-clustering-plot-in-shiny" class="section level2">
 <h2>Creating an Interactive Clustering Plot in Shiny</h2>
 <p>We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive <code>plotly</code> scatter plot in the Shiny app server to switch between variables and explore the clusters. The input variables and the specified plot type, <code>type = "scatter3d"</code>, are passed as arguments to <code>plot_ly()</code>, and <code>renderPlotly()</code> then works just as <code>renderPlot()</code> does with <code>ggplot</code> objects to produce the reactive plot object. The inclusion of a <code>submitButton()</code> within the ui allows users to pick all variables before generating the plot.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output){</span>
