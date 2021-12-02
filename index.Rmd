@@ -57,6 +57,9 @@ For the COVID state restrictions network, we used data from the Centers for Dise
 
 Visit [the CDC website](https://data.cdc.gov/browse?category=Policy+Surveillance) to explore and download the data-sets. 
 
+We also used a dataset for annual COVID cases, as well as a    , to calculate the annual COVID cases per state population (which was then used to color the nodes).
+Visit [the website]() and [next website]() to download the datasets.
+
 ### Data Wrangling {#restrictions-wrangling}
 
 _The following code chunks were for wrangling the `Restaurants.csv` data set, but the exact same procedure was repeated with the other four data sets._ 
