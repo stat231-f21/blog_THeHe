@@ -176,10 +176,11 @@ pulse_clustered_data <- pulse_college_data %>%
   mutate(clusters = factor(pulse_all_clusters$cluster))
 # Write to csv for Shiny app
 write.csv(pulse_clustered_data, file = "wrangled_csv_data/pulse_clustered_data.csv")
+write.csv(pulse_clustered_data, file = "shiny_3D-clusters/pulse_clustered_data.csv")
 
-# Create 3D plot of clusters
-# Since all answers are integers 1:4, use jitter for better visualization
-# ADD TITLES AND DO SHINY
+# Visualize one 3D plot of clusters
+# Since all respondents' answers are 1 or 2, use jitter for better visualization
+# See "shiny_3D-clusters/app.R" for Shiny app adaptation of this plot
 plot_ly(pulse_clustered_data, x = ~jitter(prescription), y = ~jitter(mental_health_services), z = ~jitter(healthcare), type="scatter3d", mode="markers", color = ~clusters)
 
 # Check usefulness of 5 clusters with elbow plot
@@ -209,31 +210,19 @@ dev.off()
 # Indeed, 5 or 6 clusters seems roughly optimal
 
 # Investigate information in the clusters
-# Compare distribution of racial/ethnic groups in each cluster to that of all respondents
-# Clusters
+# COMPARE distribution of racial/ethnic groups in each cluster to that of all respondents
+# Get distribution in clusters
 pulse_grouped <- pulse_clustered_data %>% 
   # For each cluster, count number of respondents in each racial/ethnic group
   group_by(clusters) %>% 
   count(race_ethnicity) %>% 
+  # Get proportion of each racial/ethnic group in each cluster
   mutate(total = sum(n),
-         prop_type = n/total) %>% 
-  pivot_wider(names_from = race_ethnicity,
-              values_from = prop_type) %>% 
-  mutate_all(~replace(., is.na(.), 0)) %>% 
-  janitor::clean_names() %>% 
-  summarise(hispanic_or_latino = sum(hispanic_or_latino),
-            non_hispanic_asian = sum(non_hispanic_asian),
-            non_hispanic_white = sum(non_hispanic_white),
-            non_hispanic_other_multiple_races = sum(non_hispanic_other_multiple_races),
-            non_hispanic_black = sum(non_hispanic_black)) %>% 
-  pivot_longer(cols = -clusters,
-               names_to = "race_ethnicity") %>% 
-  mutate(race_ethnicity = case_when(race_ethnicity == "hispanic_or_latino" ~ "Hispanic or Latino",
-                                    race_ethnicity == "non_hispanic_asian" ~ "Non-Hispanic Asian",
-                                    race_ethnicity == "non_hispanic_white" ~ "Non-Hispanic White",
-                                    race_ethnicity == "non_hispanic_other_multiple_races" ~ "Non-Hispanic Other/Multiple Races",
-                                    race_ethnicity == "non_hispanic_black" ~ "Non-Hispanic Black"),
-         clusters = case_when(clusters == 1 ~ "Cluster 1",
+         prop = n/total) %>% 
+  # Drop count and total columns
+  select(-c(n, total)) %>% 
+  # Update names in "clusters" column for use in plots
+  mutate(clusters = case_when(clusters == 1 ~ "Cluster 1",
                               clusters == 2 ~ "Cluster 2",
                               clusters == 3 ~ "Cluster 3",
                               clusters == 4 ~ "Cluster 4",
@@ -245,16 +234,16 @@ racial_ethnic_totals <- pulse_college_data %>%
   count() %>% 
   ungroup() %>% 
   mutate(total = sum(n),
-         value = n/total,
+         prop = n/total,
          clusters = "All respondents") %>% 
-  select(clusters, race_ethnicity, value) %>% 
+  select(clusters, race_ethnicity, prop) %>% 
   # Combine with distribution within clusters
   rbind(pulse_grouped)
 
 # Create stacked bar charts to compare breakdown of racial/ethnic groups across clusters
 clusters_breakdown_r_e <- ggplot(data = racial_ethnic_totals, 
                              mapping = aes(x = clusters,
-                                           y = value,
+                                           y = prop,
                                            fill = race_ethnicity)) +
   geom_col() +
   coord_flip() +
@@ -273,12 +262,13 @@ png(filename="images_and_plots/clusters_breakdown_r_e.png", width = 600, height 
 plot(clusters_breakdown_r_e)
 dev.off()
 
-# Compare access of healthcare across clusters with animated bar chart
+# COMPARE access of healthcare across clusters with animated bar chart
 # Find percent of individuals in each cluster taking prescription
 pres_sum <- pulse_clustered_data %>% 
   group_by(clusters) %>% 
   count(prescription) %>% 
   # Use same column names so dfs can be stacked into one df
+  # Create column to track the variable "type" once stacked into one df
   mutate(total = sum(n),
          prop_type = n/total,
          type = "presc") %>% 
@@ -326,12 +316,13 @@ clusters_characteristics <- rbind(pres_sum, mhs_sum, no_a_sum, healthcare_sum) %
                           type == "no_a" ~ "Able to access to mental health care when needed",
                           type == "healthcare" ~ "Has some form of healthcare coverage"))
 
-# Bug in gganimate makes plotting stacked bar chart as a single `geom_col()` difficult
-# Creating this allows us to plot the stacked bar chart as two layers
+#`gganimate` makes plotting stacked bar chart as a single `geom_col()` difficult
+# The following dataframe allows us to plot the stacked bar chart as two layers
 # The "bottom layer" is always 1, i.e., fills up the whole y-axis
 # The top layer then moves across this, so that the proportions of y/n are maintained but show more smoothly in the animation
 clusters_bottom_layer <- clusters_characteristics %>% 
   group_by(clusters, type) %>% 
+  # Get column of ones just by adding the proportions of "yes" or "no"
   mutate(total = sum(prop_type)) %>% 
   select(clusters, type, total) %>% 
   distinct()
@@ -350,10 +341,10 @@ animate_hc <- ggplot() +
            mapping = aes(x = clusters,
                          y = prop_type,
                          fill = "Yes")) +
-  # Create legend
+  # Create legend and colors
   scale_fill_manual(name = "Respondent's answer",
                     labels = c("Yes", "No"),
-                      values = c("Yes" = "thistle", "No" = "palegreen3")) +
+                    values = c("Yes" = "thistle", "No" = "palegreen3")) +
   # Transition between the four variables with `type`, spend more time on each state than during transition
   transition_states(type, transition_length = 1, state_length = 6) +
   # Have new points drift in and travel the full distance they represent
@@ -366,6 +357,7 @@ animate_hc <- ggplot() +
   labs(title = "{closest_state}",
        x = "Cluster",
        y = "Proportion of respondents")
+# Still unfortunately has problem filling "Yes" for Cluster 5 "receiving counseling" variable
 
 # Save animation
 animate(animate_hc, renderer=gifski_renderer("images_and_plots/clusters_breakdown.gif"))
@@ -374,6 +366,7 @@ animate(animate_hc, renderer=gifski_renderer("images_and_plots/clusters_breakdow
 # Racial/Ethnic Groups Network #
 ################################
 
+# Select mental health care, healthcare access, and race-ethnicity variables 
 r_e_network <- pulse_college_data %>% 
   select(race_ethnicity, prescription, mental_health_services, no_access, healthcare, ANXIOUS, DOWN) 
 
@@ -503,7 +496,7 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          "mhs" = V4,
          "no_a" = V5,
          "hc" = V6) %>%
-  # Subtract all values from 100, so the network will give more edge weight to smaller differences 
+  # Subtract all values from 1, so the network will give more edge weight to smaller differences 
   mutate(anx = 1-anx,
          dep = 1-dep,
          presc = 1-presc,
@@ -512,18 +505,17 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          hc = 1-hc)
 
 # Save as csv
-write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network.csv")
+write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network_final.csv")
+write.csv(r_e_network_final, file = "shiny_racial-ethnic-network/r-e-network_final.csv")
 
-# Read in data
-r_e_network <- read.csv("wrangled_csv_data/r-e-network.csv")
-
+# Create legends for network
 # Set color palette
 eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
 num_colors <- 5
 
 # Create plots for color legends for each variable
 # Anxiety
-png(filename = "r-e-network_shiny/legends/legend_anx.png", width = 400, height = 400)
+png(filename = "shiny_racial-ethnic-network/legends/legend_anx.png", width = 400, height = 400)
 anx_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 # Manually set ylab to move it closer to color scale
@@ -533,8 +525,9 @@ text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(anxiety_net$prop), digits =
 anx_image <- rasterImage(anx_image, 1, 1, 0, 0)
 dev.off()
 
+# Repeat for other variables
 # Depression
-png(filename = "r-e-network_shiny/legends/legend_dep.png", width = 400, height = 400)
+png(filename = "shiny_racial-ethnic-network/legends/legend_dep.png", width = 400, height = 400)
 dep_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
@@ -543,55 +536,51 @@ dep_image <- rasterImage(dep_image, 1, 1, 0, 0)
 dev.off()
 
 # Prescription
-png(filename = "r-e-network_shiny/legends/legend_presc.png", width = 400, height = 400)
+png(filename = "shiny_racial-ethnic-network/legends/legend_presc.png", width = 400, height = 400)
 presc_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-# Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(presc_net$prop), digits = 2), round(max(presc_net$prop), digits = 2),l=5))
 presc_image <- rasterImage(presc_image, 1, 1, 0, 0)
 dev.off()
 
 # Mental health services
-png(filename = "r-e-network_shiny/legends/legend_mhs.png", width = 400, height = 400)
+png(filename = "shiny_racial-ethnic-network/legends/legend_mhs.png", width = 400, height = 400)
 mhs_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-# Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(mhs_net$prop), digits = 2), round(max(mhs_net$prop), digits = 2),l=5))
 mhs_image <- rasterImage(mhs_image, 1, 1, 0, 0)
 dev.off()
 
 # No access
-png(filename = "r-e-network_shiny/legends/legend_no_a.png", width = 400, height = 400)
+png(filename = "shiny_racial-ethnic-network/legends/legend_no_a.png", width = 400, height = 400)
 no_a_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-# Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(no_a_net$prop), digits = 2), round(max(no_a_net$prop), digits = 2),l=5))
 no_a_image <- rasterImage(no_a_image, 1, 1, 0, 0)
 dev.off()
 
 # Healthcare
-png(filename = "r-e-network_shiny/legends/legend_hc.png", width = 400, height = 400)
+png(filename = "shiny_racial-ethnic-network/legends/legend_hc.png", width = 400, height = 400)
 hc_image <- as.raster(matrix(eigScalePal(5), ncol=1))
 plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
 title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-# Set the limits on the color scale to the min and max proportion
 text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(hc_net$prop), digits = 2), round(max(hc_net$prop), digits = 2),l=5))
 hc_image <- rasterImage(hc_image, 1, 1, 0, 0)
 dev.off()
 
 # Get nodes and edges for each health care variable
 # Select anxiety
-anx_visNetwork <- r_e_network %>% 
+anx_visNetwork <- r_e_network_final %>% 
   select(race_ethnicity_one, race_ethnicity_two, anx) %>% 
   # Create igraph object
   graph_from_data_frame(directed = FALSE) %>% 
   # Create visNetwork object
   toVisNetworkData()
 
-# Get nodes and weighted edges, and save them as csv files 
+# Get nodes and weighted edges
 anx_nodes <- anx_visNetwork$nodes %>% 
   # Join data frames to get proportions and assign colors for the legend
   inner_join(anxiety_net, by = c("id" = "race_ethnicity")) %>%
@@ -600,18 +589,21 @@ anx_nodes <- anx_visNetwork$nodes %>%
 anx_edges <- anx_visNetwork$edges %>% 
   mutate(value = anx) 
 
+# Save as .csv
 write.csv(anx_nodes, file = "wrangled_csv_data/anxiety_nodes.csv")
 write.csv(anx_edges, file = "wrangled_csv_data/anxiety_edges.csv")
+write.csv(anx_nodes, file = "shiny_racial-ethnic-network/anxiety_nodes.csv")
+write.csv(anx_edges, file = "shiny_racial-ethnic-network/anxiety_edges.csv")
 
 # Select depression
-dep_visNetwork <- r_e_network %>% 
+dep_visNetwork <- r_e_network_final %>% 
   select(race_ethnicity_one, race_ethnicity_two, dep) %>% 
   # Create igraph object
   graph_from_data_frame(directed = FALSE) %>% 
   # Create visNetwork object
   toVisNetworkData()
 
-# Get nodes and weighted edges, and save them as csv files  
+# Get nodes and weighted edges 
 dep_nodes <- dep_visNetwork$nodes %>% 
   inner_join(depression_net, by = c("id" = "race_ethnicity")) %>%
   mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
@@ -619,18 +611,21 @@ dep_nodes <- dep_visNetwork$nodes %>%
 dep_edges <- dep_visNetwork$edges %>% 
   mutate(value  = dep)
 
+# Save as .csv
 write.csv(dep_nodes, file = "wrangled_csv_data/depression_nodes.csv")
 write.csv(dep_edges, file = "wrangled_csv_data/depression_edges.csv")
+write.csv(dep_nodes, file = "shiny_racial-ethnic-network/depression_nodes.csv")
+write.csv(dep_edges, file = "shiny_racial-ethnic-network/depression_edges.csv")
 
 # Select prescription
-presc_visNetwork <- r_e_network %>% 
+presc_visNetwork <- r_e_network_final %>% 
   select(race_ethnicity_one, race_ethnicity_two, presc) %>% 
   # Create igraph object
   graph_from_data_frame(directed = FALSE) %>% 
   # Create visNetwork object
   toVisNetworkData()
 
-# Get nodes and weighted edges, and save them as csv files  
+# Get nodes and weighted edges 
 presc_nodes <- presc_visNetwork$nodes %>% 
   inner_join(presc_net, by = c("id" = "race_ethnicity")) %>%
   mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
@@ -638,18 +633,21 @@ presc_nodes <- presc_visNetwork$nodes %>%
 presc_edges <- presc_visNetwork$edges %>% 
   mutate(value = presc)
 
+# Save as .csv
 write.csv(presc_nodes, file = "wrangled_csv_data/prescription_nodes.csv")
 write.csv(presc_edges, file = "wrangled_csv_data/prescription_edges.csv")
+write.csv(presc_nodes, file = "shiny_racial-ethnic-network/prescription_nodes.csv")
+write.csv(presc_edges, file = "shiny_racial-ethnic-network/prescription_edges.csv")
 
 # Select mental health services
-mhs_visNetwork <- r_e_network %>% 
+mhs_visNetwork <- r_e_network_final %>% 
   select(race_ethnicity_one, race_ethnicity_two, mhs) %>% 
   # Create igraph object
   graph_from_data_frame(directed = FALSE) %>% 
   # Create visNetwork object
   toVisNetworkData()
 
-# Get nodes and weighted edges, and save them as csv files  
+# Get nodes and weighted edges
 mhs_nodes <- mhs_visNetwork$nodes %>% 
   inner_join(mhs_net, by = c("id" = "race_ethnicity")) %>%
   mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
@@ -657,18 +655,21 @@ mhs_nodes <- mhs_visNetwork$nodes %>%
 mhs_edges <- mhs_visNetwork$edges %>% 
   mutate(value = mhs)
 
+# Save as .csv
 write.csv(mhs_nodes, file = "wrangled_csv_data/mental_health_services_nodes.csv")
 write.csv(mhs_edges, file = "wrangled_csv_data/mental_health_services_edges.csv")
+write.csv(mhs_nodes, file = "shiny_racial-ethnic-network/mental_health_services_nodes.csv")
+write.csv(mhs_edges, file = "shiny_racial-ethnic-network/mental_health_services_edges.csv")
 
 # Select needed access but did not receive
-no_a_visNetwork <- r_e_network %>% 
+no_a_visNetwork <- r_e_network_final %>% 
   select(race_ethnicity_one, race_ethnicity_two, no_a) %>% 
   # Create igraph object
   graph_from_data_frame(directed = FALSE) %>% 
   # Create visNetwork object
   toVisNetworkData()
 
-# Get nodes and weighted edges, and save them as csv files  
+# Get nodes and weighted edges 
 no_a_nodes <- no_a_visNetwork$nodes %>% 
   inner_join(no_a_net, by = c("id" = "race_ethnicity")) %>%
   mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
@@ -676,18 +677,21 @@ no_a_nodes <- no_a_visNetwork$nodes %>%
 no_a_edges <- no_a_visNetwork$edges %>% 
   mutate(value = no_a)
 
+# Save as .csv
 write.csv(no_a_nodes, file = "wrangled_csv_data/no_access_nodes.csv")
 write.csv(no_a_edges, file = "wrangled_csv_data/no_access_edges.csv")
+write.csv(no_a_nodes, file = "shiny_racial-ethnic-network/no_access_nodes.csv")
+write.csv(no_a_edges, file = "shiny_racial-ethnic-network/no_access_edges.csv")
 
 # Select healthcare
-hc_visNetwork <- r_e_network %>% 
+hc_visNetwork <- r_e_network_final %>% 
   select(race_ethnicity_one, race_ethnicity_two, hc) %>% 
   # Create igraph object
   graph_from_data_frame(directed = FALSE) %>% 
   # Create visNetwork object
   toVisNetworkData()
 
-# Get nodes and weighted edges, and save them as csv files  
+# Get nodes and weighted edges
 hc_nodes <- hc_visNetwork$nodes %>% 
   inner_join(hc_net, by = c("id" = "race_ethnicity")) %>%
   mutate(color = eigScalePal(num_colors)[cut(prop, breaks = num_colors)]) %>%
@@ -695,5 +699,6 @@ hc_nodes <- hc_visNetwork$nodes %>%
 hc_edges <- hc_visNetwork$edges %>% 
   mutate(value = hc)
 
-write.csv(hc_nodes, file = "wrangled_csv_data/healthcare_nodes.csv")
-write.csv(hc_edges, file = "wrangled_csv_data/healthcare_edges.csv")
+# Save as .csv
+write.csv(hc_nodes, file = "shiny_racial-ethnic-network/healthcare_nodes.csv")
+write.csv(hc_edges, file = "shiny_racial-ethnic-network/healthcare_edges.csv")
