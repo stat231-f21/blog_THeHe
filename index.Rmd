@@ -534,11 +534,11 @@ animate_hc <- ggplot() +
        y = "Proportion of respondents")
 ```
 
-```{r clusters_breakdown_r_e-png, fig.show='hold', out.width="70%"}
+```{r clusters_breakdown_r_e-png, fig.show='hold', out.width="100%"}
 knitr::include_graphics("images_and_plots/clusters_breakdown_r_e.png")
 ```
 
-```{r clusters_breakdown-gif, fig.show='hold', out.width="60%"}
+```{r clusters_breakdown-gif, fig.show='hold', out.width="80%"}
 knitr::include_graphics("images_and_plots/clusters_breakdown.gif")
 ```
 
