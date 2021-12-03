@@ -58,8 +58,9 @@ For the COVID state restrictions network, we used data from the Centers for Dise
 
 Visit [the CDC website](https://data.cdc.gov/browse?category=Policy+Surveillance) to explore and download the data-sets. 
 
-We also used a dataset for annual COVID cases, as well as a    , to calculate the annual COVID cases per state population (which was then used to color the nodes).
-Visit [the website]() and [next website]() to download the datasets.
+We also used a CDC dataset with COVID case numbers per state, as well as a Census Bureau dataset for state populations, in order to calculate the annual COVID cases per state population (which was then used to color the nodes).
+
+Visit [the CDC website](https://data.cdc.gov/Case-Surveillance/United-States-COVID-19-Cases-and-Deaths-by-State-o/9mfq-cb36) and [the Census Bureau website](https://www2.census.gov/programs-surveys/popest/datasets/2010-2020/national/totals/) to download the datasets.
 
 ### Data Wrangling {#restrictions-wrangling}
 
