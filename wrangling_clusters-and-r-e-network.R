@@ -174,8 +174,8 @@ pulse_all_clusters <- pulse_college_data %>%
 # Add cluster assignments to data frame
 pulse_clustered_data <- pulse_college_data %>% 
   mutate(clusters = factor(pulse_all_clusters$cluster))
-# Write to csv for Shiny app
-write.csv(pulse_clustered_data, file = "wrangled_csv_data/pulse_clustered_data.csv")
+
+# Write to .csv for Shiny app
 write.csv(pulse_clustered_data, file = "shiny_3D-clusters/pulse_clustered_data.csv")
 
 # Visualize one 3D plot of clusters
@@ -504,8 +504,7 @@ r_e_network_final <- as.data.frame(r_e_network_final) %>%
          no_a = 1-no_a,
          hc = 1-hc)
 
-# Save as csv
-write.csv(r_e_network_final, file = "wrangled_csv_data/r-e-network_final.csv")
+# Save as .csv
 write.csv(r_e_network_final, file = "shiny_racial-ethnic-network/r-e-network_final.csv")
 
 # Create legends for network
@@ -590,8 +589,6 @@ anx_edges <- anx_visNetwork$edges %>%
   mutate(value = anx) 
 
 # Save as .csv
-write.csv(anx_nodes, file = "wrangled_csv_data/anxiety_nodes.csv")
-write.csv(anx_edges, file = "wrangled_csv_data/anxiety_edges.csv")
 write.csv(anx_nodes, file = "shiny_racial-ethnic-network/anxiety_nodes.csv")
 write.csv(anx_edges, file = "shiny_racial-ethnic-network/anxiety_edges.csv")
 
@@ -612,8 +609,6 @@ dep_edges <- dep_visNetwork$edges %>%
   mutate(value  = dep)
 
 # Save as .csv
-write.csv(dep_nodes, file = "wrangled_csv_data/depression_nodes.csv")
-write.csv(dep_edges, file = "wrangled_csv_data/depression_edges.csv")
 write.csv(dep_nodes, file = "shiny_racial-ethnic-network/depression_nodes.csv")
 write.csv(dep_edges, file = "shiny_racial-ethnic-network/depression_edges.csv")
 
@@ -656,8 +651,6 @@ mhs_edges <- mhs_visNetwork$edges %>%
   mutate(value = mhs)
 
 # Save as .csv
-write.csv(mhs_nodes, file = "wrangled_csv_data/mental_health_services_nodes.csv")
-write.csv(mhs_edges, file = "wrangled_csv_data/mental_health_services_edges.csv")
 write.csv(mhs_nodes, file = "shiny_racial-ethnic-network/mental_health_services_nodes.csv")
 write.csv(mhs_edges, file = "shiny_racial-ethnic-network/mental_health_services_edges.csv")
 
@@ -678,8 +671,6 @@ no_a_edges <- no_a_visNetwork$edges %>%
   mutate(value = no_a)
 
 # Save as .csv
-write.csv(no_a_nodes, file = "wrangled_csv_data/no_access_nodes.csv")
-write.csv(no_a_edges, file = "wrangled_csv_data/no_access_edges.csv")
 write.csv(no_a_nodes, file = "shiny_racial-ethnic-network/no_access_nodes.csv")
 write.csv(no_a_edges, file = "shiny_racial-ethnic-network/no_access_edges.csv")
 
