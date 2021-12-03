@@ -38,3 +38,4 @@ words_wrangled <- word_frequencies %>%
 
 # Write csv of wrangled words
 write_csv(words_wrangled, "data/news/words_wrangled.csv")
+write_csv(words_wrangled, "shiny_word-map/words_wrangled.csv")
