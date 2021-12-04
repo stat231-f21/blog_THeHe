@@ -629,8 +629,6 @@ presc_edges <- presc_visNetwork$edges %>%
   mutate(value = presc)
 
 # Save as .csv
-write.csv(presc_nodes, file = "wrangled_csv_data/prescription_nodes.csv")
-write.csv(presc_edges, file = "wrangled_csv_data/prescription_edges.csv")
 write.csv(presc_nodes, file = "shiny_racial-ethnic-network/prescription_nodes.csv")
 write.csv(presc_edges, file = "shiny_racial-ethnic-network/prescription_edges.csv")
 
