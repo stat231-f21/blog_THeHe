@@ -11,7 +11,6 @@ The files for our Shiny apps can be found in the respective folders:
 The data wrangling files are as follows:
 * `wrangling_state-restrictions-network.R` contains all data wrangling for the COVID state restrictions network
 * `news_scraping.R` contains code for scraping newspaper headlines for the word map
-* `wrangling_text.R` contains all data wrangling for the newspaper headlines
 * `wrangling_word-map.R` contains all data wrangling for the word map
 * `wrangling_clusters-and-r-e-network.R` contains all data wrangling for the 3D clusters and racial/ethnic network  
 
