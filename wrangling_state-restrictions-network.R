@@ -1,5 +1,4 @@
 # Data Wrangling for COVID State Restrictions Networks
-# Tracy Huang
 
 #######################
 #    Load Datasets    #
