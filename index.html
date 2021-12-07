@@ -11,35 +11,35 @@
     
     <title>A Deeper Dive Into COVID-Related Relationships</title>
 
-        <script src="index_files/header-attrs-2.10/header-attrs.js"></script>
-        <script src="index_files/jquery-1.11.3/jquery.min.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="index_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
-        <script src="index_files/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-        <script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-        <script src="index_files/navigation-1.1/tabsets.js"></script>
-        <link href="index_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
-        <script src="index_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
-        <link href="index_files/robobook-0.1/robobook.css" rel="stylesheet" />
-        <link href="index_files/robobook-0.1/robobook_fonts_embed.css" rel="stylesheet" />
-        <script src="index_files/robobook-0.1/robobook.js"></script>
+        <script src="index_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="index_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="index_files/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+    <script src="index_files/navigation-1.1/tabsets.js"></script>
+    <link href="index_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
+    <script src="index_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
+    <link href="index_files/robobook-0.1/robobook.css" rel="stylesheet" />
+    <link href="index_files/robobook-0.1/robobook_fonts_embed.css" rel="stylesheet" />
+    <script src="index_files/robobook-0.1/robobook.js"></script>
+    <script src="index_files/accessible-code-block-0.0.1/empty-anchor.js"></script>
     
     
         <style type="text/css">code{white-space: pre;}</style>
     <style type="text/css">
-      pre > code.sourceCode { white-space: pre; position: relative; }
-      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-      pre > code.sourceCode > span:empty { height: 1.2em; }
-      .sourceCode { overflow: visible; }
+      code.sourceCode > span { display: inline-block; line-height: 1.25; }
       code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode { white-space: pre; position: relative; }
       div.sourceCode { margin: 1em 0; }
       pre.sourceCode { margin: 0; }
       @media screen {
       div.sourceCode { overflow: auto; }
       }
       @media print {
-      pre > code.sourceCode { white-space: pre-wrap; }
-      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      code.sourceCode { white-space: pre-wrap; }
+      code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
       }
       pre.numberSource code
         { counter-reset: source-line 0; }
@@ -60,9 +60,9 @@
       div.sourceCode
         { color: #1f1c1b; background-color: #ffffff; }
       @media screen {
-      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      code.sourceCode > span > a:first-child::before { text-decoration: underline; }
       }
-      code span { color: #1f1c1b; } /* Normal */
+      code span. { color: #1f1c1b; } /* Normal */
       code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
       code span.an { color: #ca60ca; } /* Annotation */
       code span.at { color: #0057ae; } /* Attribute */
@@ -178,8 +178,7 @@
 
 <body class="preload">
 
-   	
-            <!-- robobook start -->   
+               <!-- robobook start -->   
    <div class="book with-summary">
       <div class="book-summary">
         <ul>
@@ -189,21 +188,18 @@
         <nav role="navigation" id="toc">
           <ul>
           <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#restrictions-network">COVID State Restrictions Network</a>
-          <ul>
+          <li><a href="#restrictions-network">COVID State Restrictions Network</a><ul>
           <li><a href="#data">Data</a></li>
           <li><a href="#visnetwork-shiny">Creating the Interactive Network in Shiny</a></li>
           <li><a href="#findings">Findings</a></li>
           <li><a href="#limitations-and-future-research">Limitations and Future Research</a></li>
           </ul></li>
-          <li><a href="#word-map">Word Map</a>
-          <ul>
+          <li><a href="#word-map">Word Map</a><ul>
           <li><a href="#data-1">Data</a></li>
           <li><a href="#creating-interactive-word-maps-in-shiny">Creating Interactive Word Maps in Shiny</a></li>
           <li><a href="#limitations-and-future-research-1">Limitations and Future Research</a></li>
           </ul></li>
-          <li><a href="#mental-health-in-racialethnic-groups---unsupervised-clustering">Mental Health in Racial/Ethnic Groups - Unsupervised Clustering</a>
-          <ul>
+          <li><a href="#mental-health-in-racialethnic-groups---unsupervised-clustering">Mental Health in Racial/Ethnic Groups - Unsupervised Clustering</a><ul>
           <li><a href="#data-2">Data</a></li>
           <li><a href="#creating-an-interactive-clustering-plot-in-shiny">Creating an Interactive Clustering Plot in Shiny</a></li>
           <li><a href="#interactive-clusters">Interactive Clusters</a></li>
@@ -211,8 +207,7 @@
           <li><a href="#findings-1">Findings</a></li>
           <li><a href="#limitations">Limitations</a></li>
           </ul></li>
-          <li><a href="#mental-health-in-racialethnic-groups-network">Mental Health in Racial/Ethnic Groups Network</a>
-          <ul>
+          <li><a href="#mental-health-in-racialethnic-groups-network">Mental Health in Racial/Ethnic Groups Network</a><ul>
           <li><a href="#data-3">Data</a></li>
           <li><a href="#creating-an-interactive-network-in-shiny">Creating an Interactive Network in Shiny</a></li>
           <li><a href="#interactive-network">Interactive Network</a></li>
@@ -241,8 +236,7 @@
         
       <h1 class="title">A Deeper Dive Into COVID-Related Relationships</h1>
       
-        
-
+      
    
       
    
@@ -259,7 +253,7 @@
 <iframe height="1500" width="100%" frameborder="no" data-external="1" src="https://th23.shinyapps.io/state_restrictions_network_shiny/">
 </iframe>
 <div id="data" class="section level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills">Data</h2>
+<h2>Data</h2>
 <div id="data-sources" class="section level3">
 <h3>Data Sources</h3>
 <p>For the COVID state restrictions network, we used data from the Centers for Disease Control and Prevention (CDC) on state-issued prevention measures for COVID-19. The specific data-sets we used were:</p>
@@ -279,70 +273,70 @@
 <p><em>The following code chunks were for wrangling the <code>Restaurants.csv</code> data set, but the exact same procedure was repeated with the other four data sets.</em></p>
 <p>In order to build a network diagram using the <code>igraph</code> package in R, we needed to transform the raw data into an edge list, a data frame where there are three columns; the first column would contain the origin states, the second column would contain the target states, and the third column would contain the number of days the states in the first and second column share. After getting all five raw data sets into this format, we converted them into an <code>igraph</code> object using the <code>graph_from_data_frame</code> function in the <code>igraph</code> package. We also specified that it was an un-directed network by putting FALSE in the <code>directed</code> argument, since it did not matter which direction the edges went between each pair of states.</p>
 <p>We then wanted to use the <code>visNetwork</code> package to create interactive network visualizations. We converted the <code>igraph</code> objects into a format usable for <code>visNetwork</code> using the <code>toVisNetworkData</code> function.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an igraph object</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>restaurants_igraph <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(restaurants_final, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert igraph to visNetwork format</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>restaurants_visNetwork <span class="ot">&lt;-</span> <span class="fu">toVisNetworkData</span>(restaurants_igraph)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Create an igraph object</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>restaurants_igraph &lt;-<span class="st"> </span><span class="kw">graph_from_data_frame</span>(restaurants_final, <span class="dt">directed =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Convert igraph to visNetwork format</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>restaurants_visNetwork &lt;-<span class="st"> </span><span class="kw">toVisNetworkData</span>(restaurants_igraph)</span></code></pre></div>
 <p>The <code>visNetwork</code> package requires the edges in the network to be a data frame. The original edges data frame in the <code>visNetwork</code> object contained three columns: a “from” column and a “to” column that taken together, contained all possible combinations of two states, as well as a column for the number of days each pair of states shared. However, <code>visNetwork</code> allows us to add properties to edges by simply adding columns to the data frame. We thus added a column for edge width and edge labels using the <code>mutate</code> function from <code>dplyr</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrangle edges data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>restaurants_edges <span class="ot">&lt;-</span> restaurants_visNetwork<span class="sc">$</span>edges <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a new column for edge width</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">as.numeric</span>(restaurants_overLap),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">width =</span> value<span class="sc">/</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>value) </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>restaurants_edges <span class="ot">&lt;-</span> restaurants_edges <span class="sc">%&gt;%</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a new column for edge labels that appear when hovered over</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">title =</span> <span class="fu">paste0</span>(restaurants_edges<span class="sc">$</span>restaurants_overLap, <span class="st">&quot; days shared in 2020&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Wrangle edges data</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>restaurants_edges &lt;-<span class="st"> </span>restaurants_visNetwork<span class="op">$</span>edges <span class="op">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="co"># Create a new column for edge width</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">as.numeric</span>(restaurants_overLap),</span>
+<span id="cb2-5"><a href="#cb2-5"></a>         <span class="dt">width =</span> value<span class="op">/</span><span class="dv">100</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>value) </span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a>restaurants_edges &lt;-<span class="st"> </span>restaurants_edges <span class="op">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="st">  </span><span class="co"># Create a new column for edge labels that appear when hovered over</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">title =</span> <span class="kw">paste0</span>(restaurants_edges<span class="op">$</span>restaurants_overLap, <span class="st">&quot; days shared in 2020&quot;</span>))</span></code></pre></div>
 <p>Similarly, the <code>visNetwork</code> package requires the nodes in the network to be a data frame. The original nodes data frame in the <code>visNetwork</code> object originally contained two columns, an “id” column and a “label” column that contained the state names for the nodes. However, we also added a new column for the color of each node, where color corresponded to the proportion of annual COVID cases per state population. The <code>eigScalePal</code> function creates a gradient of five colors from the <code>colorRampPalette</code> function, and the <code>mutate</code> command breaks the COVID cases proportions column values into five sections, assigning each value to one out of the five colors.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set color palette</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>eigScalePal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">bias =</span> <span class="dv">5</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>num_colors <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrangle nodes data</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>restaurants_nodes <span class="ot">&lt;-</span> restaurants_visNetwork<span class="sc">$</span>nodes <span class="sc">%&gt;%</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Join annual cases dataset</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(annual_cases, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span> <span class="ot">=</span> <span class="st">&quot;state&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a new column for node color, colored by annual COVID cases in relation to color palette legend</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color =</span> <span class="fu">eigScalePal</span>(num_colors)[<span class="fu">cut</span>(covid_prop, <span class="at">breaks =</span> num_colors)]) <span class="sc">%&gt;%</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(covid_prop))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Set color palette</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>eigScalePal &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="dt">bias =</span> <span class="dv">5</span>)</span>
+<span id="cb3-3"><a href="#cb3-3"></a>num_colors &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co"># Wrangle nodes data</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>restaurants_nodes &lt;-<span class="st"> </span>restaurants_visNetwork<span class="op">$</span>nodes <span class="op">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="st">  </span><span class="co"># Join annual cases dataset</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="st">  </span><span class="kw">inner_join</span>(annual_cases, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span> =<span class="st"> &quot;state&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="st">  </span><span class="co"># Create a new column for node color, colored by annual COVID cases in relation to color palette legend</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">color =</span> <span class="kw">eigScalePal</span>(num_colors)[<span class="kw">cut</span>(covid_prop, <span class="dt">breaks =</span> num_colors)]) <span class="op">%&gt;%</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(covid_prop))</span></code></pre></div>
 </div>
 </div>
 <div id="visnetwork-shiny" class="section level2">
 <h2>Creating the Interactive Network in Shiny</h2>
 <p>In order to create an interactive network in a Shiny app, the function, <code>visNetwork()</code>, can be used within the <code>renderVisNetwork()</code> function in the Shiny server code. The <code>visNetwork()</code> function needs two arguments: the nodes and the edges. Using the pipe function, there are also many other functions that can be used to further customize the network. For example, the <code>visOptions()</code> function allows users to select a node and have its connecting edges highlighted. Another example is the <code>visEdges()</code> function that specifies the color of the edges and the different color they should change to when selected.</p>
 <p>To be able to add and remove nodes interactively, depending on what the user selects, an updated network can be created using the <code>visNetworkProxy()</code> function. After creating data frames to contain the nodes that the user selected and did not select, <code>visRemoveNodes()</code> and <code>visUpdateNodes()</code> can be used to reactively display only the nodes the user selected in the network.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>network_proxy_update <span class="ot">&lt;-</span> <span class="fu">renderVisNetwork</span>({</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visNetwork</span>(<span class="fu">active_nodes</span>(), <span class="fu">active_edges</span>(), <span class="at">height =</span> <span class="st">&quot;700px&quot;</span>, <span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Create a title for network</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">main =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Network for States Sharing the Same COVID Restrictions in 2020&quot;</span>, </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">style =</span> <span class="st">&quot;font-family:Arial;font-size:20px&quot;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>               )) <span class="sc">%&gt;%</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Specify size of nodes</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visNodes</span>(<span class="at">size =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Allow users to select a node and have its edges highlighted</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visOptions</span>(<span class="at">selectedBy =</span> <span class="st">&quot;group&quot;</span>, </span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visPhysics</span>(<span class="at">stabilization =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Specify color of edges</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visEdges</span>(<span class="at">color =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">highlight =</span> <span class="st">&quot;red&quot;</span>)) </span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  myVisNetworkProxy <span class="ot">&lt;-</span> <span class="fu">visNetworkProxy</span>(<span class="st">&quot;network_proxy_update&quot;</span>)</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observe</span> ({</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a data frame to contain the nodes the user selects</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    filteredNodes <span class="ot">&lt;-</span> <span class="fu">active_nodes</span>()[gathering_ban_nodes<span class="sc">$</span>id <span class="sc">%in%</span> input<span class="sc">$</span>filterNodes, ,drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a data frame to contain all the nodes the user did not select</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    hiddenNodes <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(<span class="fu">active_nodes</span>(), filteredNodes)</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visRemoveNodes</span>(myVisNetworkProxy, <span class="at">id =</span> hiddenNodes<span class="sc">$</span>id)</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visUpdateNodes</span>(myVisNetworkProxy, <span class="at">nodes =</span> filteredNodes)</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output) {</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  </span>
+<span id="cb4-3"><a href="#cb4-3"></a>  output<span class="op">$</span>network_proxy_update &lt;-<span class="st"> </span><span class="kw">renderVisNetwork</span>({</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="kw">visNetwork</span>(<span class="kw">active_nodes</span>(), <span class="kw">active_edges</span>(), <span class="dt">height =</span> <span class="st">&quot;700px&quot;</span>, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, </span>
+<span id="cb4-5"><a href="#cb4-5"></a>               <span class="co"># Create a title for network</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>               <span class="dt">main =</span> <span class="kw">list</span>(<span class="dt">text =</span> <span class="st">&quot;Network for States Sharing the Same COVID Restrictions in 2020&quot;</span>, </span>
+<span id="cb4-7"><a href="#cb4-7"></a>                           <span class="dt">style =</span> <span class="st">&quot;font-family:Arial;font-size:20px&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>               )) <span class="op">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="st">      </span><span class="co"># Specify size of nodes</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="st">      </span><span class="kw">visNodes</span>(<span class="dt">size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="st">      </span><span class="co"># Allow users to select a node and have its edges highlighted</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="st">      </span><span class="kw">visOptions</span>(<span class="dt">selectedBy =</span> <span class="st">&quot;group&quot;</span>, </span>
+<span id="cb4-13"><a href="#cb4-13"></a>                 <span class="dt">highlightNearest =</span> <span class="kw">list</span>(<span class="dt">enabled =</span> <span class="ot">TRUE</span>, <span class="dt">hover =</span> <span class="ot">TRUE</span>), </span>
+<span id="cb4-14"><a href="#cb4-14"></a>                 <span class="dt">nodesIdSelection =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="st">      </span><span class="kw">visPhysics</span>(<span class="dt">stabilization =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="st">      </span><span class="co"># Specify color of edges</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="st">      </span><span class="kw">visEdges</span>(<span class="dt">color =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">highlight =</span> <span class="st">&quot;red&quot;</span>)) </span>
+<span id="cb4-18"><a href="#cb4-18"></a>  })</span>
+<span id="cb4-19"><a href="#cb4-19"></a>  </span>
+<span id="cb4-20"><a href="#cb4-20"></a>  myVisNetworkProxy &lt;-<span class="st"> </span><span class="kw">visNetworkProxy</span>(<span class="st">&quot;network_proxy_update&quot;</span>)</span>
+<span id="cb4-21"><a href="#cb4-21"></a>  </span>
+<span id="cb4-22"><a href="#cb4-22"></a>  <span class="kw">observe</span> ({</span>
+<span id="cb4-23"><a href="#cb4-23"></a>    <span class="co"># Create a data frame to contain the nodes the user selects</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a>    filteredNodes &lt;-<span class="st"> </span><span class="kw">active_nodes</span>()[gathering_ban_nodes<span class="op">$</span>id <span class="op">%in%</span><span class="st"> </span>input<span class="op">$</span>filterNodes, ,drop =<span class="st"> </span><span class="ot">FALSE</span>]</span>
+<span id="cb4-25"><a href="#cb4-25"></a>    <span class="co"># Create a data frame to contain all the nodes the user did not select</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a>    hiddenNodes &lt;-<span class="st"> </span><span class="kw">anti_join</span>(<span class="kw">active_nodes</span>(), filteredNodes)</span>
+<span id="cb4-27"><a href="#cb4-27"></a>    <span class="kw">visRemoveNodes</span>(myVisNetworkProxy, <span class="dt">id =</span> hiddenNodes<span class="op">$</span>id)</span>
+<span id="cb4-28"><a href="#cb4-28"></a>    <span class="kw">visUpdateNodes</span>(myVisNetworkProxy, <span class="dt">nodes =</span> filteredNodes)</span>
+<span id="cb4-29"><a href="#cb4-29"></a>  })</span>
+<span id="cb4-30"><a href="#cb4-30"></a>}</span></code></pre></div>
 </div>
 <div id="findings" class="section level2">
 <h2>Findings</h2>
@@ -358,155 +352,171 @@
 <p>To further understand how the COVID-19 pandemic affected Americans, we have performed textual analysis. Text has the potential to be revealing in an entirely different way from the results of the Household Pulse survey, since language allows for the expression of nuance and feelings and emotions in a way that something so rigid as a census survey cannot. We wanted to go local, so we took news headlines from all fifty states and explored the trends and connections hidden within them. Our main tools in this endeavor were a word frequency analysis and a sentiment analysis, both of which use data that represent a much more colloquial and social view of how the pandemic was digested and affecting Americans than the purely categorical and standardized data that we studied in our first project, which centered around the Household Pulse Survey Data.</p>
 <p>View our findings and explore further with our <a href="https://hbassett23.shinyapps.io/blog_text-analysis/">Text Analysis Shiny App!</a></p>
 <div id="data-1" class="section level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills">Data</h2>
+<h2>Data</h2>
 <div id="data-sources-1" class="section level3">
 <h3>Data Sources</h3>
 <p>The data for the text analysis portion of the project was scraped from local news sites from all fifty states. We found the most widely circulated news outlet in each state (according to <a href="https://www.agilitypr.com/resources/top-media-outlets/">this media source</a>). At first, we attempted to scrape each news site individually, but this proved very challenging because each site was built differently, so this effort would have required fifty different individualized scraping scripts, which was not feasible. We turned to <a href="https://news.google.com">Google News</a> as our solution; using this site, we can easily search individual news sites and get back results in a standardized manner.</p>
 <p>We were chiefly interested in the sentiments and discussions revolving around the COVID-19 pandemic, so we only searched for articles that included the keyword <strong>“covid”</strong>. Additionally, we restricted each search to time frames that matched up with the time frames that we used in our originally analysis, with the Household Pulse Survey data.</p>
 <p>We ran into some issues at first, since Google does not allow scraping of Google News’ search results page, which would have been a relatively easy way to obtain headlines. We were able to obtain RSS feeds of Google News searches: these are outputs in XML format that are typically used for email feeds and the like. There was no explicit restriction against scraping these feeds, so we used this output along with the <code>tidyRSS</code> package to obtain certain parts of the feed—specifically, headlines. (We were also somewhat ethically assuaged by the fact that each individual news website had no issue with scraping their headlines.)</p>
 <p>The specifics of scraping involved nested <code>for</code> loops: we had to scrape news sites from fifty states (taken care of by the outer loop), and for each state, we had to scrape headlines for each of the eighteen “weeks” that we were interested in (the inner loop).</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop for 50 states</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) {</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set current state</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  state <span class="ot">&lt;-</span> news_sites<span class="sc">$</span>state[i]</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Set current news url</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  site <span class="ot">&lt;-</span> news_sites<span class="sc">$</span>url[i]</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Loop for 18 weeks</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>){</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set current start date (of time period in question)</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    start_date <span class="ot">&lt;-</span> weeks<span class="sc">$</span>start[j]</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set current end date (of time period in question)</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    end_date <span class="ot">&lt;-</span> weeks<span class="sc">$</span>end[j]</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create Google News RSS url to scrape</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    rss_url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://news.google.com/rss/search?q=before%3A&quot;</span>, end_date, <span class="st">&quot;%20after%3A&quot;</span>, start_date, <span class="st">&quot;%20covid%20&quot;</span>, state, <span class="st">&quot;%20site%3A&quot;</span>, site, <span class="st">&quot;&amp;hl=en-US&amp;gl=US&amp;ceid=US%3Aen&quot;</span>)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Scrape data from RSS feed</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    headlines_scraped <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Return NA instead of headline text when error is thrown (usually because there are no articles that meet criteria)</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(cnd) {</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="cn">NA</span>)</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Otherwise, pull headline text from the RSS feed</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      scraped_text <span class="ot">&lt;-</span> rss_url <span class="sc">%&gt;%</span> </span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tidyfeed</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(item_title)</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add scraped headline into our pre-made list</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    headlines<span class="sc">$</span>headline_text[(i<span class="dv">-1</span>)<span class="sc">*</span><span class="dv">18</span> <span class="sc">+</span> j] <span class="ot">&lt;-</span> headlines_scraped</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Loop for 50 states</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>) {</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  </span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="co"># Set current state</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>  state &lt;-<span class="st"> </span>news_sites<span class="op">$</span>state[i]</span>
+<span id="cb5-6"><a href="#cb5-6"></a>  <span class="co">#Set current news url</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>  site &lt;-<span class="st"> </span>news_sites<span class="op">$</span>url[i]</span>
+<span id="cb5-8"><a href="#cb5-8"></a>  </span>
+<span id="cb5-9"><a href="#cb5-9"></a>  <span class="co"># Loop for 18 weeks</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">18</span>){</span>
+<span id="cb5-11"><a href="#cb5-11"></a>    </span>
+<span id="cb5-12"><a href="#cb5-12"></a>    <span class="co"># Set current start date (of time period in question)</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a>    start_date &lt;-<span class="st"> </span>weeks<span class="op">$</span>start[j]</span>
+<span id="cb5-14"><a href="#cb5-14"></a>    <span class="co"># Set current end date (of time period in question)</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a>    end_date &lt;-<span class="st"> </span>weeks<span class="op">$</span>end[j]</span>
+<span id="cb5-16"><a href="#cb5-16"></a>    </span>
+<span id="cb5-17"><a href="#cb5-17"></a>    <span class="co"># Create Google News RSS url to scrape</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a>    rss_url &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;https://news.google.com/rss/search?q=before%3A&quot;</span>, end_date, <span class="st">&quot;%20after%3A&quot;</span>, start_date, <span class="st">&quot;%20covid%20&quot;</span>, state, <span class="st">&quot;%20site%3A&quot;</span>, site, <span class="st">&quot;&amp;hl=en-US&amp;gl=US&amp;ceid=US%3Aen&quot;</span>)</span>
+<span id="cb5-19"><a href="#cb5-19"></a>    </span>
+<span id="cb5-20"><a href="#cb5-20"></a>    <span class="co"># Scrape data from RSS feed</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a>    headlines_scraped &lt;-<span class="st"> </span><span class="kw">tryCatch</span>(</span>
+<span id="cb5-22"><a href="#cb5-22"></a>      </span>
+<span id="cb5-23"><a href="#cb5-23"></a>      <span class="co"># Return NA instead of headline text when error is thrown (usually because there are no articles that meet criteria)</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a>      <span class="dt">error =</span> <span class="cf">function</span>(cnd) {</span>
+<span id="cb5-25"><a href="#cb5-25"></a>        <span class="kw">return</span>(<span class="ot">NA</span>)</span>
+<span id="cb5-26"><a href="#cb5-26"></a>      },</span>
+<span id="cb5-27"><a href="#cb5-27"></a>      </span>
+<span id="cb5-28"><a href="#cb5-28"></a>      <span class="co"># Otherwise, pull headline text from the RSS feed</span></span>
+<span id="cb5-29"><a href="#cb5-29"></a>      scraped_text &lt;-<span class="st"> </span>rss_url <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-30"><a href="#cb5-30"></a><span class="st">        </span><span class="kw">tidyfeed</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-31"><a href="#cb5-31"></a><span class="st">        </span><span class="kw">select</span>(item_title)</span>
+<span id="cb5-32"><a href="#cb5-32"></a>    )</span>
+<span id="cb5-33"><a href="#cb5-33"></a>    </span>
+<span id="cb5-34"><a href="#cb5-34"></a>    <span class="co"># Add scraped headline into our pre-made list</span></span>
+<span id="cb5-35"><a href="#cb5-35"></a>    headlines<span class="op">$</span>headline_text[(i<span class="dv">-1</span>)<span class="op">*</span><span class="dv">18</span> <span class="op">+</span><span class="st"> </span>j] &lt;-<span class="st"> </span>headlines_scraped</span>
+<span id="cb5-36"><a href="#cb5-36"></a>    </span>
+<span id="cb5-37"><a href="#cb5-37"></a>  }</span>
+<span id="cb5-38"><a href="#cb5-38"></a>}</span></code></pre></div>
 <p>Once the scraping was completed, we had an (enormous) .csv file with an observation for every headline scraped, tagged with the state of the news outlet that it came from and the week that the headlines ran.</p>
 <pre><code>## # A tibble: 5 x 3
 ##   state    week headline_text                                                   
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                                           
-## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama ~
-## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from ~
-## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -~
+## 1 Alabama    22 Everything you need to know about the COVID vaccine in Alabama …
+## 2 Alabama    22 Alabama crematoriums running ‘around the clock’ as deaths from …
+## 3 Alabama    22 Alabama teachers may have to wait longer for COVID-19 vaccine -…
 ## 4 Alabama    22 4,863 new COVID-19 cases in Alabama - al.com                    
-## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines~</code></pre>
+## 5 Alabama    22 Alabama adds 3,153 new COVID cases, administers 41,026 vaccines…</code></pre>
 </div>
 <div id="data-wrangling" class="section level3">
 <h3>Data Wrangling</h3>
 <p>Once we obtained the raw text of every COVID-related headline from Week 22 to Week 39, we began performing text analysis on these headlines. The first wrangling was a simple word frequency analysis, breaking the headlines up and then tallying how often each one appeared (still separated by state and by week, so the tallies were specific to a certain location and time period, i.e. how many times the word <strong>vaccine</strong> appeared in headlines from Massachusetts during Week 33).</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>word_frequencies <span class="ot">&lt;-</span> all_headlines <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Break headlines up into unigrams</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word, <span class="at">input =</span> headline_text, <span class="at">drop =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove typical stop words</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add word frequencies</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>(state, week, word) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove duplicate entries</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Group words by state &amp; week, then sort by frequency</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(state, week, <span class="fu">desc</span>(n))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>word_frequencies &lt;-<span class="st"> </span>all_headlines <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="co"># Break headlines up into unigrams</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw">unnest_tokens</span>(<span class="dt">output =</span> word, <span class="dt">input =</span> headline_text, <span class="dt">drop =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="st">  </span><span class="co"># Remove typical stop words</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="st">  </span><span class="kw">anti_join</span>(stop_words, <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="st">  </span><span class="co"># Add word frequencies</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="st">  </span><span class="kw">add_count</span>(state, week, word) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="st">  </span><span class="co"># Remove duplicate entries</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="st">  </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="st">  </span><span class="co"># Group words by state &amp; week, then sort by frequency</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="st">  </span><span class="kw">arrange</span>(state, week, <span class="kw">desc</span>(n))</span></code></pre></div>
 <p>We then did some custom filtering of the unigrams that we ended up with: we had already filtered out the typical stop words from the built-in dictionary, but looking through the data, it was clear that there were some more words that would not be useful to any of our analysis. For example, the names of the newspapers frequently showed up in the headlines that we scraped (i.e. “Massachusetts COVID-19 Cases Spiking Once Again – Boston Globe”), and clearly if they were in every headline, then they would clog up our frequency analysis. We therefore removed any newspaper-related and any location-specific words from the raw text, as well as any "textual detritus, such as urls or numbers:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>words_wrangled <span class="ot">&lt;-</span> word_frequencies <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Filter out any numbers</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">&quot;[:digit:]&quot;</span>),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Filter out any phrase with &quot;.&quot; (mostly urls)</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">.&quot;</span>),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Filter out &quot;covid&quot;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">&quot;covid&quot;</span>),</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Filter out the state names</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="fu">tolower</span>(<span class="fu">as.character</span>(word_frequencies<span class="sc">$</span>state)))) <span class="sc">%&gt;%</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove custom stop words</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(custom_stops, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>words_wrangled &lt;-<span class="st"> </span>word_frequencies <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">         </span><span class="co"># Filter out any numbers</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">str_detect</span>(word, <span class="st">&quot;[:digit:]&quot;</span>),</span>
+<span id="cb8-4"><a href="#cb8-4"></a>         <span class="co"># Filter out any phrase with &quot;.&quot; (mostly urls)</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>         <span class="op">!</span><span class="kw">str_detect</span>(word, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">.&quot;</span>),</span>
+<span id="cb8-6"><a href="#cb8-6"></a>         <span class="co"># Filter out &quot;covid&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>         <span class="op">!</span><span class="kw">str_detect</span>(word, <span class="st">&quot;covid&quot;</span>),</span>
+<span id="cb8-8"><a href="#cb8-8"></a>         <span class="co"># Filter out the state names</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>         <span class="op">!</span><span class="kw">str_detect</span>(word, <span class="kw">tolower</span>(<span class="kw">as.character</span>(word_frequencies<span class="op">$</span>state)))) <span class="op">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="st">  </span><span class="co"># Remove custom stop words</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="st">  </span><span class="kw">anti_join</span>(custom_stops, <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>)</span></code></pre></div>
 <p>With that, our text was wrangled, and we were ready for our final analysis.</p>
 </div>
 </div>
 <div id="creating-interactive-word-maps-in-shiny" class="section level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills">Creating Interactive Word Maps in Shiny</h2>
+<h2>Creating Interactive Word Maps in Shiny</h2>
 <div id="creating-the-shiny-app" class="section level3">
 <h3>Creating the Shiny app</h3>
 <p>Our interactive analysis consists of two parts: a word frequency map that explores <em>qualitatively</em> how different states were discussing, reporting, contextualizing, and focusing on the pandemic; and a sentiment analysis map, that explores <em>quantitatively</em> how different locations in the United States viewed the pandemic. We combined both of these elements into a Shiny app:</p>
 <iframe height="800" width="100%" frameborder="no" data-external="1" src="https://hbassett23.shinyapps.io/blog_text-analysis/">
 </iframe>
 <p>Pulling the most frequently used words from each state required more wrangling, but it needed to be contained within the Shiny app, since it demanded <em>reactivity</em> since the words displayed depended on user input, both for the week in question and the number of words that the user wanted displayed:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform reactive wrangling for word frequency map</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  wordmap_words <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    words_wrangled <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter only weeks specified by slider</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(week <span class="sc">==</span> input<span class="sc">$</span>week_slider1) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Arrange words first by state, and then by how often they occur  </span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(state, <span class="fu">desc</span>(n)) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a list-column of words &amp; frequency for each state  </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nest</span>(<span class="at">word_list =</span> <span class="fu">c</span>(word, n)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>           <span class="co"># Make state names lowercase  </span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">tolower</span>(state),</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>           <span class="co"># Pull out the top however-so-many words from each state</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">reactive_words =</span> <span class="fu">map</span>(word_list, <span class="sc">~</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                                    .x <span class="sc">%&gt;%</span> </span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">select</span>(word) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">slice_head</span>(<span class="at">n =</span> input<span class="sc">$</span>words_slider1) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">pull</span>(word))) <span class="sc">%&gt;%</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add mapping sf data to text data  </span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(state_map, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;state&quot;</span> <span class="ot">=</span> <span class="st">&quot;ID&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Coerce back into sf object</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_as_sf</span>()</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  })</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Perform reactive wrangling for word frequency map</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>  wordmap_words &lt;-<span class="st"> </span><span class="kw">reactive</span>({</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    </span>
+<span id="cb9-4"><a href="#cb9-4"></a>    words_wrangled <span class="op">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="st">    </span><span class="co"># Filter only weeks specified by slider</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="st">    </span><span class="kw">filter</span>(week <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>week_slider1) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="st">    </span><span class="co"># Arrange words first by state, and then by how often they occur  </span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="st">    </span><span class="kw">arrange</span>(state, <span class="kw">desc</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="st">    </span><span class="co"># Create a list-column of words &amp; frequency for each state  </span></span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="st">    </span><span class="kw">nest</span>(<span class="dt">word_list =</span> <span class="kw">c</span>(word, n)) <span class="op">%&gt;%</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="st">           </span><span class="co"># Make state names lowercase  </span></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">state =</span> <span class="kw">tolower</span>(state),</span>
+<span id="cb9-13"><a href="#cb9-13"></a>           <span class="co"># Pull out the top however-so-many words from each state</span></span>
+<span id="cb9-14"><a href="#cb9-14"></a>           <span class="dt">reactive_words =</span> <span class="kw">map</span>(word_list, <span class="op">~</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a><span class="st">                                    </span>.x <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="st">                                    </span><span class="kw">select</span>(word) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="st">                                    </span><span class="kw">slice_head</span>(<span class="dt">n =</span> input<span class="op">$</span>words_slider1) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="st">                                    </span><span class="kw">pull</span>(word))) <span class="op">%&gt;%</span></span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="st">    </span><span class="co"># Add mapping sf data to text data  </span></span>
+<span id="cb9-20"><a href="#cb9-20"></a><span class="st">    </span><span class="kw">right_join</span>(state_map, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span> =<span class="st"> &quot;ID&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-21"><a href="#cb9-21"></a><span class="st">    </span><span class="co"># Coerce back into sf object</span></span>
+<span id="cb9-22"><a href="#cb9-22"></a><span class="st">    </span><span class="kw">st_as_sf</span>()</span>
+<span id="cb9-23"><a href="#cb9-23"></a>    </span>
+<span id="cb9-24"><a href="#cb9-24"></a>  })</span></code></pre></div>
 <p>The sentiment analysis required a similar amount of reactive wrangling; this time, the focus was on finding the weighted mean sentiment for each state given the time frame of interest:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform reactive wrangling for sentiment analysis map</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  sent_words <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    words_wrangled <span class="sc">%&gt;%</span> </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter only weeks specified  </span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(week <span class="sc">==</span> input<span class="sc">$</span>week_slider2) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Arrange words first by state, and then by how often they occur</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(state, <span class="fu">desc</span>(n)) <span class="sc">%&gt;%</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add sentiment data</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(afinn_lexicon, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create list-column of word, frequency, and sentiment value</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nest</span>(<span class="at">word_list =</span> <span class="fu">c</span>(word, n, value)) <span class="sc">%&gt;%</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make state names lowercase  </span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">tolower</span>(state)) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add state sf geometry objects  </span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(state_map, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;state&quot;</span> <span class="ot">=</span> <span class="st">&quot;ID&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute &amp; mutate the weighted mean of sentiment values for each state</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">avg_sent =</span> <span class="fu">map_dbl</span>(word_list, <span class="sc">~</span> <span class="fu">mean</span>(.x<span class="sc">$</span>value <span class="sc">*</span> .x<span class="sc">$</span>n, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Coerce back into sf object</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_as_sf</span>()</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  })</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Perform reactive wrangling for sentiment analysis map</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>  sent_words &lt;-<span class="st"> </span><span class="kw">reactive</span>({</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    </span>
+<span id="cb10-4"><a href="#cb10-4"></a>    words_wrangled <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="st">    </span><span class="co"># Filter only weeks specified  </span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="st">    </span><span class="kw">filter</span>(week <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>week_slider2) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="st">    </span><span class="co"># Arrange words first by state, and then by how often they occur</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="st">    </span><span class="kw">arrange</span>(state, <span class="kw">desc</span>(n)) <span class="op">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="st">    </span><span class="co"># Add sentiment data</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="st">    </span><span class="kw">inner_join</span>(afinn_lexicon, <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="st">    </span><span class="co"># Create list-column of word, frequency, and sentiment value</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="st">    </span><span class="kw">nest</span>(<span class="dt">word_list =</span> <span class="kw">c</span>(word, n, value)) <span class="op">%&gt;%</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="st">    </span><span class="co"># Make state names lowercase  </span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">state =</span> <span class="kw">tolower</span>(state)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="st">    </span><span class="co"># Add state sf geometry objects  </span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="st">    </span><span class="kw">right_join</span>(state_map, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span> =<span class="st"> &quot;ID&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="st">    </span><span class="co"># Compute &amp; mutate the weighted mean of sentiment values for each state</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">avg_sent =</span> <span class="kw">map_dbl</span>(word_list, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(.x<span class="op">$</span>value <span class="op">*</span><span class="st"> </span>.x<span class="op">$</span>n, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="st">    </span><span class="co"># Coerce back into sf object</span></span>
+<span id="cb10-20"><a href="#cb10-20"></a><span class="st">    </span><span class="kw">st_as_sf</span>()</span>
+<span id="cb10-21"><a href="#cb10-21"></a>    </span>
+<span id="cb10-22"><a href="#cb10-22"></a>  })</span></code></pre></div>
 </div>
 <div id="exploring-our-app" class="section level3">
 <h3>Exploring our app</h3>
 <p>We often get the starkest results from our word map when we just look at the “top word” for each week: to a very rough approximation, this view shows us the word that people in each state were using most often to describe the COVID-19 pandemic in a given week. During the first week under investigation, from January 6th to January 18th, 2021, the two dominating words across the United States were <strong>capitol</strong> and <strong>vaccine</strong>:</p>
+<div class="figure">
+<img src="images_and_plots/week_22_map_ss.png" alt="" />
+<p class="caption">Word Frequency Map for Week 22</p>
+</div>
 <p>Interestingly, these two words seem to be evenly spread throughout the states: there is not a geographical bias of either one.</p>
 <p>As we move to the next week, most if not all of the mentions of the <strong>capitol</strong> disappear, and while <strong>vaccine</strong> remains constant, another topic starts to dominate the United States’ psyche: <strong>basketball</strong>.</p>
+<div class="figure">
+<img src="images_and_plots/week_23_map_ss.png" alt="" />
+<p class="caption">Word Frequency Map for Week 23</p>
+</div>
 <p>Remember—all of these words come from headlines obtained from a search using the keyword <strong>covid</strong>, so the fact that <strong>basketball</strong> is showing up means that there were articles about, presumably, how the pandemic was affecting the basketball season, and those articles were dominating in those states.</p>
 <p>As we move along the never-ending axis of time, coming to the next week shows what we think is a pointed change in mindset. By this time, the beginning of February 2021, there is much more prevalence of words that suggest more local worries, rather than global or national ones (which were reflected by words such as <strong>vaccine</strong>, <strong>capitol</strong>, or <strong>basketball</strong>). We start to see discussions of <strong>school</strong> come up, as well as <strong>governor</strong> and <strong>restaurant</strong>. These reflect concerns that are affecting people on a much more personal level, signifying a shift: the pandemic is now an individual problem. How can <em>I</em> live <em>my</em> life now? What will <em>my</em> summer look like? We can see America becoming, for lack of a better word, a tad selfish.</p>
+<div class="figure">
+<img src="images_and_plots/week_24_map_ss.png" alt="" />
+<p class="caption">Word Frequency Map for Week 24</p>
+</div>
 <p>This “selfish” trend gives us a great window into how the way that Americans thought about the pandemic in 2021 twisted and turned. Several other trends are pervasive throughout the following weeks; they are worth exploring and coming to one’s own conclusions about. Notable are the increase in words such as <strong>black</strong> and <strong>police</strong>, as well as their timing; the increase in the frequency of <strong>mask</strong> and other restrictions (particularly interesting in the light of <a href="#restrictions-network">our concurrent network analysis of state’s restrictions throughout the pandemic</a>); the prevalence of <strong>delta</strong> and how that changed over time, and last but certainly not least—America’s continuing and unwavering fixation on sports: <strong>basketball</strong>, <strong>olympics</strong>, <strong>ncaa</strong>, and more.</p>
 <p>Turning now to the sentiment analysis map, there is an overwhelming trend of negative sentiment across the United States for all eighteen weeks in question. This is perhaps unsurprising, given what we know about the constant messaging surrounding the COVID-19 pandemic. It is remarkable, however, to note when and where the sentiment of these COVID-related headlines improves. There is a sharp peak in positive sentiment at Week 30 (i.e. the middle of May):</p>
+<div class="figure">
+<img src="images_and_plots/week_30_sent_ss.png" alt="" />
+<p class="caption">Sentiment Analysis Map for Week 30</p>
+</div>
 <p>This may be a fluke, or this may be a quick glimmer of hope about the summer. We all heard the rhetoric about how Summer 2021 was going to be the “reclaimed summer” that “makes up for 2020”—and perhaps the sentiment of Week 30 reflects this. It quickly subsides, however, and we do not see overwhelmingly positive sentiment again until Week 33, where it persists for longer, and then transitions back and forth between positive and negative with no clear direction.</p>
 <p>If we consider trends in geography rather than trends in time, we make the interesting observation that when there are states with standout positive sentiment, they are almost always located in the Midwest or the Deep South. Again, these could very well be flukes—the data collection process left a lot to be desired—but they might also tell us something about the states where there were more likely to be moments of positive thinking throughout the dark pandemic.</p>
 </div>
@@ -524,7 +534,7 @@
 <h1>Mental Health in Racial/Ethnic Groups - Unsupervised Clustering</h1>
 <p>Young adults, particularly college students, have experienced many difficult and unique struggles during the pandemic. In 2021 alone, uncertainties about living situations, remote or in-person classes, vaccination availability, the Delta variant, and more have impacted the mental and physical health of these individuals. Building off our previous Shiny app project, we were interested in investigating the relationships between mental health, healthcare access, and race and ethnicity during COVID-19. To do so, we investigated whether or not an unsupervised clustering algorithm could identify racial/ethnic groups from healthcare-related variables.</p>
 <div id="data-2" class="section level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills">Data</h2>
+<h2>Data</h2>
 <div id="mentalhealth-data" class="section level3">
 <h3>Data Sources</h3>
 <p>We created our clustering and racial/ethnic groups network with data from the U.S. Census Bureau’s Household Pulse Survey. This ongoing survey is designed to collect information on how COVID-19 has impacted the social and economic lives of American households; it is motivated by the idea that understanding the pandemic’s impacts will aid in building policy and outreach programs to help individuals and families recover from the pandemic.</p>
@@ -560,63 +570,63 @@
 <h3>Data Wrangling</h3>
 <p>After filtering for our population and time frame of interest and combining individuals’ answers to the above questions, we further wrangled the data for clustering and the network.</p>
 <p>For clustering, we were particularly interested in the disparities in access to or use of mental health and healthcare resources between racial/ethnic groups, which may be particularly exacerbated during COVID-19. To group similar individuals in this regard, we used kmeans clustering and the <code>mclust</code> package. Kmeans clustering requires variables to cluster by (the data the algorithm uses to identify implicit patterns), a chosen number of clusters to identify (<code>centers =</code>), and a number of initial random cluster centers to try out (<code>nstart =</code>). As we suggested that there may be distinct clusters based on racial/ethnic groups, we set the algorithm to identify five clusters. We clustered based on individuals’ responses to questions of taking prescription medication, using mental health counseling or similar services, needing access to mental health care but not receiving it, and having healthcare coverage.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility </span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1984</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster with healthcare access variables</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>clustering_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;prescription&quot;</span>, <span class="st">&quot;mental_health_services&quot;</span>, <span class="st">&quot;no_access&quot;</span>, <span class="st">&quot;healthcare&quot;</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># From data set with all variables (columns) and all respondents (rows), select only those for clustering</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>pulse_all_clusters <span class="ot">&lt;-</span> pulse_college_data <span class="sc">%&gt;%</span> </span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(clustering_vars) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Try 5 clusters (there are 5 racial/ethnic groups) and 25 initial centers</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kmeans</span>(<span class="at">centers =</span> <span class="dv">5</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add cluster assignments to data frame</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>pulse_clustered_data <span class="ot">&lt;-</span> pulse_college_data <span class="sc">%&gt;%</span> </span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clusters =</span> <span class="fu">factor</span>(pulse_all_clusters<span class="sc">$</span>cluster))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Set seed for reproducibility </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">set.seed</span>(<span class="dv">1984</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># Cluster with healthcare access variables</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>clustering_vars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;prescription&quot;</span>, <span class="st">&quot;mental_health_services&quot;</span>, <span class="st">&quot;no_access&quot;</span>, <span class="st">&quot;healthcare&quot;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co"># From data set with all variables (columns) and all respondents (rows), select only those for clustering</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a>pulse_all_clusters &lt;-<span class="st"> </span>pulse_college_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="st">  </span><span class="kw">select</span>(clustering_vars) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="st">  </span><span class="co"># Try 5 clusters (there are 5 racial/ethnic groups) and 25 initial centers</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="st">  </span><span class="kw">kmeans</span>(<span class="dt">centers =</span> <span class="dv">5</span>, <span class="dt">nstart =</span> <span class="dv">25</span>)</span>
+<span id="cb11-10"><a href="#cb11-10"></a></span>
+<span id="cb11-11"><a href="#cb11-11"></a><span class="co"># Add cluster assignments to data frame</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a>pulse_clustered_data &lt;-<span class="st"> </span>pulse_college_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-13"><a href="#cb11-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">clusters =</span> <span class="kw">factor</span>(pulse_all_clusters<span class="op">$</span>cluster))</span></code></pre></div>
 <p>We then constructed an elbow plot to assess whether or not five was an optimal number of clusters to use. The “elbow” bends where the total within-cluster sum of squares (which measures variation within clusters) begins decreasing linearly. At this point, identifying more clusters becomes less useful. Viewing this plot, it is clear either five or six clusters is optimal.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check usefulness of 5 clusters with elbow plot</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>elbow_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">clusters =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">within_ss =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">10</span>))</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1984</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>){</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  pulse_out <span class="ot">&lt;-</span> pulse_clustered_data <span class="sc">%&gt;%</span> </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(clustering_vars) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kmeans</span>(<span class="at">centers =</span> i, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  elbow_plot<span class="sc">$</span>within_ss[i] <span class="ot">&lt;-</span> pulse_out<span class="sc">$</span>tot.withinss</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct elbow plot</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>clusters_elbow <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(elbow_plot, <span class="fu">aes</span>(<span class="at">x =</span> clusters, <span class="at">y =</span> within_ss)) <span class="sc">+</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">+</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Number of clusters (k)&quot;</span>, <span class="at">y =</span> <span class="fu">expression</span>(<span class="st">&quot;Total Withins&quot;</span>[k]))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Check usefulness of 5 clusters with elbow plot</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>elbow_plot &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">clusters =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>                         <span class="dt">within_ss =</span> <span class="kw">rep</span>(<span class="ot">NA</span>, <span class="dv">10</span>))</span>
+<span id="cb12-4"><a href="#cb12-4"></a></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="kw">set.seed</span>(<span class="dv">1984</span>)</span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>){</span>
+<span id="cb12-7"><a href="#cb12-7"></a>  pulse_out &lt;-<span class="st"> </span>pulse_clustered_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="st">    </span><span class="kw">select</span>(clustering_vars) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="st">    </span><span class="kw">kmeans</span>(<span class="dt">centers =</span> i, <span class="dt">nstart =</span> <span class="dv">25</span>)</span>
+<span id="cb12-10"><a href="#cb12-10"></a>  </span>
+<span id="cb12-11"><a href="#cb12-11"></a>  elbow_plot<span class="op">$</span>within_ss[i] &lt;-<span class="st"> </span>pulse_out<span class="op">$</span>tot.withinss</span>
+<span id="cb12-12"><a href="#cb12-12"></a>}</span>
+<span id="cb12-13"><a href="#cb12-13"></a></span>
+<span id="cb12-14"><a href="#cb12-14"></a><span class="co"># Construct elbow plot</span></span>
+<span id="cb12-15"><a href="#cb12-15"></a>clusters_elbow &lt;-<span class="st"> </span><span class="kw">ggplot</span>(elbow_plot, <span class="kw">aes</span>(<span class="dt">x =</span> clusters, <span class="dt">y =</span> within_ss)) <span class="op">+</span></span>
+<span id="cb12-16"><a href="#cb12-16"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb12-17"><a href="#cb12-17"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb12-18"><a href="#cb12-18"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) <span class="op">+</span></span>
+<span id="cb12-19"><a href="#cb12-19"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Number of clusters (k)&quot;</span>, <span class="dt">y =</span> <span class="kw">expression</span>(<span class="st">&quot;Total Withins&quot;</span>[k]))</span></code></pre></div>
 <p><img src="images_and_plots/clusters_elbow.png" width="50%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="creating-an-interactive-clustering-plot-in-shiny" class="section level2">
 <h2>Creating an Interactive Clustering Plot in Shiny</h2>
 <p>We can visualize clusters with three-dimensional scatter plots. Since we clustered on four variables, we can use an interactive <code>plotly</code> scatter plot in the Shiny app server to switch between variables and explore the clusters. The input variables and the specified plot type, <code>type = "scatter3d"</code>, are passed as arguments to <code>plot_ly()</code>, and <code>renderPlotly()</code> then works just as <code>renderPlot()</code> does with <code>ggplot</code> objects to produce the reactive plot object. The inclusion of a <code>submitButton()</code> within the ui allows users to pick all variables before generating the plot.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output){</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>clusters <span class="ot">&lt;-</span> <span class="fu">renderPlotly</span>({</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotly 3D scatter, jitter points for clarity, color by cluster</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_ly</span>(pulse_clustered_data, </span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var1)), </span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var2)), </span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">z =</span> <span class="sc">~</span><span class="fu">jitter</span>(<span class="fu">get</span>(input<span class="sc">$</span>var3)), </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">type=</span><span class="st">&quot;scatter3d&quot;</span>, <span class="at">mode=</span><span class="st">&quot;markers&quot;</span>, <span class="at">color =</span> <span class="sc">~</span>clusters) <span class="sc">%&gt;%</span> </span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Mental Health and Healthcare Resources Kmeans Clustering&quot;</span>),</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var1])), </span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var2])),</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">paste</span>(choice_axes[choice_values <span class="sc">==</span> input<span class="sc">$</span>var3]))),</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">title=</span><span class="fu">list</span>(<span class="at">text=</span><span class="st">&#39;&lt;b&gt; Cluster &lt;/b&gt;&#39;</span>))</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output){</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a>  output<span class="op">$</span>clusters &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    <span class="co"># Create plotly 3D scatter, jitter points for clarity, color by cluster</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>    <span class="kw">plot_ly</span>(pulse_clustered_data, </span>
+<span id="cb13-6"><a href="#cb13-6"></a>            <span class="dt">x =</span> <span class="op">~</span><span class="kw">jitter</span>(<span class="kw">get</span>(input<span class="op">$</span>var1)), </span>
+<span id="cb13-7"><a href="#cb13-7"></a>            <span class="dt">y =</span> <span class="op">~</span><span class="kw">jitter</span>(<span class="kw">get</span>(input<span class="op">$</span>var2)), </span>
+<span id="cb13-8"><a href="#cb13-8"></a>            <span class="dt">z =</span> <span class="op">~</span><span class="kw">jitter</span>(<span class="kw">get</span>(input<span class="op">$</span>var3)), </span>
+<span id="cb13-9"><a href="#cb13-9"></a>            <span class="dt">type=</span><span class="st">&quot;scatter3d&quot;</span>, <span class="dt">mode=</span><span class="st">&quot;markers&quot;</span>, <span class="dt">color =</span> <span class="op">~</span>clusters) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="st">      </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="kw">list</span>(<span class="dt">text =</span> <span class="st">&quot;Mental Health and Healthcare Resources Kmeans Clustering&quot;</span>),</span>
+<span id="cb13-11"><a href="#cb13-11"></a>             <span class="dt">scene =</span> <span class="kw">list</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="kw">paste</span>(choice_axes[choice_values <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>var1])), </span>
+<span id="cb13-12"><a href="#cb13-12"></a>                          <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="kw">paste</span>(choice_axes[choice_values <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>var2])),</span>
+<span id="cb13-13"><a href="#cb13-13"></a>                          <span class="dt">zaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="kw">paste</span>(choice_axes[choice_values <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>var3]))),</span>
+<span id="cb13-14"><a href="#cb13-14"></a>             <span class="dt">legend =</span> <span class="kw">list</span>(<span class="dt">title=</span><span class="kw">list</span>(<span class="dt">text=</span><span class="st">&#39;&lt;b&gt; Cluster &lt;/b&gt;&#39;</span>))</span>
+<span id="cb13-15"><a href="#cb13-15"></a>             )</span>
+<span id="cb13-16"><a href="#cb13-16"></a>  })</span>
+<span id="cb13-17"><a href="#cb13-17"></a>  </span>
+<span id="cb13-18"><a href="#cb13-18"></a>}</span></code></pre></div>
 </div>
 <div id="interactive-clusters" class="section level2">
 <h2>Interactive Clusters</h2>
@@ -627,34 +637,34 @@
 <div id="clusters-patterns" class="section level2">
 <h2>Clusters Patterns</h2>
 <p>To investigate what patterns the clusters identified, we then looked at the breakdown of racial/ethnic groups and responses to the four mental health and healthcare variables within each cluster. For the latter, we created an animated stacked bar chart which cycles through the proportions of individuals answering “yes” and answering “no” in each cluster to the four survey questions we clustered on. This was achieved with the <code>gganimate</code> package; the function <code>transition_states()</code> allows us to plot the previously defined <code>ggplot</code> object while cycling through the “type” column in our data frame, which contains information on which of the four healthcare variables a given data point comes from.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>animate_hc <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># First layer always fills entire length of the bar chart (0-1)</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Since all proportions add to 1 in total, this layer represents &quot;no&quot; responses once overlaid by the second layer</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> clusters_bottom_layer,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> clusters,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> total, </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> <span class="st">&quot;No&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filtering for `value == 1` gives &quot;yes&quot; answers</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> clusters_characteristics <span class="sc">%&gt;%</span> <span class="fu">filter</span>(value <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> clusters,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> prop_type,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> <span class="st">&quot;Yes&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create legend</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">name =</span> <span class="st">&quot;Respondent&#39;s answer&quot;</span>,</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span> <span class="ot">=</span> <span class="st">&quot;thistle&quot;</span>, <span class="st">&quot;No&quot;</span> <span class="ot">=</span> <span class="st">&quot;palegreen3&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transition between the four variables with `type`, spend more time on each state than during transition</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(type, <span class="at">transition_length =</span> <span class="dv">1</span>, <span class="at">state_length =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Have new points drift in and travel the full distance they represent</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enter_drift</span>(<span class="at">x_mod =</span> <span class="dv">0</span>, <span class="at">y_mod =</span> clusters_characteristics<span class="sc">$</span>prop_type) <span class="sc">+</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Have old points shrink out of the animation</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exit_shrink</span>() <span class="sc">+</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Flip horizontally</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get title to change as states change</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;{closest_state}&quot;</span>,</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Cluster&quot;</span>,</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Proportion of respondents&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>animate_hc &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="co"># First layer always fills entire length of the bar chart (0-1)</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="st">  </span><span class="co"># Since all proportions add to 1 in total, this layer represents &quot;no&quot; responses once overlaid by the second layer</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">data =</span> clusters_bottom_layer,</span>
+<span id="cb14-5"><a href="#cb14-5"></a>           <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> clusters,</span>
+<span id="cb14-6"><a href="#cb14-6"></a>                         <span class="dt">y =</span> total, </span>
+<span id="cb14-7"><a href="#cb14-7"></a>                         <span class="dt">fill =</span> <span class="st">&quot;No&quot;</span>)) <span class="op">+</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="st">  </span><span class="co"># Filtering for `value == 1` gives &quot;yes&quot; answers</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">data =</span> clusters_characteristics <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(value <span class="op">==</span><span class="st"> </span><span class="dv">1</span>),</span>
+<span id="cb14-10"><a href="#cb14-10"></a>           <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> clusters,</span>
+<span id="cb14-11"><a href="#cb14-11"></a>                         <span class="dt">y =</span> prop_type,</span>
+<span id="cb14-12"><a href="#cb14-12"></a>                         <span class="dt">fill =</span> <span class="st">&quot;Yes&quot;</span>)) <span class="op">+</span></span>
+<span id="cb14-13"><a href="#cb14-13"></a><span class="st">  </span><span class="co"># Create legend</span></span>
+<span id="cb14-14"><a href="#cb14-14"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">name =</span> <span class="st">&quot;Respondent&#39;s answer&quot;</span>,</span>
+<span id="cb14-15"><a href="#cb14-15"></a>                    <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
+<span id="cb14-16"><a href="#cb14-16"></a>                      <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;Yes&quot;</span> =<span class="st"> &quot;thistle&quot;</span>, <span class="st">&quot;No&quot;</span> =<span class="st"> &quot;palegreen3&quot;</span>)) <span class="op">+</span></span>
+<span id="cb14-17"><a href="#cb14-17"></a><span class="st">  </span><span class="co"># Transition between the four variables with `type`, spend more time on each state than during transition</span></span>
+<span id="cb14-18"><a href="#cb14-18"></a><span class="st">  </span><span class="kw">transition_states</span>(type, <span class="dt">transition_length =</span> <span class="dv">1</span>, <span class="dt">state_length =</span> <span class="dv">6</span>) <span class="op">+</span></span>
+<span id="cb14-19"><a href="#cb14-19"></a><span class="st">  </span><span class="co"># Have new points drift in and travel the full distance they represent</span></span>
+<span id="cb14-20"><a href="#cb14-20"></a><span class="st">  </span><span class="kw">enter_drift</span>(<span class="dt">x_mod =</span> <span class="dv">0</span>, <span class="dt">y_mod =</span> clusters_characteristics<span class="op">$</span>prop_type) <span class="op">+</span></span>
+<span id="cb14-21"><a href="#cb14-21"></a><span class="st">  </span><span class="co"># Have old points shrink out of the animation</span></span>
+<span id="cb14-22"><a href="#cb14-22"></a><span class="st">  </span><span class="kw">exit_shrink</span>() <span class="op">+</span></span>
+<span id="cb14-23"><a href="#cb14-23"></a><span class="st">  </span><span class="co"># Flip horizontally</span></span>
+<span id="cb14-24"><a href="#cb14-24"></a><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></span>
+<span id="cb14-25"><a href="#cb14-25"></a><span class="st">  </span><span class="co"># Get title to change as states change</span></span>
+<span id="cb14-26"><a href="#cb14-26"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;{closest_state}&quot;</span>,</span>
+<span id="cb14-27"><a href="#cb14-27"></a>       <span class="dt">x =</span> <span class="st">&quot;Cluster&quot;</span>,</span>
+<span id="cb14-28"><a href="#cb14-28"></a>       <span class="dt">y =</span> <span class="st">&quot;Proportion of respondents&quot;</span>)</span></code></pre></div>
 <p><img src="images_and_plots/clusters_breakdown_r_e.png" width="100%" style="display: block; margin: auto;" /></p>
 <p><img src="images_and_plots/clusters_breakdown.gif" width="80%" style="display: block; margin: auto;" /></p>
 </div>
@@ -672,10 +682,10 @@
 <h1>Mental Health in Racial/Ethnic Groups Network</h1>
 <p>Furthermore, we arranged racial/ethnic groups in a network where connections between groups are weighted by how similar their population samples responded to questions about mental health symptoms, access to mental health resources, and healthcare coverage.</p>
 <div id="data-3" class="section level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills">Data</h2>
+<h2>Data</h2>
 <div id="data-sources-2" class="section level3">
 <h3>Data Sources</h3>
-<p>We utilized the same datasets that we used in unsupervised clustering for the racial/ethnic groups network. See the <a href="#mentalhealth-data">Data Sources Tab</a>.</p>
+<p>We utilized the same datasets that we used in unsupervised clustering for the racial/ethnic groups network. See the <a href="#mentalhealth-data">Data Sources Tab</a></p>
 </div>
 <div id="data-wrangling-2" class="section level3">
 <h3>Data Wrangling</h3>
@@ -691,59 +701,59 @@
 </ul>
 <p>For each pair of racial/ethnic groups, we calculated the difference in these proportions. Thus, smaller differences provided more weight to the network edges, indicating more similar “experiences” (that is, proportions) between those groups.</p>
 <p>For an explanation of the <code>igraph</code> and <code>visNetwork</code> packages, see the <a href="#restrictions-wrangling">Data Wrangling Tab for COVID-19 Restrictions</a>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From larger data set with all mental health variables, select anxiety</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>anx_visNetwork <span class="ot">&lt;-</span> r_e_network <span class="sc">%&gt;%</span> </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(race_ethnicity_one, race_ethnicity_two, anx) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create igraph object</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_from_data_frame</span>(<span class="at">directed =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create visNetwork object</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">toVisNetworkData</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># From larger data set with all mental health variables, select anxiety</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>anx_visNetwork &lt;-<span class="st"> </span>r_e_network <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="st">  </span><span class="kw">select</span>(race_ethnicity_one, race_ethnicity_two, anx) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="st">  </span><span class="co"># Create igraph object</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="st">  </span><span class="kw">graph_from_data_frame</span>(<span class="dt">directed =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="st">  </span><span class="co"># Create visNetwork object</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="st">  </span><span class="kw">toVisNetworkData</span>()</span></code></pre></div>
 <p>We then got the nodes and edges for the network. For the edges, a new column, <code>value</code>, was created, which is where the network pulls the weight or size of the edges from. The nodes are colored based on the proportion of individuals in the group with the mental health symptom or access of interest.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set color palette</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>eigScalePal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">bias =</span> <span class="dv">5</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>num_colors <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get nodes and weighted edges</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>anx_nodes <span class="ot">&lt;-</span> anx_visNetwork<span class="sc">$</span>nodes <span class="sc">%&gt;%</span> </span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Join data frames to get proportions and assign colors for the legend</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(anxiety_net, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span> <span class="ot">=</span> <span class="st">&quot;race_ethnicity&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color =</span> <span class="fu">eigScalePal</span>(num_colors)[<span class="fu">cut</span>(prop, <span class="at">breaks =</span> num_colors)]) <span class="sc">%&gt;%</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(prop))</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>anx_edges <span class="ot">&lt;-</span> anx_visNetwork<span class="sc">$</span>edges <span class="sc">%&gt;%</span> </span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> anx) </span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Set color palette</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>eigScalePal &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="dt">bias =</span> <span class="dv">5</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a>num_colors &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="co"># Get nodes and weighted edges</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a>anx_nodes &lt;-<span class="st"> </span>anx_visNetwork<span class="op">$</span>nodes <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="st">  </span><span class="co"># Join data frames to get proportions and assign colors for the legend</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="st">  </span><span class="kw">inner_join</span>(anxiety_net, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span> =<span class="st"> &quot;race_ethnicity&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">color =</span> <span class="kw">eigScalePal</span>(num_colors)[<span class="kw">cut</span>(prop, <span class="dt">breaks =</span> num_colors)]) <span class="op">%&gt;%</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(prop))</span>
+<span id="cb16-11"><a href="#cb16-11"></a>anx_edges &lt;-<span class="st"> </span>anx_visNetwork<span class="op">$</span>edges <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">value =</span> anx) </span></code></pre></div>
 </div>
 </div>
 <div id="creating-an-interactive-network-in-shiny" class="section level2">
 <h2>Creating an Interactive Network in Shiny</h2>
 <p>We similarly used the <code>renderVisNetwork</code> and <code>visNetwork</code> functions to create an interactive network in Shiny. For more details, see the <a href="#visnetwork-shiny">interactive network tab for COVID state restrictions</a>. We also used the <code>renderImage</code> function to reactively change the color legend for the nodes, depending on the variable the user selects to look at.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>network_proxy_update_re <span class="ot">&lt;-</span> <span class="fu">renderVisNetwork</span>({</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visNetwork</span>(<span class="fu">active_nodes</span>(), <span class="fu">active_edges</span>(), <span class="at">height =</span> <span class="st">&quot;700px&quot;</span>, <span class="at">width =</span> <span class="st">&quot;100%&quot;</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">scaling =</span> <span class="fu">list</span>(<span class="at">min =</span> <span class="fu">min</span>(input<span class="sc">$</span>hc_variable), <span class="at">max =</span> <span class="fu">max</span>(input<span class="sc">$</span>hc_variable)),</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">main =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">&quot;Network for Mental Health Symptoms and Access to Resources for Racial/Ethnic Groups&quot;</span>, </span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">style =</span> <span class="st">&quot;font-family:Arial;font-size:20px&quot;</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>               )) <span class="sc">%&gt;%</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visNodes</span>(<span class="at">size =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visOptions</span>(<span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visPhysics</span>(<span class="at">stabilization =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">visEdges</span>(<span class="at">color =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">highlight =</span> <span class="st">&quot;red&quot;</span>)) </span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  myreVisNetworkProxy <span class="ot">&lt;-</span> <span class="fu">visNetworkProxy</span>(<span class="st">&quot;network_proxy_update_re&quot;</span>)</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reactively call on previously-made legend images</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Not temporary images, so set `deleteFile = FALSE`</span></span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>legend <span class="ot">&lt;-</span> <span class="fu">renderImage</span>({</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    filename <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(<span class="fu">file.path</span>(<span class="st">&quot;./legends&quot;</span>,</span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">paste</span>(<span class="st">&quot;legend_&quot;</span>, input<span class="sc">$</span>hc_variable, <span class="st">&quot;.png&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)))</span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">src =</span> filename)</span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">deleteFile =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output) {</span>
+<span id="cb17-2"><a href="#cb17-2"></a>  </span>
+<span id="cb17-3"><a href="#cb17-3"></a>  <span class="co"># Scale edge widths by setting the minimum to the minimum proportion for a given variable, and the max to the max proportion</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>  output<span class="op">$</span>network_proxy_update_re &lt;-<span class="st"> </span><span class="kw">renderVisNetwork</span>({</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    <span class="kw">visNetwork</span>(<span class="kw">active_nodes</span>(), <span class="kw">active_edges</span>(), <span class="dt">height =</span> <span class="st">&quot;700px&quot;</span>, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>,</span>
+<span id="cb17-6"><a href="#cb17-6"></a>               <span class="dt">scaling =</span> <span class="kw">list</span>(<span class="dt">min =</span> <span class="kw">min</span>(input<span class="op">$</span>hc_variable), <span class="dt">max =</span> <span class="kw">max</span>(input<span class="op">$</span>hc_variable)),</span>
+<span id="cb17-7"><a href="#cb17-7"></a>               <span class="dt">main =</span> <span class="kw">list</span>(<span class="dt">text =</span> <span class="st">&quot;Network for Mental Health Symptoms and Access to Resources for Racial/Ethnic Groups&quot;</span>, </span>
+<span id="cb17-8"><a href="#cb17-8"></a>                           <span class="dt">style =</span> <span class="st">&quot;font-family:Arial;font-size:20px&quot;</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a>               )) <span class="op">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="st">      </span><span class="kw">visNodes</span>(<span class="dt">size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a><span class="st">      </span><span class="kw">visOptions</span>(<span class="dt">highlightNearest =</span> <span class="kw">list</span>(<span class="dt">enabled =</span> <span class="ot">TRUE</span>, <span class="dt">hover =</span> <span class="ot">TRUE</span>), </span>
+<span id="cb17-12"><a href="#cb17-12"></a>                 <span class="dt">nodesIdSelection =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb17-13"><a href="#cb17-13"></a><span class="st">      </span><span class="kw">visPhysics</span>(<span class="dt">stabilization =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb17-14"><a href="#cb17-14"></a><span class="st">      </span><span class="kw">visEdges</span>(<span class="dt">color =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">highlight =</span> <span class="st">&quot;red&quot;</span>)) </span>
+<span id="cb17-15"><a href="#cb17-15"></a>  })</span>
+<span id="cb17-16"><a href="#cb17-16"></a>  </span>
+<span id="cb17-17"><a href="#cb17-17"></a>  myreVisNetworkProxy &lt;-<span class="st"> </span><span class="kw">visNetworkProxy</span>(<span class="st">&quot;network_proxy_update_re&quot;</span>)</span>
+<span id="cb17-18"><a href="#cb17-18"></a>  </span>
+<span id="cb17-19"><a href="#cb17-19"></a>  <span class="co"># Reactively call on previously-made legend images</span></span>
+<span id="cb17-20"><a href="#cb17-20"></a>  <span class="co"># Not temporary images, so set `deleteFile = FALSE`</span></span>
+<span id="cb17-21"><a href="#cb17-21"></a>  output<span class="op">$</span>legend &lt;-<span class="st"> </span><span class="kw">renderImage</span>({</span>
+<span id="cb17-22"><a href="#cb17-22"></a>    filename &lt;-<span class="st"> </span><span class="kw">normalizePath</span>(<span class="kw">file.path</span>(<span class="st">&quot;./legends&quot;</span>,</span>
+<span id="cb17-23"><a href="#cb17-23"></a>                              <span class="kw">paste</span>(<span class="st">&quot;legend_&quot;</span>, input<span class="op">$</span>hc_variable, <span class="st">&quot;.png&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>)))</span>
+<span id="cb17-24"><a href="#cb17-24"></a>    <span class="kw">list</span>(<span class="dt">src =</span> filename)</span>
+<span id="cb17-25"><a href="#cb17-25"></a>    </span>
+<span id="cb17-26"><a href="#cb17-26"></a>  }, <span class="dt">deleteFile =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb17-27"><a href="#cb17-27"></a></span>
+<span id="cb17-28"><a href="#cb17-28"></a>}</span></code></pre></div>
 </div>
 <div id="interactive-network" class="section level2">
 <h2>Interactive Network</h2>
