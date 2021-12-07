@@ -1,5 +1,4 @@
 # Shiny app code for COVID state restrictions network
-# Tracy Huang
 
 # Load packages
 library(tidyverse)

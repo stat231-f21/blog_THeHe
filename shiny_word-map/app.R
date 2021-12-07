@@ -120,10 +120,15 @@ server <- function(input, output) {
            # Make state names lowercase  
     mutate(state = tolower(state),
            # Pull out the top however-so-many words from each state
+                            # Apply a function to each element of `word_list`
            reactive_words = map(word_list, ~
+                                    # Take the list `word_list`...
                                     .x %>% 
-                                    select(word) %>% 
+                                    # Select the "sub-list" `word` within the list-columns of `word_list`
+                                    select(word) %>%
+                                    # Select the top words (as determined by slider)
                                     slice_head(n = input$words_slider1) %>% 
+                                    # Pluck out these "sliced" words
                                     pull(word))) %>%
     # Add mapping sf data to text data  
     right_join(state_map, by = c("state" = "ID")) %>% 

@@ -329,41 +329,26 @@ The sentiment analysis required a similar amount of reactive wrangling; this tim
 
 We often get the starkest results from our word map when we just look at the "top word" for each week: to a very rough approximation, this view shows us the word that people in each state were using most often to describe the COVID-19 pandemic in a given week. During the first week under investigation, from January 6th to January 18th, 2021, the two dominating words across the United States were **capitol** and **vaccine**:
 
-```{r first-week-photo}
 
-# Henry will add a screenshot of Week 22 here
-
-```
+![Word Frequency Map for Week 22](images_and_plots/week_22_map_ss.png)
 
 Interestingly, these two words seem to be evenly spread throughout the states: there is not a geographical bias of either one.
 
 As we move to the next week, most if not all of the mentions of the **capitol** disappear, and while **vaccine** remains constant, another topic starts to dominate the United States' psyche: **basketball**.
 
-```{r second-week-photo}
-
-# Henry will add a screenshot of Week 23 here etc etc etc
-
-```
+![Word Frequency Map for Week 23](images_and_plots/week_23_map_ss.png)
 
 Remember---all of these words come from headlines obtained from a search using the keyword **covid**, so the fact that **basketball** is showing up means that there were articles about, presumably, how the pandemic was affecting the basketball season, and those articles were dominating in those states.
 
 As we move along the never-ending axis of time, coming to the next week shows what we think is a pointed change in mindset. By this time, the beginning of February 2021, there is much more prevalence of words that suggest more local worries, rather than global or national ones (which were reflected by words such as **vaccine**, **capitol**, or **basketball**). We start to see discussions of **school** come up, as well as **governor** and **restaurant**. These reflect concerns that are affecting people on a much more personal level, signifying a shift: the pandemic is now an individual problem. How can *I* live *my* life now? What will *my* summer look like? We can see America becoming, for lack of a better word, a tad selfish.
 
-```{r third-week-photo}
-
-# Thrd week yadda yadda
-
-```
+![Word Frequency Map for Week 24](images_and_plots/week_24_map_ss.png)
 
 This "selfish" trend gives us a great window into how the way that Americans thought about the pandemic in 2021 twisted and turned. Several other trends are pervasive throughout the following weeks; they are worth exploring and coming to one's own conclusions about. Notable are the increase in words such as **black** and **police**, as well as their timing; the increase in the frequency of **mask** and other restrictions (particularly interesting in the light of [our concurrent network analysis of state's restrictions throughout the pandemic](#restrictions-network)); the prevalence of **delta** and how that changed over time, and last but certainly not least---America's continuing and unwavering fixation on sports: **basketball**, **olympics**, **ncaa**, and more.
 
 Turning now to the sentiment analysis map, there is an overwhelming trend of negative sentiment across the United States for all eighteen weeks in question. This is perhaps unsurprising, given what we know about the constant messaging surrounding the COVID-19 pandemic. It is remarkable, however, to note when and where the sentiment of these COVID-related headlines improves. There is a sharp peak in positive sentiment at Week 30 (i.e. the middle of May):
 
-```{r week-30-sent}
-
-# Week 30 sentiment map screenshot
-
-```
+![Sentiment Analysis Map for Week 30](images_and_plots/week_30_sent_ss.png)
 
 This may be a fluke, or this may be a quick glimmer of hope about the summer. We all heard the rhetoric about how Summer 2021 was going to be the "reclaimed summer" that "makes up for 2020"---and perhaps the sentiment of Week 30 reflects this. It quickly subsides, however, and we do not see overwhelmingly positive sentiment again until Week 33, where it persists for longer, and then transitions back and forth between positive and negative with no clear direction.
 

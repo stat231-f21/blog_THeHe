@@ -1,5 +1,4 @@
 # Data Wrangling for COVID State Restrictions Networks
-# Tracy Huang
 
 #######################
 #    Load Datasets    #
@@ -63,7 +62,7 @@ annual_cases <- covid_cases %>%
   select(state, covid_prop)
 
 # Convert data into csv file
-write.csv(annual_cases, file = "wrangled_csv_data/proportion_annual_covid_cases_data.csv")
+write.csv(annual_cases, file = "shiny_state-restrictions-network/proportion_annual_covid_cases_data.csv")
 
 #################################
 #    Restaurant Restrictions    #
@@ -148,9 +147,9 @@ restaurants_nodes <- restaurants_visNetwork$nodes %>%
 
 # Convert data into csv file
 write.csv(restaurants_edges, 
-          file = "wrangled_csv_data/restaurants_edges_data.csv")
+          file = "shiny_state-restrictions-network/restaurants_edges_data.csv")
 write.csv(restaurants_nodes, 
-          file = "wrangled_csv_data/restaurants_nodes_data.csv")
+          file = "shiny_state-restrictions-network/restaurants_nodes_data.csv")
 
 # Repeat the wrangling above for the four other datasets
 
@@ -221,9 +220,9 @@ bars_nodes <- bars_visNetwork$nodes %>%
 
 # Convert data into csv file
 write.csv(bars_edges, 
-          file = "wrangled_csv_data/bars_edges_data.csv")
+          file = "shiny_state-restrictions-network/bars_edges_data.csv")
 write.csv(bars_nodes, 
-          file = "wrangled_csv_data/bars_nodes_data.csv")
+          file = "shiny_state-restrictions-network/bars_nodes_data.csv")
 
 ######################
 #    Mask Mandates   #
@@ -289,9 +288,9 @@ mask_mandates_nodes <- mask_mandates_visNetwork$nodes %>%
 
 # Convert data into csv file
 write.csv(mask_mandates_edges, 
-          file = "wrangled_csv_data/mask_mandates_edges_data.csv")
+          file = "shiny_state-restrictions-network/mask_mandates_edges_data.csv")
 write.csv(mask_mandates_nodes, 
-          file = "wrangled_csv_data/mask_mandates_nodes_data.csv")
+          file = "shiny_state-restrictions-network/mask_mandates_nodes_data.csv")
 
 ######################
 #   Gathering Bans   #
@@ -354,9 +353,9 @@ gathering_ban_nodes <- gathering_bans_visNetwork$nodes %>%
 
 # Convert data into csv file
 write.csv(gathering_ban_edges, 
-          file = "wrangled_csv_data/gathering_ban_edges_data.csv")
+          file = "shiny_state-restrictions-network/gathering_ban_edges_data.csv")
 write.csv(gathering_ban_nodes, 
-          file = "wrangled_csv_data/gathering_ban_nodes_data.csv")
+          file = "shiny_state-restrictions-network/gathering_ban_nodes_data.csv")
 
 ##########################
 #   Stay at Home Orders  #
@@ -432,7 +431,7 @@ stay_at_home_orders_nodes <- stay_at_home_orders_visNetwork$nodes %>%
 
 # Convert data into csv file
 write.csv(stay_at_home_orders_edges, 
-          file = "wrangled_csv_data/stay_at_home_orders_edges_data.csv")
+          file = "shiny_state-restrictions-network/stay_at_home_orders_edges_data.csv")
 write.csv(stay_at_home_orders_nodes, 
-          file = "wrangled_csv_data/stay_at_home_orders_nodes_data.csv")
+          file = "shiny_state-restrictions-network/stay_at_home_orders_nodes_data.csv")
 
