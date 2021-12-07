@@ -512,62 +512,62 @@ write.csv(r_e_network_final, file = "shiny_racial-ethnic-network/r-e-network_fin
 eigScalePal <- colorRampPalette(c("blue", "red"), bias = 5)
 num_colors <- 5
 
-# Create plots for color legends for each variable
+# Create horizontal plots for color legends for each variable
 # Anxiety
 png(filename = "shiny_racial-ethnic-network/legends/legend_anx.png", width = 400, height = 400)
-anx_image <- as.raster(matrix(eigScalePal(5), ncol=1))
-plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-# Manually set ylab to move it closer to color scale
-title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
+anx_image <- as.raster(matrix(eigScalePal(5), nrow = 1))
+plot(c(0,1),c(0,4),type = 'n', axes = F,xlab = '', ylab = '')
+# Manually set xlab to move it closer to color scale
+title(xlab = "Proportion of respondents", line=0, cex.lab=1.2)
 # Set the limits on the color scale to the min and max proportion
-text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(anxiety_net$prop), digits = 2), round(max(anxiety_net$prop), digits = 2),l=5))
-anx_image <- rasterImage(anx_image, 1, 1, 0, 0)
+text(y=1.5, x = seq(0,1,l=5), labels = seq(round(min(anxiety_net$prop), digits = 2), round(max(anxiety_net$prop), digits = 2),l=5))
+anx_image <- rasterImage(anx_image, 0, 0, 1, 1)
 dev.off()
 
 # Repeat for other variables
 # Depression
 png(filename = "shiny_racial-ethnic-network/legends/legend_dep.png", width = 400, height = 400)
-dep_image <- as.raster(matrix(eigScalePal(5), ncol=1))
-plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(depression_net$prop), digits = 2), round(max(depression_net$prop), digits = 2), l=5))
-dep_image <- rasterImage(dep_image, 1, 1, 0, 0)
+dep_image <- as.raster(matrix(eigScalePal(5), nrow = 1))
+plot(c(0,1),c(0,4),type = 'n', axes = F,xlab = '', ylab = '')
+title(xlab = "Proportion of respondents", line=0, cex.lab=1.2)
+text(y = 1.5, x = seq(0,1,l=5), labels = seq(round(min(depression_net$prop), digits = 2), round(max(depression_net$prop), digits = 2), l=5))
+dep_image <- rasterImage(dep_image, 0, 0, 1, 1)
 dev.off()
 
 # Prescription
 png(filename = "shiny_racial-ethnic-network/legends/legend_presc.png", width = 400, height = 400)
-presc_image <- as.raster(matrix(eigScalePal(5), ncol=1))
-plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(presc_net$prop), digits = 2), round(max(presc_net$prop), digits = 2),l=5))
-presc_image <- rasterImage(presc_image, 1, 1, 0, 0)
+presc_image <- as.raster(matrix(eigScalePal(5), nrow = 1))
+plot(c(0,1),c(0,4),type = 'n', axes = F,xlab = '', ylab = '')
+title(xlab = "Proportion of respondents", line=0, cex.lab=1.2)
+text(y = 1.5, x = seq(0,1,l=5), labels = seq(round(min(presc_net$prop), digits = 2), round(max(presc_net$prop), digits = 2),l=5))
+presc_image <- rasterImage(presc_image, 0, 0, 1, 1)
 dev.off()
 
 # Mental health services
 png(filename = "shiny_racial-ethnic-network/legends/legend_mhs.png", width = 400, height = 400)
-mhs_image <- as.raster(matrix(eigScalePal(5), ncol=1))
-plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(mhs_net$prop), digits = 2), round(max(mhs_net$prop), digits = 2),l=5))
-mhs_image <- rasterImage(mhs_image, 1, 1, 0, 0)
+mhs_image <- as.raster(matrix(eigScalePal(5), nrow = 1))
+plot(c(0,1),c(0,4),type = 'n', axes = F,xlab = '', ylab = '')
+title(xlab = "Proportion of respondents", line=0, cex.lab=1.2)
+text(y = 1.5, x = seq(0,1,l=5), labels = seq(round(min(mhs_net$prop), digits = 2), round(max(mhs_net$prop), digits = 2),l=5))
+mhs_image <- rasterImage(mhs_image, 0, 0, 1, 1)
 dev.off()
 
 # No access
 png(filename = "shiny_racial-ethnic-network/legends/legend_no_a.png", width = 400, height = 400)
-no_a_image <- as.raster(matrix(eigScalePal(5), ncol=1))
-plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(no_a_net$prop), digits = 2), round(max(no_a_net$prop), digits = 2),l=5))
-no_a_image <- rasterImage(no_a_image, 1, 1, 0, 0)
+no_a_image <- as.raster(matrix(eigScalePal(5), nrow = 1))
+plot(c(0,1),c(0,4),type = 'n', axes = F,xlab = '', ylab = '')
+title(xlab = "Proportion of respondents", line=0, cex.lab=1.2)
+text(y = 1.5, x = seq(0,1,l=5), labels = seq(round(min(no_a_net$prop), digits = 2), round(max(no_a_net$prop), digits = 2),l=5))
+no_a_image <- rasterImage(no_a_image, 0, 0, 1, 1)
 dev.off()
 
 # Healthcare
 png(filename = "shiny_racial-ethnic-network/legends/legend_hc.png", width = 400, height = 400)
-hc_image <- as.raster(matrix(eigScalePal(5), ncol=1))
-plot(c(0,4),c(0,1),type = 'n', axes = F,xlab = '', ylab = '')
-title(ylab = "Proportion of respondents", line=0, cex.lab=1.2)
-text(x=1.5, y = seq(0,1,l=5), labels = seq(round(min(hc_net$prop), digits = 2), round(max(hc_net$prop), digits = 2),l=5))
-hc_image <- rasterImage(hc_image, 1, 1, 0, 0)
+hc_image <- as.raster(matrix(eigScalePal(5), nrow = 1))
+plot(c(0,1),c(0,4),type = 'n', axes = F,xlab = '', ylab = '')
+title(xlab = "Proportion of respondents", line=0, cex.lab=1.2)
+text(y = 1.5, x = seq(0,1,l=5), labels = seq(round(min(hc_net$prop), digits = 2), round(max(hc_net$prop), digits = 2),l=5))
+hc_image <- rasterImage(hc_image, 0, 0, 1, 1)
 dev.off()
 
 # Get nodes and edges for each health care variable
@@ -629,8 +629,6 @@ presc_edges <- presc_visNetwork$edges %>%
   mutate(value = presc)
 
 # Save as .csv
-write.csv(presc_nodes, file = "wrangled_csv_data/prescription_nodes.csv")
-write.csv(presc_edges, file = "wrangled_csv_data/prescription_edges.csv")
 write.csv(presc_nodes, file = "shiny_racial-ethnic-network/prescription_nodes.csv")
 write.csv(presc_edges, file = "shiny_racial-ethnic-network/prescription_edges.csv")
 
